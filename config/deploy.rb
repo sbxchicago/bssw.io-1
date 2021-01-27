@@ -8,9 +8,9 @@ set :rvm_ruby_version, '2.7.2'
 set :application, 'bss'
 set :repo_url, 'git@github.com:Parallactic/bssw.io.git'
 
-set :branch, ENV['BRANCH'] || 'master'
+set :branch, ENV['BRANCH'] || 'main'
 
-# Default branch is :master
+
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
