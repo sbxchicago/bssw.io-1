@@ -1,0 +1,33 @@
+<% if resource.slug %>
+<div class="<% if @search %>event-blog-row search-row<% else %>resource<% end %>">
+  <div class="container">
+    <a href="<%= site_item_url(resource.slug) %>">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <% if resource.pinned && !(@search) %>
+          <span class="recommended"><span class="dot"></span> Recommended</span>
+          <% end %>
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <h3><%= resource.name %></h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <p class="topics small-caps">
+                <% if @community || @search %>
+                  <strong>Topics </strong>
+                <% else %>
+                 <strong><% "Topic".pluralize(resource.topics_count) %>&nbsp; </strong>
+                <% end %>
+		<%= resource.topic_list %>
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+<% end %>

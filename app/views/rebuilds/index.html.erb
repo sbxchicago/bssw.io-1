@@ -1,0 +1,95 @@
+<div class='container'>
+    <div class='row' >
+
+	<% if Rebuild.in_progress %>
+	    <div class='col-md-12'>
+		<br />
+		<h3>Another rebuild, started less than 10 minutes ago, is either currently in progress, or has failed. Please wait and reload this page after 10 minutes; if the existing rebuild is not complete by then, it has most likely failed, and you will be able to override.</h3>
+		<br />
+	    </div>
+	<% else %>
+	    <div class='col-md-4'>
+		<form action='/rebuilds/import' id='form' style='padding: 4em;' method='POST'>
+		    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+		    <%= submit_tag "Rebuild Now!", class: 'btn btn-primary',
+			data: { confirm: "Do you really want to rebuild everything?"}, onclick: "$('#done').hide(); $('.alert').hide();" %>
+		</form>
+
+	    </div>
+	    <div class='col-md-8'>
+		<div id='wait'>
+		    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+		    <div class='import'>
+			<h3>Import in progress...</h3>
+			<p>(Import will continue even if you close this window.)</p>
+			<br />
+		    </div>
+		</div>
+		<div id='done'>
+		    <br /><br />
+		    <h3>Import complete!</h3>
+
+		</div>
+
+	    </div>
+	<% end %>
+    </div>
+    <% if params[:rebuilt] %>
+	<script type='text/javascript'>
+	 $('#wait').hide();
+	</script>
+    <% else %>
+	<script type='text/javascript'>
+	 $('#wait').hide();
+	 $('#done').hide();
+	</script>
+    <% end %>
+    <script type='text/javascript'>
+     $('#form').submit(function() {
+	 $('#wait').show();
+	 $('#form').hide();
+     });
+    </script>
+
+    <table class='rebuilds'>
+	<tr>
+	    <th>Rebuild Started</th>
+	    <th>Rebuild Finished</th>
+	    <th>Initiating IP</th>
+	    <th>Files Processed Successfully</th>
+	    <th>Errors Encountered</th>
+	    <th></th>
+	</tr>
+	<% @rebuilds.each do |r| %>
+	    <tr <% if r == RebuildStatus.displayed_rebuild %> class='displayed' <% end  %>>
+		<td><%= r.started_at.try(:in_time_zone, 'Central Time (US & Canada)') %> (<%= time_ago_in_words(r.started_at) %> ago)</td>
+		<td><%= r.ended_at.try(:in_time_zone, 'Central Time (US & Canada)') %>
+		<% if r.ended_at %>(took <%= distance_of_time_in_words(r.started_at, r.ended_at) %>)<% end %>
+</td>
+
+		<td><%= r.ip %> (<%= r.location %>)</td>
+		<td>
+		    <p>
+		    <a href='#' id='show<%= r.id %>' onclick="$('#files<%= r.id %>').show(); $('#hide<%= r.id %>').show(); $('#show<%= r.id %>').hide();">Show List</a>
+		    <a href='#' id='hide<%= r.id %>' onclick="$('#files<%= r.id %>').hide(); $('#show<%= r.id %>').show(); $('#hide<%= r.id %>').hide();">Hide List</a>
+		    </p>
+		    <div id='files<%= r.id %>'>
+			<%= r.files_processed.try(:html_safe) %>
+		    </div>
+		    <script type='text/javascript'>
+		     $('#files<%= r.id %>').hide();
+		     $('#hide<%= r.id %>').hide();
+		    </script>
+
+		</td>
+		<td><%= r.errors_encountered.try(:html_safe) %></td>
+		<td><% if r != RebuildStatus.displayed_rebuild && Rebuild.first(10).include?(r) %> <%= button_to 'Set As Displayed', {:action => 'make_displayed', :id => r.id}, data: { confirm: "Do you really want to change the displayed rebuild?"} %> <% end  %>
+<% if r == RebuildStatus.displayed_rebuild %>
+This is the currently displayed rebuild.
+<% end %>
+</td>
+	    </tr>
+	<% end %>
+    </table>
+</div>
+

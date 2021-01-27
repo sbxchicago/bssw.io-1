@@ -1,0 +1,161 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark top-nav">
+  <div class="container">
+    <div class="collapse navbar-collapse" id="top-nav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link" href="#" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Information For <i class="fal fa-angle-down"></i></a>
+          <div class="dropdown-menu dropdown-menu-top" aria-labelledby="dropdown1">
+
+            <ul class="caret-list">
+              <% Community.displayed.each do |community| %>
+              <li><%= link_to community.name, community %></li>
+              <% end %>
+            </ul> 
+
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/pages/what-to-contribute-content-for-better-scientific-software">Contribute to BSSw</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/pages/receive-our-email-digest">Receive Our Email Digest</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact BSSw</a>
+        </li>
+
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-blue turqoise-underline main-nav">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <div class="md-logo-div"></div>
+      <div class="sm-logo-div"></div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="scrollup-toggler-label">Menu&nbsp;</span>
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse no-transition" id="main-nav">
+      <ul class="navbar-nav ml-auto top-nav-mobile">
+        <li class="nav-item dropdown">
+          <a class="nav-link" href="#" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Information For <i class="fal fa-angle-down"></i></a>
+          <div class="dropdown-menu" aria-labelledby="dropdown1">
+            <% Community.displayed.each do |community| %>
+            <%= link_to community.name, community %>
+            <% end %>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contribute to BSSw</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Receive Our Email Digest</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav navbar-scrollup-menu ml-auto">
+        <li class="nav-item dropdown position-static">
+          <a class="nav-link" href="#" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Resources <i class="fal fa-angle-down"></i></a>
+          <div class="dropdown-menu dropdown-menu-full w-100" aria-labelledby="dropdown2">
+            <div class="container">
+              <div class="row">
+                <% Category.displayed.each_with_index do |category, index| 
+                  cat = category.name.split(' ') %>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-6 col-sp-12 gap">
+                    <div class="nav-heading">
+                      <div class="circle">
+                        <i class="fas fa-angle-right"></i>
+                      </div>
+                      <h3><%= link_to cat.first, '/items?category='+category.slug.to_s %></h3>
+                      <h2><%= link_to cat.last, '/items?category='+category.slug.to_s %></h2>
+                    </div>
+                    <ul class="caret-list">
+                      <% category.topics.each_with_index do |topic| %>
+                      <li><%= link_to topic.name, '/items?topic='+topic.slug.to_s %></li>
+                      <% end %>
+                    </ul>     
+                  </div>
+                  <% end %>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="nav-heading nav-heading-link">
+                      <div class="circle">
+                        <i class="fas fa-angle-right"></i>
+                      </div>
+                      <h2><a href="/items">View All Resources</a></h2>
+                    </div>
+
+                  </div>
+
+
+
+                </div>
+              </div>
+
+
+            </div>
+          </li>
+          <li class="scrollup-resources-menu">
+            <ul class="caret-list">
+              <li><a href="/items?category=better-planning">Better Planning</a></li>
+              <li><a href="/items?category=better-development">Better Development</a></li>
+              <li><a href="/items?category=better-performance">Better Performance</a></li>
+              <li><a href="/items?category=better-reliability">Better Reliability</a></li>
+              <li><a href="/items?category=better-collaboration">Better Collaboration</a></li>
+              <li><a href="/items?category=better-skills">Better Skills</a></li>
+              <li><a href="/items">View All Resources</a></li>
+            </ul>
+          </li>
+          <li class="nav-item <% if (defined? page.slug) && (page.slug == 'bssw-blog') || controller.controller_name == 'blog_posts' =%>active<% end %>">
+            <a class="nav-link" href="/blog_posts">Blog</a>
+          </li>
+
+          <li class="nav-item <% if (defined? page.slug) && (page.slug == 'upcoming-events') || controller.controller_name == 'events' =%>active<% end %>">
+            <a class="nav-link" href="/events">Events</a>
+          </li>
+          <!--
+          <li class="nav-item <% if (defined? page.slug) && (page.slug == 'about') =%>active<% end %>">
+            <a class="nav-link " href="/pages/about">About</a>
+          </li>
+        -->
+
+          <li class="nav-item dropdown">
+            <a class="nav-link" href="#" id="dropdown3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About <i class="fal fa-angle-down"></i></a>
+            <div class="dropdown-menu dropdown-menu-bottom" aria-labelledby="dropdown3">
+
+              <ul class="caret-list">
+                <li><a href="/pages/about">Team</a></li>
+                <li><a href="/pages/policies">Policies and Code of Conduct</a></li>
+                <li><a href="/pages/bssw-fellowship-program">BSSw Fellowship Program</a></li>
+              </ul> 
+            </div>
+          </li>
+
+          <li class='dropdown search'>
+            <a href="#" class="nav-link" data-toggle="dropdown"><i class="fas fa-search fa-flip-horizontal"></i></a>
+            <ul class='dropdown-menu search-menu'>
+              <li>
+                <form class="navbar-form" role="search" method="get" action="/items/search">
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="form-control-search" placeholder="Search" name="search_string" value="">
+                    <div class="input-group-btn">
+                      <button class="btn" type="submit"><i class="fas fa-search fa-flip-horizontal"></i></button>
+                    </div>
+                  </div>
+                </form>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>

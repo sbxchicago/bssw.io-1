@@ -1,0 +1,79 @@
+<div class="event-blog-row search-row">
+    <div class="container">
+
+	<div class="row">
+	    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+		<a href="<%= result.is_a?(SiteItem) ? site_item_url(result) : fellow_url(result) %>">
+
+		    <div class="row">
+			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+			    <h3><% name = highlight((result.name), @search.flatten) %>
+				<%= name.blank? ? result.name : name %>
+			    </h3>
+			</div>
+		    </div>
+		    <div class="row">
+			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			    <p class="search-results-content">
+				<% [:author_list_without_links, :location, :organizers].each do |facet| %>
+				    <% if result.respond_to?(facet) %>
+					<p class='small-caps'>
+					    <%=  highlight(ActionController::Base.helpers.strip_tags(result.try(facet)), @search.flatten) %>
+					</p>
+				    <% end %>
+				<% end %>
+
+
+				<% if result.respond_to?('content') || result.respond_to?('long_bio')%>
+				    <% strings = [] 
+				    @search.each do |str| 
+
+				    str.each do |s|
+				    strings.delete_if{|str| str && str.match(s)}
+					new_strings = []
+					if result.respond_to?('content')
+					    new_strings << (excerpt ActionController::Base.helpers.strip_tags(result.content), s)
+					else
+					    new_strings << (excerpt ActionController::Base.helpers.strip_tags(result.long_bio), s)
+
+				    end
+				    %>
+				    <% new_strings.delete_if{|str| str && !(str.match(/\b#{s}|#{s}\b/i)) } %>
+
+				    <%
+
+				    strings = strings + new_strings
+				    end 
+				    end
+				    %>
+
+
+				    <% strings.flatten.uniq.each do |str| %>
+					<%= highlight(str, @search.flatten) %>
+				    <% end %>
+				<% end %>
+			    </p>
+			    <p class="topics small-caps">
+				<strong>Type of Item</strong>
+				<% if result.is_a?(Event)  %>
+				    Event
+				<% elsif result.is_a?(BlogPost) %>
+				    Blog Post
+				<% elsif result.is_a?(Fellow) %>
+				    Fellow
+				<% else %>
+				    Resource
+				<% end %>
+			    </p>
+			</div>
+		    </div>
+
+		</a>
+	    </div>
+	</div>		
+
+    </div>
+</div>
+

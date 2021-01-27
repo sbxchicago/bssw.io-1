@@ -1,0 +1,19 @@
+$("#resources").append("<%= escape_javascript render('resources',  :resources => @resources, :results => (@search ? @results : nil)) %> ");
+
+$("#show_more_link").attr("href", '<%=
+show_page(request.fullpath, @resources.next_page)  %>');
+
+<% if !@resources.next_page %>
+  $("#show_more_link").remove();
+
+<% end %>
+
+var top = $('.pagination.pagination-top:first')
+var btm = $('.pagination.pagination-bottom:last')
+var link = $('.pagination-bottom:last > a#show_more_link')
+
+$('.pagination.pagination-top').not(top).remove();
+$('.pagination.pagination-bottom').not(btm).remove();
+$('.more-top').not(btm).remove();
+$('.to-top-after-load').show();
+$(btm).append(link);

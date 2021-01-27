@@ -1,0 +1,58 @@
+<div class='row refine-row'>
+  <div class='container'>
+
+    <form class='navbar-form refine-form' role='index' method='get'>
+      <ul class='nav navbar-nav'>
+        <li class='dropdown refine'><a href='#' class='dropdown-toggle'>Refine Results by Topic</a>
+          <ul class='dropdown-menu refine-menu'>
+
+            <% Category.all.each_with_index do |cat, index| %>
+
+              <!-- if CATEGORY % 3 == 0    then print   <div class='flexwrapper'>   -->
+
+              <li class='col-md-4'>
+                <div class='row title'>
+                  <div class='col-md-12'>
+                    <div class='-bluebottomborder'>
+                      <h4><%= cat.name %></h4>
+
+                      <!-- MISSING - category description paragraph -->
+
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class='row filters'>
+                  <div class='col-md-12'>
+                    <div class='filters -bluebottombordermobile'>
+
+                      <% cat.topics.each do |top| %>
+                      <p>
+                        <label>
+                          <%= check_box_tag 'topics[]', top.slug %>
+                          <%= top.name %>
+                          (<%= SiteItem.get(:topic => top).published.standard_scope.count %>)
+                          <span></span>
+                        </label>
+                      </p>
+                      <% end %>
+
+                    </div>
+                  </div>
+                </div>
+              </li>
+            <% end %>
+            <!-- if CATEGORY % 3 == 0  OR  if last    then  print   </div>  -->
+
+
+            <button class='btn btn-filter' type='submit'>Filter by Selected Topics</button>
+            <button class='btn btn-reset' type='button'><i class='fa fa-refresh' aria-hidden='true'></i>Reset Filters</button>
+
+          </ul>
+	</li>
+      </ul>
+    </form>
+
+  </div>
+</div>

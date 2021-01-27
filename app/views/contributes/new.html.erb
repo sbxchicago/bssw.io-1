@@ -1,0 +1,32 @@
+
+
+<div class='row contributions'>
+	<div class='container'>
+		<div class="row">
+			<div class="col-xl-10 col-lg-10 col-md-12 col-sm-12 col-12">
+	    <%= simple_form_for @contribute, :url => contributes_path do |f| %>
+	    	<div class='row'>
+				<div class='col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12'>
+		  			<div class='input'>
+	      				<label>Select the Nature of Your Suggestion</label>
+
+		    			<%= f.select :reason, ['I have a suggestion for the site',
+	  					'Consider me for a contributor role'], :label => 'Select The Nature Of Your Suggestion' %>
+		  			</div>
+		  			<%= f.input :message, :as => :text, :required => false, :class => 'optional' %>
+				</div>
+				<div class='col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12'>
+		  			<%= f.input :name, :required => true, :label => "Full Name" %>
+		  			<%= f.input :email, :required => true %>
+		  			<%= recaptcha_tags %>
+		  			<div style="clear:both;"></div>
+				</div>
+	      	</div>
+	     	<div class='row'>
+				<div class='col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12'>
+					<%= f.button :submit, 'Send Suggestion', :class => 'captcha-btn-fix' %></div>
+	      		</div>
+	    <% end %>
+</div></div>
+	</div>
+</div>

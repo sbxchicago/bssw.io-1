@@ -1,0 +1,69 @@
+<%= render 'pages/page', :page => @page %>
+
+
+
+<div class="sub-nav-container blog-sub-nav">
+  <div class="container">
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link email-digest" href="/pages/receive-our-email-digest">Subscribe To Our Email Digest</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link rss-feed" href="/resources.rss">Follow Our RSS Feed</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="blog-list-container">
+  <div class="posts-list" id="posts">
+    <%= render 'posts', posts: @posts %>
+    <div class="reference-wrapper">
+
+    </div>
+
+  </div>
+  
+  <div class="posts-list to-top-after-load">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-nd-12 col-sm-12 col-12">
+          <a class="to-top" href="#top">To Top</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if @posts[0].try(:hero_image_url) %>
+<style type="text/css">
+ #posts .event-blog-row:first-of-type a
+ {
+   background:
+   linear-gradient(
+      rgba(52, 157, 255, 0.5), 
+      rgba(52, 157, 255, 0.5)
+    ),
+    /* bottom, image */
+
+    url(<%= @posts[0].hero_image_url %>) no-repeat center top;
+    background-size: cover;
+ }
+
+ #posts .event-blog-row:first-of-type a:hover {
+    background:#18187d;
+    transition: none;
+ }
+</style>
+<% else %>
+<style>
+   #posts .event-blog-rows:first-of-type a {
+      background:#18187d;
+   }
+   #posts .event-blog-row:first-of-type a:hover {
+      background: #3366cc;
+      transition: none;
+   }
+  </style>
+<% end %>

@@ -1,0 +1,14 @@
+<% if controller.action_name != 'search' %>
+
+1-<%=
+if @resources.current_page*@resources.per_page > @resources.total_entries
+	@resources.total_entries
+else 
+	@resources.current_page*@resources.per_page 
+end
+%> of <%= @resources.total_entries %> Items  
+    <% if @resources.next_page %>
+    | <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
+    <% end %>
+
+<% end %>

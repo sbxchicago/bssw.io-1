@@ -1,0 +1,25 @@
+<% if announcement %>
+  <div id='announcement'>
+  <div class='row close-row'>
+    <div class='container'>
+      <button class='btn announcements-close' id='close' aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+
+
+  <div class='row announcements-row'>
+    <div class='container'>
+      <div class='-displayflex-desktop'>
+        <p>
+          <%= link_to announcement.resource do %>
+<!--            Announcement: <%= announcement.start_date %> -->
+
+      	    &nbsp;<%= announcement.text || (announcement.resource.try(:name)) %>
+	  <% end %>
+        </p>
+      </div><!-- /.-displayflex-desktop -->
+    </div><!-- /.container -->
+  </div><!-- /.row -->
+  </div>
+<% end %>

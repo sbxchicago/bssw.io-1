@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe WhatIs, type: :model do
+  it 'can create itself from content' do
+    content = "# Foo \n#### Contributed by [Jane Does](https://github.com)\n \n bar
+<!---
+Topics: first topic, second topic
+Categories: Blah Blah
+Publish: true
+Aggregate: Base
+--->"
+    FactoryBot.create(:category, name: 'Better Blah Blah')
+    what_is = Resource.find_or_create_resource('CuratedContent/WhatIsFoo.md', 1)
+    expect(what_is).to be_a(WhatIs)
+    expect(what_is.basic?).to be true
+    what_is.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
+    expect(what_is.content).to match 'bar'
+    topic = what_is.topics.last
+    resource = FactoryBot.create(:resource)
+    resource.topics << topic
+    expect(resource.basics).to include what_is
+  end
+end

@@ -1,0 +1,12 @@
+
+  $("#show_more_link").attr("href", '<%=
+  show_page(request.fullpath, @events.next_page)
+  %>');
+
+<% if !(@events.next_page) %>
+$("#more").remove();
+$(".more-top").remove();
+<% end %>
+
+
+  $("#events").append("<%= escape_javascript render('events', :events => @events ) %>");

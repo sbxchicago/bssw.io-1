@@ -1,0 +1,7 @@
+<% (Page.orientation).each do |orient| %>
+<li class='list-inline-item
+<% if page == orient %> inactive<% end %>
+'>
+  <%= link_to orient.name, orient %>
+</li>
+<% end %>

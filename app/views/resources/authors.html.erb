@@ -1,0 +1,24 @@
+<%= render 'pages/page', :page => @page %>
+
+<div class="author-container">
+		<div class="container">
+			<div class="row">
+				<% index = 0 %>
+				<% @authors.each do |author| %>
+
+
+				<% if author.blog_count(session[:preview]) > 0 || author.resource_count(session[:preview]) > 0 || author.event_count(session[:preview]) > 0 %>
+			
+
+					<%= render 'resources/author', :author => author %>
+
+			
+				<% index = index + 1 %>
+				<% end %>
+				<% end %>
+
+				</div>
+			</div>
+
+	</div>
+</div>

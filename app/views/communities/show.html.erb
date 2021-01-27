@@ -1,0 +1,70 @@
+<div class="main post-event-hero single-post-hero">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+        <div class="page-heading">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <div class="breadcrumbs">
+                <ul>
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/pages/communities-overview">Communities</a></li>
+                  <li class="active"><%= @community.name[0..90].gsub(/\s\w+\s*$/, '...') %></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <h1><%= @community.name %></h1>
+
+
+
+          <div class="post-content">
+            <p><%= @community.try(:snippet) %> </p>
+            <p class='learn-more'><%= link_to "Learn More About Communities", page_path(Page.find_by_name("Communities Overview")) %> </p>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+<div class="page-content post-event-content">
+  <div class="container">
+    <div class='row'>
+      <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+        <div class="content">
+
+          <%= @community.main.try(:html_safe) %>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="blog-post-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <h1>Featured Resources for the <%= @community.name %></h1>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+      <% @community.resources.each do |resource| %>
+      <%= render 'resources/listing', :resource => resource  %>
+      <% end %>
+</div>
+
+
+
+

@@ -1,0 +1,30 @@
+<div class="resource search-row">
+    <div class="container">
+	<a href="<%= site_item_url(resource) %>">
+	    <div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+		    <h3><%= resource.name %>
+		    </h3>
+		</div>
+	    </div>
+
+	    <div class="row">
+
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+		    <p class="small-caps">
+			<strong>Type of Item</strong>
+			<% if resource.is_a?(Event)  %>
+			    Event
+			<% elsif resource.is_a?(BlogPost) %>
+			    Blog Post
+			<% else %>
+			    Resource
+			<% end %>
+		    </p>
+		</div>
+	    </div>
+	</a>
+    </div>
+</div>
+

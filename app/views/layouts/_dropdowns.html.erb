@@ -1,0 +1,32 @@
+<div class="dropdown-menu dropdown-menu-full w-100" aria-labelledby="dropdown2">
+	<div class="container">
+	<div class="row dropdown-row">
+
+		<% Category.displayed.each_with_index do |category, index| 
+			cat = category.name.split(' ') %>
+		<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-6 col-sp-12 gap">
+			<div class="nav-heading">
+				<div class="circle">
+					<i class="fas fa-angle-right"></i>
+				</div>
+					<h3><%= link_to cat.first, '/items?category='+category.slug %></h3>
+					<h2><%= link_to cat.last, '/items?category='+category.slug %></h2>
+			</div>
+			<ul class="caret-list">
+				<% category.topics.each_with_index do |topic| %>
+					<li><%= link_to topic.name, '/items?topic='+topic.slug.to_s %></li>
+				<% end %>
+			</ul>			
+		</div>
+		<% end %>
+
+			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="nav-heading nav-heading-link all-resources-col">
+					<div class="circle">
+						<i class="fas fa-angle-right"></i>
+					</div>
+					<h2><a href="/items">View All Resources</a></h2>
+				</div>
+			</div>
+
+</div>

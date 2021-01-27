@@ -1,0 +1,17 @@
+<div class="dropdown-menu dropdown-menu-full w-100 nav-communities" aria-labelledby="dropdown3">
+	<div class="container">
+	<div class="row dropdown-row ">
+		<ul>
+			  <% Community.displayed.each do |community| %>
+			    <li>
+			    	<!-- <i class="fas fa-chevron-right"></i> -->
+			    	<%= link_to community.name, community %></li>
+			  <% end %>
+		</ul>
+
+				</div>
+			</div>
+
+</div>
+
+

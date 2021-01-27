@@ -1,0 +1,55 @@
+
+    <div class="main post-event-hero fellows-hero">
+	<div class="container">
+	    <div class="row">
+		<div class="col-12">
+		    <div class="page-heading">
+			<div class="breadcrumbs">
+			    <ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="/items/authors">Contributors</a></li>
+				<li class="active"> <%= @author.first_name %> <%= @author.last_name %></li>
+				
+			    </ul>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	    <div class="row">
+		<div class="col-12">
+		<h1 > <%= @author.first_name %> <%= @author.last_name %></h1></div>
+	</div>
+	<div class="row">
+	    <div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 col-12 ">
+		<%= cl_image_tag(@author.avatar_url, :type => :fetch, :invalidate => true, :cloud_name => 'bssw', :class => 'fellows-photo') %>
+
+	    </div>
+	    <div class="col-xl-8 col-lg-8 col-md-7 col-sm-12 col-12">
+		<div class="fellows-info">
+		    <div class="fellows-info-inner">
+			
+			<% if @author.website %>
+			    <p class="offsite mt-0"><%= link_to 'GitHub',  ("https://github.com/" + @author.website).html_safe  %></p>
+			<% end %>
+			
+			
+			<p>
+			    <strong>Contribution<% unless @author.single_contribution %>s<% end %>:</strong>
+			    <% if @author.resource_listing != "0 resources" %>
+				<%= @author.resource_listing %><% if (@author.blog_listing != "0 blog posts" || @author.event_listing != "0 events") %>,<% end %>
+			    <% end %>
+			    
+			    <% if @author.blog_listing != "0 blog posts" %>
+				<%= @author.blog_listing %><% if @author.event_listing != "0 events" %>, <% end %>				    <% end %><%= @author.event_listing unless @author.event_listing == '0 events' %>
+			    
+			    
+			</p>
+			
+			
+		    </div>
+		</div>
+	    </div>
+	    <p style="clear: both;"></p>
+	</div>	    
+	</div>
+    </div>

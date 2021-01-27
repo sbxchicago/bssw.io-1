@@ -1,0 +1,70 @@
+<div class="main post-event-hero fellows-hero">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+	<div class="page-heading">
+	  <div class="row">
+	    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+	      <div class="breadcrumbs">
+		<ul>
+		  <li><a href="/">Home</a></li>
+		  <li><a href="/pages/meet-our-fellows">Fellows</a></li>
+		  <li class="active"><%= @fellow.name %></li>
+		</u>
+	      </div>
+	    </div>
+	  </div>
+	  <h1><%= @fellow.name %></h1>
+	  <div class='row'>
+	    <div class='col-xl-3 col-lg-3 col-md-5 col-sm-12 col-12'>
+	      <% if @fellow.image_path %>
+		         <%= cl_image_tag("http://github.com/betterscientificsoftware" + @fellow.image_path.strip + "?raw=true", :type => :fetch, :invalidate => true, :cloud_name => 'bssw', :class => 'fellows-photo') %>
+
+							<% end %>
+						</div>
+						<div class='col-xl-8 col-lg-8 col-md-7 col-sm-12 col-12'>
+							<div class="fellows-info">
+								<div class="fellows-info-inner">
+									<% if @fellow.affiliation %>
+									<p class="mb-0"><strong>Affiliation:</strong> <%= @fellow.affiliation %></p>
+									<% end %>
+									<% if @fellow.url %>
+									<p><strong>URL:</strong> <%= link_to @fellow.url, @fellow.url %></p>
+									<% end %>
+									<% if @fellow.linked_in %>
+									<p class="offsite mb-0 pb-0"><%= link_to 'LinkedIn', @fellow.linked_in, class: "pb-0" %></p>
+									<% end %>
+									<% if @fellow.github %>
+									<p class="offsite mt-0"><%= link_to 'GitHub', @fellow.github %></p>
+									<% end %>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+
+		</div>
+	</div>
+</div>
+
+
+<div class="page-content event-content fellows-content">
+	<div class="container">
+		<div class='row'>
+			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+				<div class="content">
+					<%= @fellow.long_bio.try(:html_safe) %>
+
+					<% @fellow.fellow_links.each do |link| %>
+					<%= link_to link.text, link.url, :class => 'link-row' %>
+					<% end %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

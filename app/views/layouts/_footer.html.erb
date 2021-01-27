@@ -1,0 +1,78 @@
+
+<% if @quote %>
+<!-- Displays the Quote Slider for only homepage -->
+<div class="quote">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="quote-circle"></div>
+        <div class="quote-text">
+          <%= quote.text %>
+          <div class="quote-author"><%= quote.author %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Quote Slider -->
+<% end %>
+
+
+<div class="footer" id="footer">
+  <div class="container">
+    <div class="row">
+      <% if (@resource || @resources) && (!@event && !@post) %>
+      <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+      <% else %>
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+      <% end %>
+        <a href="/"><img class="footer-logo" src="/assets/bss-b-logo-white.svg" alt="logo Better Scientific Software" title="Better Scientific Software"></a>
+        </div>
+      <% if (@resource || @resources) && (!@event && !@post) %>
+      <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+      <% else %>
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+      <% end %>
+        <ul class="caret-list">
+          <li><a href="/pages/bssw-fellowship-program">BSSw Fellowship Program</a></li>
+          <li><a href="/pages/policies">Policies</a></li>
+          <li><a href="/resources/authors">Site Contributors</a></li>
+        </ul>
+      </div>
+      <% if (@resource || @resources) && (!@event && !@post) %>
+      <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+      <% else %>
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+      <% end %>
+        <ul class="caret-list">
+          <li><a href="/pages/contact-bssw">Contact BSSw</a></li>
+          <li><a href="/pages/receive-our-email-digest">Receive Our Email Digest</a></li>
+          <li><%= link_to "Follow Our RSS Feed", "/resources.rss" %></li>
+        </ul>
+      </div>
+    </div>
+    <div class="sub-footer">
+        <div class="row">
+          <% if (@resource || @resources) && (!@event && !@post) %>
+          <div class="col-xl-3 col-lg-3 col-md-9 col-sm-12 col-12">
+          <% else %>
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+          <% end %>
+            <div class="copyright">
+              <p>Copyright &copy; 2020 Better Scientific Software under <a href="https://github.com/betterscientificsoftware/bssw.io/blob/master/LICENSE" target="_blank">MIT&nbsp;License</a></p>
+            </div>
+          </div>
+        <% if (@resource || @resources) && (!@event && !@post) %>
+        <div class="col-xl-6 col-lg-6 col-md-9 col-sm-12 col-12">
+        <% else %>
+        <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12">
+        <% end %>
+          <a href="https://science.energy.gov/" target="_blank"><img src="/assets/us-doe-office-of-science.png" alt="United States Department of Energy Office of Science" title="United States Department of Energy | Office of Science | Better Scientific Software" class="us-doe-footer" /></a>
+          <a href="https://nnsa.energy.gov/" target="_blank"><img src="/assets/nnsa-logo-2.png" alt="National Nuclear Security Administration" title="National Nuclear Security Administration | Better Scientific Software" class="nnsa-footer" /></a>
+          <a href="https://exascaleproject.org/" target="_blank"><img src="/assets/ecp.png" alt="Exascale Computing Project" title="Exascale Computing Project | Better Scientific Software" class="ecp-footer" /></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

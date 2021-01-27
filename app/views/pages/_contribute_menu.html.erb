@@ -1,0 +1,11 @@
+<% (Page.contribute).each do |cont| %>
+<li class='list-inline-item
+<% if page == cont %> inactive<% end %>
+'>
+  <% name = cont.name %>
+  <% name = "What To Contribute" if name.match?("What") %>
+  <% name = "How To Contribute" if name.match?("How") %>
+  <% name = "Questions? Contact Us" if name.match?("Questions") %>
+  <%= link_to name, cont %>
+</li>
+<% end %>

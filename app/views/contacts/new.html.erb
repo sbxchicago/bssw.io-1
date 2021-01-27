@@ -1,0 +1,43 @@
+<%= render 'pages/page', :page => @page %>
+
+
+<div class="contact-container">
+<div class='row form-row -contact'>
+  <div class='container'>
+    <div class="page-content">
+
+    <h2>Email Contact Form </h2>
+
+    <%= simple_form_for @contact, :url => contacts_path do |f| %>
+    <div class='row'>
+
+      <div class='col-md-6'>
+
+        <div class='form-group input select'>
+          <label>Select Reason for Contacting BSSw </label>
+          <%= f.select :reason, ['I have a question about the website',
+            'I have a question about BSSw',
+            'I have a comment',
+            'I have a suggestion for the site'], :label => 'Select The Nature Of Your Message', :class=> "form-control" %>
+        </div>
+        <%= f.input :message, :as => :text, :required => false, :class => 'optional' %>
+      </div>
+
+
+      <div class='col-md-6'>
+        <%= f.input :name, :required => true, :label => "Full Name" %>
+        <%= f.input :email, :required => true %>
+	<%= recaptcha_tags %>
+	<span class="help-block pull-left" style="color:#a94442;"><%=@captcha_error%></span>
+      </div>
+    </div>
+
+
+    <div class='row'>
+      <div class='col-md-12'><%= f.button :submit, 'Send Message', :class => 'captcha-btn-fix' %></div>
+    </div>
+    <% end %>
+  </div>
+  </div>
+</div>
+</div>

@@ -1,0 +1,48 @@
+<div class='row hero-row'>
+  <div class='container'>
+    <div class='row'>
+      <div class='col-md-9'>
+
+        <h1><%= @category.name %></h1>
+
+
+        <div class='deck -big-dark'>
+          <%= @category.description.try(:html_safe) %>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class='row main-row'>
+  <div class='container'>
+    <div class='row'>
+      <div class='col-md-9 content'>
+	<%= @category.overview.try(:html_safe) %>
+
+        <p class='see-all -mdtxt'><%= link_to "See Resources: #{@category.name}", site_items_path(:category => @category.slug) %></p>
+
+
+        <h2><%= @category.name %> Topics</h2>
+
+
+        <% unless @topic %>
+        <% @category.topics.each do |topic| %>
+
+
+        <h3 class='topic'><%= topic.name %></h3>
+        <p><%= topic.overview.try(:html_safe) %></p>
+        <p class='see-all'><%= link_to "See Resources: #{topic.name}", site_items_path(:topic => topic) %></p>
+
+        <% end %>
+        <% end %>
+
+
+      </div>
+    </div>
+  </div>
+</div>

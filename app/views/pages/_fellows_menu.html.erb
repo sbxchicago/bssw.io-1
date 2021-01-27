@@ -1,0 +1,10 @@
+<% (Page.fellows).each do |fell| %>
+<li class='list-inline-item
+<% if page == fell %> inactive<% end %>
+'>
+  <% name = fell.name %>
+  <% name = "Apply" if name.match?("Apply") %>
+  <% name = "Fellowships Overview" if name.match?("Program") %>
+  <%= link_to name, fell %>
+</li>
+<% end %>

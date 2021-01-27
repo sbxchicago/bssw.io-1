@@ -1,0 +1,14 @@
+
+<% if events.total_pages > events.current_page %>
+
+  <%= link_to 'Load More',
+{ :page => events.current_page + 1,
+:controller => controller.controller_name,
+  :action => controller.action_name,
+  :past => params[:past]},
+  :id => 'show_more_link',
+  :class => 'load-more',
+  :remote => true
+%>
+
+<% end %>

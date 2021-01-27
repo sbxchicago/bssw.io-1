@@ -1,0 +1,48 @@
+<% if defined?(results) && results %>
+    <% results.each do |result| %>
+	<%= render 'search_result', :result => result  %>
+    <% end %>
+<% elsif resources %>
+    <% if controller.action_name != 'search' %>
+<div class='container'>
+<div class='row'>
+	<div class="pagination pagination-top col-md-12">
+	    <%= render :partial => '/layouts/pagination' %>
+	</div>
+</div>
+</div>
+    <% end %>
+    <div class="resources">
+	<% resources.each do |resource| %>
+<% if @author %>
+	    <%= render 'author_listing', :resource => resource  %>
+<% else %>
+	    <%= render 'listing', :resource => resource  %>
+<% end %>
+	<% end %>
+<div class='container'>
+<div class='row'>
+
+	<% if controller.action_name === 'search' %>
+	    <div class="container more-top col-md-12">
+	<% else %>
+		<div class="pagination pagination-bottom col-md-12">
+
+	<% end %>
+	<%= render :partial => '/layouts/pagination' %>
+</div></div>
+	<% if @resources.next_page %>
+	    <%= render 'show_more' %>
+	<% end %>
+	<% if controller.action_name === 'search' %>
+	    <a class="to-top" href="#top">To Top</a>
+	<% end %>
+		</div>
+<% end %>
+<% if defined?(results) && results %>
+    <style>
+     .to-top-after-load {
+	 display:block;
+     }
+    </style>
+<% end %>

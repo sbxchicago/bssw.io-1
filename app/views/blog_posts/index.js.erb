@@ -1,0 +1,19 @@
+
+$("#posts").append("<%= escape_javascript render('posts',  :posts => @posts) %> ");
+
+$("#show_more_link").attr("href", '<%= show_page(request.fullpath, @posts.next_page)
+%>');
+
+<% if !(@posts.next_page) %>
+    $('.to-top-after-load').show();
+
+<% end %>
+
+
+var btm = $('.row.bottom-event-row:last');
+var link = $('.container.more-top');
+
+$('.row.bottom-event-row').not(btm).remove();
+//$('.container.more-top').not(btm).remove();
+
+//$(btm).append(link);

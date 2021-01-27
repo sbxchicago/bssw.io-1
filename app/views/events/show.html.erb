@@ -1,0 +1,99 @@
+<div class="main post-event-hero <% if @resource %>single-event-hero<% end %>">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+        <div class="page-heading">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <div class="breadcrumbs">
+                <ul>
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/events">Events</a></li>
+                  <li class="active"><%= @event.name[0..60].gsub(/\s\w+\s*$/, '...') %></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <h1><%= @event.name %></h1>
+
+          <%= render :partial => '/layouts/share' %>
+
+
+          <div class="post-content">
+            <p><%= @event.snippet %></p>
+          </div>
+
+          <% if @event.website %>
+          <h4 class="offsite"><a href='<%= @event.website %>' target='_blank'>Event Website</a></h4>
+          <% end %>
+        </div>
+      </div></div>
+       <div class="row details-row">
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+          <h3 class='small-caps'>
+            <strong>Date</strong><%= show_dates(@event) %></h3>
+          </div>
+          <% if @event.location %>
+          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+            <h3 class='small-caps'>
+              <strong>Location</strong><%= @event.location.strip %></h3>
+            </div>
+            <% end %>
+            <% if @event.organizers %>
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+             <h3 class='small-caps'><strong>Organizers</strong> <%= @event.organizers %></h3>
+           </div>
+           <% end %>
+       </div>
+       <div class='row details-row'>
+	   <% if @event.authors %>
+	       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+		   <div class="topics-wrapper">
+		       
+			       <span class="small-caps">                     
+                      <% if @resource.authors.empty? %>
+<strong>Contributed by BSSW Community</strong>
+<% else %>
+                      <strong><%= "Contributor".pluralize(@resource.authors.count) %></strong><%= author_list(@resource) %>
+                      <% end %>
+</span>
+
+
+	       </div>
+	   </div>
+	   <% end  %>
+           <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+	       <span class="small-caps">
+		   <%= render :partial => '/resources/topics', :locals => {:resource => @event } %>
+	       </span>
+	   </div>
+
+
+        </div>
+      </div>
+
+
+
+       </div>
+     </div>
+   </div>
+
+
+   <div class="page-content event-content">
+      <div class="container">
+        <div class='row'>
+    <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+          <div class="content">
+
+            <%= @event.main.try(:html_safe) %>
+
+            <% if @event.website %>
+            <p class="offsite">
+              <!--<i class="fas fa-link"></i>--><a href="<%= @event.website %>" target="_blank">Event Website</a></p>
+            <% end %>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
