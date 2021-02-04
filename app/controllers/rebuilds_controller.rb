@@ -10,14 +10,14 @@ class RebuildsController < ApplicationController
   end
 
   def make_displayed
-    rs = RebuildStatus.first
+p    rs = RebuildStatus.first
     rs.update_attribute(:display_rebuild_id, params[:id])
     flash[:notice] = 'Reverted!'
     redirect_to '/rebuilds'
   end
 
-  def update_links_and_images
-    (Page.displayed + SiteItem.displayed + Community.displayed).each(&:update_links_and_images)
+  def update_links_and_images(build_id)
+    (Page.where(rebuild_id: build_id) + SiteItem.where(rebuild_id: build_id) + Community.where(rebuild_id: build_id)).each(&:update_links_and_images)
   end
 
   def populate_from_github(rebuild)
@@ -46,7 +46,7 @@ class RebuildsController < ApplicationController
     rebuild = Rebuild.create(started_at: Time.now, ip: request.ip)
     RebuildStatus.start(rebuild)
     populate_from_github(rebuild)
-    update_links_and_images
+    update_links_and_images(rebuild.id)
     clear_all
     rebuild.clean
     RebuildStatus.complete(rebuild)
