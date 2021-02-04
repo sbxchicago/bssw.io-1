@@ -74,7 +74,7 @@ class Author < ApplicationRecord
     client.login
     begin
       hash = client.user(website.split('/').last)
-      update(avatar_url: hash.avatar_url, affiliation: hash.company)
+      update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''), affiliation: hash.company)
       update_name(hash.name)
     rescue StandardError
     end
