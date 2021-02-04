@@ -21,10 +21,14 @@ class Author < ApplicationRecord
   end
 
   def self.process_authors(rebuild)
-    #    where(rebuild_id: rebuild).each do |auth|
-    all.each do |auth|
+    where(rebuild_id: rebuild).each do |auth|
       auth.update_from_github
-      auth.refresh_resource_count
+    end
+  end
+
+  def self.refresh_author_counts
+    displayed.each do |auth|
+      auth.refresh_resource_count 
       auth.refresh_event_count
       auth.refresh_blog_count
       auth.refresh_resource_listing
