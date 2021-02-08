@@ -17,6 +17,8 @@ class Rebuild < ApplicationRecord
   end
 
   def process_file(file)
+    return if File.extname(file.full_name) != '.md'
+    
     file_name = File.basename(file.full_name) 
     return if GithubImport.excluded_filenames.include?(file_name)
 
