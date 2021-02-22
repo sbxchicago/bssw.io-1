@@ -68,7 +68,7 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Author.displayed.where(website: @author_slug).size).to eq 1
 
       expect(Author.displayed.where(website: @author_slug).first.resource_listing).not_to eq "0 resources"
-
+      expect(Staff.displayed.where(website: 'maherou').first.affiliation).to eq "Sandia National Laboratories"
       @search_expectations.each do |key, val|
         
         expect(SiteItem.perform_search(SiteItem.prepare_strings(key), 1, false).size).to be > val

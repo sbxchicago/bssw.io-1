@@ -76,12 +76,17 @@ class Author < ApplicationRecord
 
     client = GithubImport.github
     client.login
+
     begin
       hash = client.user(website.split('/').last)
-      update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''), affiliation: hash.company)
+      update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
+
+      update(affiliation: hash.company) if affiliation.blank?
+
       update_name(hash.name)
     rescue StandardError
     end
+
   end
 
   def self.make_from_data(node, rebuild)
@@ -112,6 +117,9 @@ class Author < ApplicationRecord
       end
     end
     update_name(siblings.first.text)
-    update_attribute(:affiliation, siblings[1].text)
+    siblings.first.remove
+    update_attribute(:affiliation,
+                     link.parent.children.first.text.strip)
+    
   end
 end
