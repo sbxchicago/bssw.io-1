@@ -18,6 +18,10 @@ class Event < SiteItem
 
   private
 
+  def broken_range?
+    self.end_at && self.start_at > self.end_at
+  end
+
   def update_details(doc)
     %w[website location organizers].each do |method|
       node = doc.at("li:contains('#{method.titleize}')")
@@ -30,12 +34,20 @@ class Event < SiteItem
 
   def update_dates(date_node)
     return unless date_node
-
     dates = date_node.text.split(':').last.split(' -')
-    self.start_at = Chronic.parse(dates.first)
-    self.end_at = Chronic.parse(dates.last)
-    self.end_at = self.end_at.change(year: self.start_at.year) if end_at && (start_at > end_at)
-    self.end_at = self.end_at.change(year: self.start_at.year + 1) if end_at && (start_at > end_at)
+
+    start_text = dates.first
+    end_text = dates.last
+    self.start_at = Chronic.parse(start_text)
+    self.end_at = Chronic.parse(end_text)
+
+    end_year = end_text.match(/\d{4}/)
+    if broken_range? && end_year
+      self.start_at = self.start_at.change(year: end_year[0].to_i)
+    elsif broken_range?
+      self.start_at = self.end_at.change(year: end_at.year + 1)
+    end
+
     self.save
     date_node.try(:parent).try(:remove)
   end

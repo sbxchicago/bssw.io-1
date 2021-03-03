@@ -37,7 +37,7 @@ RSpec.describe Event, type: :model do
     content = "# Foo \n bar
     \n* Dates: February 1 - March 2 #{Date.today.year}
     \n* Location: Place \n* \n* <!--- Publish: Yes --->"
-
+    
     event = Resource.find_or_create_resource('Events/foo.md', 1)
     event.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
     expect(event.start_at).to eq Chronic.parse("February 1 #{Date.today.year}").to_date

@@ -69,8 +69,8 @@ class Fellow < GithubImport
       'Image' => 'image_path',
       'URL' => 'url',
       'LinkedIn' => 'linked_in',
-      'Github' => 'github',
-      'Honorable Mention' => 'honorable_mention' }
+      'Github' => 'github'
+    }
   end
 
   def do_fields(doc)
