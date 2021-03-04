@@ -62,7 +62,8 @@ class Fellow < GithubImport
 
   def modified_path
     if image_path.match?('http')
-      image_path
+      image_path = image_path.gsub('github.com', 'raw.githubusercontent.com')
+      image_path = image_path.gsub('/blob', '')
     else
       "http://raw.githubusercontent.com/betterscientificsoftware/" + image_path.strip
     end
