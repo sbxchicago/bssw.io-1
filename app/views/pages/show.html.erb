@@ -61,7 +61,7 @@
 					<div class="author-col">
 					    <% if fellow.image_path %>
 						<div class="author-photo" style="background:url('<%= cl_image_path(fellow.modified_path,
-														   :type => :fetch, :width => 350, :height => 350, :invalidate => true, :version => RebuildStatus.first.displayed_rebuild_id, :cloud_name => 'bssw') %>') no-repeat center center;">
+														   :type => :fetch, :width => 350, :height => 350, :invalidate => true, :cloud_name => 'bssw') %>') no-repeat center center;">
 						    
 						</div>
 					    <% end %>
