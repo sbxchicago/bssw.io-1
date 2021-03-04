@@ -62,7 +62,7 @@ class Fellow < GithubImport
 
   def modified_path
     if image_path.match?('http')
-      image_path + "?raw=true"  
+      image_path.strip + "?raw=true"  
     elsif image_path
       "https://github.com/betterscientificsoftware/" + image_path.strip + "?raw=true"
     end
