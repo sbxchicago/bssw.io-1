@@ -59,6 +59,15 @@ class Fellow < GithubImport
     save
   end
 
+
+  def modified_path
+    if image_path.match?('http')
+      image_path
+    else
+      "http://github.com/betterscientificsoftware/bssw.io" + image_path.strip
+    end
+  end
+
   private
 
   def fields

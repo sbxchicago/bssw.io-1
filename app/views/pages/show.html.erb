@@ -60,7 +60,7 @@
 				    <div class='col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12'>
 					<div class="author-col">
 					    <% if fellow.image_path %>
-						<div class="author-photo" style="background:url('<%= cl_image_path("http://github.com/betterscientificsoftware" + fellow.image_path.strip + "?raw=true",
+						<div class="author-photo" style="background:url('<%= cl_image_path(fellow.modified_path,
 														   :type => :fetch, :width => 350, :height => 350, :invalidate => false, :cloud_name => 'bssw') %>') no-repeat center center;">
 						    
 						</div>
