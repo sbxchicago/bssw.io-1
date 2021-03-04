@@ -64,7 +64,7 @@ class Fellow < GithubImport
     if image_path.match?('http')
       image_path      
     elsif image_path
-      "http://raw.githubusercontent.com/betterscientificsoftware/" + image_path.strip
+      "https://github.com/betterscientificsoftware/" + image_path.strip
     end
   end
 
