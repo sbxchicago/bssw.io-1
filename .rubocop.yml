@@ -1,0 +1,9 @@
+AllCops:
+  Exclude:
+    - 'db/schema.rb'
+    - 'db/migrate/*'
+    - 'bin/*'
+
+Metrics/BlockLength:
+    Exclude:
+      - 'config/routes.rb'

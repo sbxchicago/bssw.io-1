@@ -2,7 +2,10 @@
 
 # controller for the Resource class
 class ResourcesController < ApplicationController
-  http_basic_authenticate_with name: Rails.application.credentials.import['name'], password: Rails.application.credentials.import['password'], only: ['import'] if Rails.env != 'preview'
+  if Rails.env != 'preview'
+    http_basic_authenticate_with name: Rails.application.credentials.import['name'],
+                                 password: Rails.application.credentials.import['password'], only: ['import']
+  end
 
   def show
     @resource = scoped_resources.find(params[:id])

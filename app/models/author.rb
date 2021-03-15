@@ -21,14 +21,12 @@ class Author < ApplicationRecord
   end
 
   def self.process_authors(rebuild)
-    where(rebuild_id: rebuild).each do |auth|
-      auth.update_from_github
-    end
+    where(rebuild_id: rebuild).each(&:update_from_github)
   end
 
   def self.refresh_author_counts
     displayed.each do |auth|
-      auth.refresh_resource_count 
+      auth.refresh_resource_count
       auth.refresh_event_count
       auth.refresh_blog_count
       auth.refresh_resource_listing
@@ -86,7 +84,6 @@ class Author < ApplicationRecord
       update_name(hash.name)
     rescue StandardError
     end
-
   end
 
   def self.make_from_data(node, rebuild)
@@ -120,6 +117,5 @@ class Author < ApplicationRecord
     siblings.first.remove
     update_attribute(:affiliation,
                      link.parent.children.first.text.strip)
-    
   end
 end

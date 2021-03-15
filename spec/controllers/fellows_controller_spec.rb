@@ -22,7 +22,7 @@ RSpec.describe FellowsController, type: :controller do
 
   describe 'get index' do
     it 'renders the index template' do
-      fellow = FactoryBot.create(:fellow, rebuild_id: @rebuild.id)
+      FactoryBot.create(:fellow, rebuild_id: @rebuild.id)
       get :index
       expect(response).to render_template 'index'
     end

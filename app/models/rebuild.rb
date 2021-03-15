@@ -18,18 +18,18 @@ class Rebuild < ApplicationRecord
 
   def process_file(file)
     return if File.extname(file.full_name) != '.md'
-    
-    file_name = File.basename(file.full_name) 
+
+    file_name = File.basename(file.full_name)
     return if GithubImport.excluded_filenames.include?(file_name)
 
     begin
       resource = GithubImport.process_path(file.full_name, file.read, id)
       update_attribute(:files_processed, "#{files_processed}<li>#{resource.try(:path)}</li>")
-    rescue StandardError => error
+    rescue StandardError => e
       update_attribute(:errors_encountered,
                        "#{errors_encountered}
                        <h4>#{file_name}:</h4>
-                       <h5>#{error}</h5> #{error.backtrace.first(10).join('<br />')}<hr />")
+                       <h5>#{e}</h5> #{e.backtrace.first(10).join('<br />')}<hr />")
     end
   end
 
@@ -38,5 +38,4 @@ class Rebuild < ApplicationRecord
     Fellow.all.each(&:set_search_text)
     Author.process_authors(id)
   end
-  
 end

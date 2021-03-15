@@ -18,7 +18,7 @@ class Community < GithubImport
 
   def update_from_content(doc, rebuild)
     save
-    our_items = update_resources(doc) 
+    our_items = update_resources(doc)
     super(doc, rebuild)
     our_items.each do |item|
       resource_paths << item

@@ -158,7 +158,6 @@ class SiteItem < GithubImport
   end
 
   def self.order_results(words, results)
-
     word_array = []
     words.flatten.uniq.each do |str_var|
       unless str_var.blank?
@@ -166,7 +165,7 @@ class SiteItem < GithubImport
         word_array << "name REGEXP \"#{Regexp.escape((str_var))}\" DESC"
       end
     end
-    return results.order(Arel.sql("field (type, 'WhatIs', 'HowTo', 'Resource', 'BlogPost', 'Event') ASC, " + word_array.join(',')))
+    results.order(Arel.sql("field (type, 'WhatIs', 'HowTo', 'Resource', 'BlogPost', 'Event') ASC, #{word_array.join(',')}"))
   end
 
   def self.perform_search(words, page, preview)
@@ -232,7 +231,7 @@ class SiteItem < GithubImport
         rebuild_id: rebuild
       )
       top.slug = name.parameterize
-      self.topics << top
+      topics << top
     end
   end
 

@@ -1,32 +1,31 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-
-
-
-  
-
-  
   resources :features
   root 'pages#show', id: 'homepage'
 
   get '/robots.txt' => 'application#robots'
 
-  resources :site_items, only: %i[index show], controller: 'resources', path: 'items' do
+  resources :site_items,
+            only: %i[index show],
+            controller: 'resources', path: 'items' do
     collection do
-
       get 'search'
-#      get 'restart_search'
+      #      get 'restart_search'
       get 'authors'
     end
   end
 
-  get '/resources/:id', to: redirect('/items/%{id}/')
+  get '/resources/:id', to: redirect('/items/%<id>s/')
   get '/resources.rss', to: redirect('/items.rss')
 
   match '/contact', to: 'contacts#new', via: :get
-  match '/contribute', to: 'pages#show',
-                       defaults: { id: 'what-to-contribute-content-for-better-scientific-software' }, via: :get
+  match '/contribute',
+        to: 'pages#show',
+        defaults: {
+          id: 'what-to-contribute-content-for-better-scientific-software'
+        },
+        via: :get
 
   resources :fellows, only: %i[index show]
   resources 'contacts', only: %i[new create]
@@ -47,23 +46,25 @@ Rails.application.routes.draw do
     end
   end
 
-  match '/psip', to: 'resources#show', defaults: { id: 'productivity-and-sustainability-improvement-planning-psip' },
+  match '/psip', to: 'resources#show',
+                 defaults: {
+                   id: 'productivity-and-sustainability-improvement-planning-psip'
+                 },
                  via: :get
 
-  match '/fellowship', to: 'pages#show', defaults: { id: 'bssw-fellowship-program' }, via: :get
-  match '/FELLOWSHIP', to: 'pages#show', defaults: { id: 'bssw-fellowship-program' }, via: :get
+  match '/fellowship', to: 'pages#show',
+                       defaults: { id: 'bssw-fellowship-program' }, via: :get
+  match '/FELLOWSHIP', to: 'pages#show',
+                       defaults: { id: 'bssw-fellowship-program' }, via: :get
 
-  match '/blog_posts/working-remotely-the-exascale-computing-project-ecp-panel-series-tips', to: 'resources#show',
-                                                                                             defaults: { id: 'tips-for-producing-online-panel-discussions' }, via: :get
-
-
+  match '/blog_posts/working-remotely-the-exascale-computing-project-ecp-panel-series-tips',
+        to: 'resources#show',
+        defaults: { id: 'tips-for-producing-online-panel-discussions' },
+        via: :get
 
   match '/rebuild/search', to: 'rebuilds#search', via: :get
 
   match '/announcements/close', to: 'announcements#close', via: :post
 
   get '*path', to: 'application#not_found'
-
-
-  
 end

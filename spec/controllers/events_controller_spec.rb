@@ -58,7 +58,7 @@ RSpec.describe EventsController, type: :controller do
   describe 'get show' do
     it 'shows an event' do
       event = FactoryBot.create(:event, rebuild_id: @rebuild.id)
-#      event.subresources << FactoryBot.create(:resource, rebuild_id: @rebuild.id)
+      #      event.subresources << FactoryBot.create(:resource, rebuild_id: @rebuild.id)
       get :show, params: { id: event }
       expect(assigns(:event)).not_to be_nil
       expect(assigns(:resource)).not_to be_nil

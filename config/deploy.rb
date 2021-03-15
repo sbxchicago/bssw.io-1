@@ -10,7 +10,6 @@ set :repo_url, 'git@github.com:Parallactic/bssw.io.git'
 
 set :branch, ENV['BRANCH'] || 'main'
 
-
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
@@ -34,7 +33,7 @@ set :branch, ENV['BRANCH'] || 'main'
 set :linked_dirs,
     fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system',
                                  'public/uploads',
-                                'config/credentials')
+                                 'config/credentials')
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
 
 # Default value for default_env is {}

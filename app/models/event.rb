@@ -19,7 +19,7 @@ class Event < SiteItem
   private
 
   def broken_range?
-    self.end_at && self.start_at > self.end_at
+    end_at && start_at > end_at
   end
 
   def update_details(doc)
@@ -34,6 +34,7 @@ class Event < SiteItem
 
   def update_dates(date_node)
     return unless date_node
+
     dates = date_node.text.split(':').last.split(' -')
 
     start_text = dates.first
@@ -43,12 +44,12 @@ class Event < SiteItem
 
     end_year = end_text.match(/\d{4}/)
     if broken_range? && end_year
-      self.start_at = self.start_at.change(year: end_year[0].to_i)
+      self.start_at = start_at.change(year: end_year[0].to_i)
     elsif broken_range?
-      self.start_at = self.end_at.change(year: end_at.year + 1)
+      self.start_at = end_at.change(year: end_at.year + 1)
     end
 
-    self.save
+    save
     date_node.try(:parent).try(:remove)
   end
 end

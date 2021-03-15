@@ -59,12 +59,11 @@ class Fellow < GithubImport
     save
   end
 
-
   def modified_path
     if image_path.match?('http')
-      image_path.strip + "?raw=true"  
+      "#{image_path.strip}?raw=true"
     elsif image_path
-      "https://github.com/betterscientificsoftware/" + image_path.strip + "?raw=true"
+      "https://github.com/betterscientificsoftware/#{image_path.strip}?raw=true"
     end
   end
 
@@ -78,8 +77,7 @@ class Fellow < GithubImport
       'Image' => 'image_path',
       'URL' => 'url',
       'LinkedIn' => 'linked_in',
-      'Github' => 'github'
-    }
+      'Github' => 'github' }
   end
 
   def do_fields(doc)

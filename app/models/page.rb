@@ -88,11 +88,11 @@ class Page < GithubImport
   def update_featured(doc)
     node = doc.at("//comment()[contains(.,'Slide1')]")
     return unless node
-    
-    slides = node.text.split("\n").map { |slide|
+
+    slides = node.text.split("\n").map do |slide|
       slide_info = slide.split(':')
       [slide_info.first, slide_info.last]
-    }
+    end
     slides.each do |slide|
       path = slide.last
       FeaturedPost.create(path: path, label: slide.first, rebuild_id: rebuild_id) unless path == '-'
