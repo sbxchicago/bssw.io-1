@@ -6,6 +6,10 @@ Rails.application.routes.draw do
 
   get '/robots.txt' => 'application#robots'
 
+
+  get '/resources/:id', to: redirect('/items/%<id>s/')
+  get '/resources.rss', to: redirect('/items.rss')
+
   resources :site_items,
             only: %i[index show],
             controller: 'resources', path: 'items' do
@@ -16,8 +20,6 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/resources/:id', to: redirect('/items/%<id>s/')
-  get '/resources.rss', to: redirect('/items.rss')
 
   match '/contact', to: 'contacts#new', via: :get
   match '/contribute',
@@ -47,15 +49,15 @@ Rails.application.routes.draw do
   end
 
   match '/psip', to: 'resources#show',
-                 defaults: {
-                   id: 'productivity-and-sustainability-improvement-planning-psip'
-                 },
-                 via: :get
+        defaults: {
+          id: 'productivity-and-sustainability-improvement-planning-psip'
+        },
+        via: :get
 
   match '/fellowship', to: 'pages#show',
-                       defaults: { id: 'bssw-fellowship-program' }, via: :get
+        defaults: { id: 'bssw-fellowship-program' }, via: :get
   match '/FELLOWSHIP', to: 'pages#show',
-                       defaults: { id: 'bssw-fellowship-program' }, via: :get
+        defaults: { id: 'bssw-fellowship-program' }, via: :get
 
   match '/blog_posts/working-remotely-the-exascale-computing-project-ecp-panel-series-tips',
         to: 'resources#show',
