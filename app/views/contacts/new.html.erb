@@ -27,7 +27,7 @@
       <div class='col-md-6'>
         <%= f.input :name, :required => true, :label => "Full Name" %>
         <%= f.input :email, :required => true %>
-	<%= recaptcha_tags %>
+	<%= invisible_captcha %>
 	<span class="help-block pull-left" style="color:#a94442;"><%=@captcha_error%></span>
       </div>
     </div>
