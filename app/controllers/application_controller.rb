@@ -96,14 +96,19 @@ class ApplicationController < ActionController::Base
 
   def process_message(contact)
     flash.delete(:error)
+    flash.delete(:notice)
     flash.delete(:recaptcha_error)
-    flash[:error] = 'reCAPTCHA failed: Message Not Sent' && return unless verify_recaptcha
-    contact.request = request
-    if contact.deliver
-      flash[:notice] = 'Thank you for your message!'
+
+    if verify_recaptcha
+      contact.request = request
+      if contact.deliver
+        flash[:notice] = 'Thank you for your message!'
+      else
+        flash[:error] =
+          "Error: message not sent! #{contact.errors.full_messages.to_sentence}"
+      end
     else
-      flash[:error] =
-        "Error: message not sent! #{contact.errors.full_messages.to_sentence}" 
+      flash[:error] = 'reCAPTCHA failed: Message Not Sent' && return 
     end
   end
 end
