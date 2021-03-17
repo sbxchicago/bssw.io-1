@@ -125,7 +125,7 @@ gem 'rubycritic'
 
 gem 'ffi' # , '1.10.0'
 
-gem 'recaptcha'
+gem 'recaptcha', '5.6.0'
 
 gem 'octokit'
 

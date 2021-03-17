@@ -372,7 +372,7 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    recaptcha (5.7.0)
+    recaptcha (5.6.0)
       json
     redcard (1.1.0)
     redcarpet (3.5.1)
@@ -583,7 +583,7 @@ DEPENDENCIES
   rails (~> 6.0.0)
   rails-controller-testing
   ransack
-  recaptcha
+  recaptcha (= 5.6.0)
   redcarpet
   reek
   rspec
