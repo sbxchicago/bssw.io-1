@@ -100,8 +100,7 @@ class ApplicationController < ActionController::Base
     flash.delete(:recaptcha_error)
     logger.warn("response is #{params['g-recaptcha-response']}")
     logger.warn("or other response is #{params['g-recaptcha-response-data']}")    
-    if verify_recaptcha(timeout: 5, response: params['g-recaptcha-response'])
-
+    if verify_recaptcha
       contact.request = request
       if contact.deliver
         flash[:notice] = 'Thank you for your message!'
