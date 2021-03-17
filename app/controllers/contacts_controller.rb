@@ -3,6 +3,7 @@
 # send email via contact form
 class ContactsController < ApplicationController
   before_action :set_page
+  invisible_captcha only: [:create]
 
   def new
     @contact = ContactForm.new
