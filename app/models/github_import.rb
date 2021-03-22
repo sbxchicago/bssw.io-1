@@ -135,13 +135,11 @@ class GithubImport < ApplicationRecord
 
   def self.update_image(img, _doc)
     class_name = img['class'].to_s
-    src = img['src']
+    src = modified_path(img['src'])
     img['src'] = "#{image_classes(class_name)}#{src}" # adjusted_src
     add_caption(img,  img.parent.try(:content).try(:match, Regexp.new('\[(.*?)\]'))) unless img.parent.nil?
     add_lightbox(img, src) if class_name.match('lightbox') # lb
   end
-
-
 
 
   def self.modified_path(image_path)
