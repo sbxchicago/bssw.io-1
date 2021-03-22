@@ -146,7 +146,8 @@ class GithubImport < ApplicationRecord
     if image_path.match?('http')
       "#{image_path.strip}?raw=true"
     elsif image_path
-      "https://github.com/betterscientificsoftware/images/#{File.basename(image_path.strip)}?raw=true"
+      branch = Rails.env.preview? ? 'preview' : 'master'
+      "https://raw.githubusercontent.com/betterscientificsoftware/bssw.io/#{branch}/images/#{File.basename(image_path.strip)}?raw=true"
     end
   end
 
