@@ -141,6 +141,18 @@ class GithubImport < ApplicationRecord
     add_lightbox(img, src) if class_name.match('lightbox') # lb
   end
 
+
+
+
+  def self.modified_path(image_path)
+    if image_path.match?('http')
+      "#{image_path.strip}?raw=true"
+    elsif image_path
+      "https://github.com/betterscientificsoftware/images/#{File.basename(image_path.strip)}?raw=true"
+    end
+  end
+
+  
   def self.add_caption(img, caption)
     return unless caption
 

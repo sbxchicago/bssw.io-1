@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe ContactsController, type: :controller do
-  Recaptcha.configuration.skip_verify_env.delete('test')
+
   render_views
 
   before(:each) do
@@ -12,6 +12,9 @@ RSpec.describe ContactsController, type: :controller do
     RebuildStatus.create(display_rebuild_id: @rebuild.id)
     page = Page.create(name: 'Contact BSSw', rebuild_id: @rebuild.id, path: 'Contact.md')
     page.save
+    InvisibleCaptcha.init!
+    InvisibleCaptcha.timestamp_threshold = 1
+    InvisibleCaptcha.spinner_enabled = false
   end
 
   describe 'get new' do
@@ -23,14 +26,16 @@ RSpec.describe ContactsController, type: :controller do
 
   describe 'post create' do
     it 'sends mail' do
-      allow_any_instance_of(ContactsController).to receive(:verify_recaptcha).and_return(true)
+      session[:invisible_captcha_timestamp] = Time.zone.now.iso8601
+      sleep InvisibleCaptcha.timestamp_threshold
+
       expect do
         post :create, params: { contact_form: { name: 'foo', email: 'foo@example.com' } }
       end.to change(ActionMailer::Base.deliveries, :count)
     end
 
     it 'fails with bad info' do
-      allow_any_instance_of(ContactsController).to receive(:verify_recaptcha).and_return(true)
+      sleep InvisibleCaptcha.timestamp_threshold
 
       expect do
         post :create, params: { contact_form: { name: 'foo', email: 'foo' } }
@@ -38,7 +43,7 @@ RSpec.describe ContactsController, type: :controller do
     end
 
     it 'wont send without recaptcha' do
-      allow_any_instance_of(ContactsController).to receive(:verify_recaptcha).and_return(false)
+
       expect do
         post :create, params: { contact_form: { name: 'foo', email: 'foo@example.com' } }
       end.not_to change(ActionMailer::Base.deliveries, :count)
