@@ -67,8 +67,9 @@ class Page < GithubImport
   private
 
   def update_staff(doc, rebuild)
-    update_staffers(doc, 'Associate', rebuild)
-    update_staffers(doc, 'Senior', rebuild)
+    doc.css('h2').each do |node|
+      update_staffers(doc, node.text, rebuild)      
+    end
   end
 
   def update_staffers(doc, val, rebuild)

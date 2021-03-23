@@ -3,6 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe ContributesController, type: :controller do
+
+  before(:each) do
+    InvisibleCaptcha.init!
+    InvisibleCaptcha.timestamp_threshold = 1
+    InvisibleCaptcha.spinner_enabled = false
+  end
+  
   describe 'get new' do
     it 'renders the new template' do
       get :new
@@ -12,7 +19,9 @@ RSpec.describe ContributesController, type: :controller do
 
   describe 'post create' do
     it 'sends mail' do
-      allow_any_instance_of(ContributesController).to receive(:verify_recaptcha).and_return(true)
+      session[:invisible_captcha_timestamp] = Time.zone.now.iso8601
+      sleep InvisibleCaptcha.timestamp_threshold
+
       expect do
         post :create, params: { contribute: { name: 'foo', email: 'foo@example.com' } }
       end.to change(ActionMailer::Base.deliveries, :count)

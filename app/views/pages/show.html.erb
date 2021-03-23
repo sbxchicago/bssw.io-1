@@ -14,22 +14,15 @@
     </style>
     <div class="limiter">
 	<div class="container">
-	    <div class="row">
-		<% Staff.displayed.where.not(title: nil).where(associate: false).order(:last_name => 'asc').all.each do |author| %>
-		    <%= render 'resources/author', :author => author %>
-		<% end %>
-		<% Staff.displayed.where(title: nil).where(associate: false).order(:last_name => 'asc').all.each do |author| %>
-		    <%= render 'resources/author', :author => author %>
-		<% end %>
-	    </div>
-	    <h2 class="mb-3">BSSw Associate Editors</h2>
-	    <div class="row">
-		<% Staff.displayed.where(associate: true).order(:last_name => 'asc').all.each do |author| %>
-		    <%= render 'resources/author', :author => author %>
-		<% end %>
-	    </div>
 
+	<% Staff.displayed.order('title desc').group_by(&:section).each do |section, staff| %>
+	    <h2 class="mb-3"><%= section %></h2>
+	    <div class="row">
+<% staff.each do |author| %>
+		    <%= render 'resources/author', :author => author %>
+		<% end %>
 	</div>
+<% end %>
     </div>
 
 <% elsif @page.name == 'Meet Our Fellows' %>
