@@ -54,7 +54,7 @@
 
 
 			<% if @page.name.match("About") %>
-			    <%= page.main.split('<h2>Partners</h2>').first %>
+			    <%= page.main.split('<h2>Partners</h2>').first.html_safe %>
 			    <style>
 			     .page-content {
 				 padding-bottom: 8px;
@@ -74,7 +74,7 @@
 				</div>
 				    <% end  %>
 				    <h2>Partners</h2>
-				    <%= page.main.split('<h2>Partners</h2>').last %>
+				    <%= page.main.split('<h2>Partners</h2>').last.html_safe %>
 			<% else %>
 				    <%= page.main %>
 			<% end %>
