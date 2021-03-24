@@ -83,7 +83,7 @@ class Page < GithubImport
   def update_staffers(doc, node, rebuild)
     # node = doc.at("h3:contains('#{val}')")
     # return unless node
-
+    val = node.text
     node = node.next_element
 
     while node
