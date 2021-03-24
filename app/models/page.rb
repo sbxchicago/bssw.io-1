@@ -73,8 +73,9 @@ class Page < GithubImport
     while node
       break if doc.css("h2").index(node)
       update_staffers(doc, node, rebuild) if doc.css("h3").index(node)
-      node.remove
-      node = node.next_element
+      old_node = node
+      node = old_node.next_element
+      old_node.remove
     end
   end
 
