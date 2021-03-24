@@ -51,18 +51,44 @@
 		<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
 		    <div class='content <% if page.slug == 'communities-overview' %>communities-overview<% end %>'>
 
-			<%= page.main %>
+
+
+			<% if @page.name.match("About") %>
+			    <%= page.main.split('<h2>Partners</h2>').first %>
+			    <style>
+			     .page-content {
+				 padding-bottom: 8px;
+			     }
+			    </style>
+			    <div class="limiter">
+				<div class="container">
+
+				    <% Staff.displayed.order('title desc').group_by(&:section).each do |section, staff| %>
+					<h3 class="mb-3"><%= section %></h3>
+					<div class="row">
+					    <% staff.each do |author| %>
+						<%= render 'resources/author', :author => author %>
+					    <% end %>
+					</div>
+
+				</div>
+				    <% end  %>
+				    <h2>Partners</h2>
+				    <%= page.main.split('<h2>Partners</h2>').last %>
+			<% else %>
+				    <%= page.main %>
+			<% end %>
 
 			<% if page.name.match("Email") %>
 			    <%= render 'email_signup' %>
 			<% end %>
 
 
+			    </div>
 		    </div>
 		</div>
 	    </div>
 	</div>
-    </div>
 
 
 <% end %>

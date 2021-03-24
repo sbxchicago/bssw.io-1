@@ -1,4 +1,4 @@
-<%= render 'pages/page',  :page => @page  unless @page.name.match("About") %>
+<%= render 'pages/page',  :page => @page  %>
 
 <% if @page.name == 'Communities' %>
     <% Community.all.each do |community| %>
@@ -6,26 +6,6 @@
     <% end %>
 <% elsif @page.name == "Questions About Contributing to Better Scientific Software?" %>
     <%= render 'contributes/new' %>
-<% elsif @page.name.match("About") %>
-    <style>
-     .page-content {
-	 padding-bottom: 8px;
-     }
-    </style>
-    <div class="limiter">
-	<div class="container">
-
-	    <% Staff.displayed.order('title desc').group_by(&:section).each do |section, staff| %>
-		<h3 class="mb-3"><%= section %></h3>
-		<div class="row">
-		    <% staff.each do |author| %>
-			<%= render 'resources/author', :author => author %>
-		    <% end %>
-		</div>
-
-	</div>
-	    <% end  %>
-	    <%= render 'pages/page',  :page => @page  %>
 <% elsif @page.name == 'Meet Our Fellows' %>
 	    <style>
 	     .page-content {
