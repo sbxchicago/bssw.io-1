@@ -1,4 +1,4 @@
-<%= render 'pages/page',  :page => @page  %>
+<%= render 'pages/page',  :page => @page  unless @page.name.match("About") %>
 
 <% if @page.name == 'Communities' %>
     <% Community.all.each do |community| %>
@@ -24,7 +24,7 @@
 	</div>
 <% end %>
     </div>
-
+<%= render 'pages/page',  :page => @page  %>
 <% elsif @page.name == 'Meet Our Fellows' %>
     <style>
      .page-content {
