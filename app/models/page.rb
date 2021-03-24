@@ -85,6 +85,7 @@ class Page < GithubImport
 
     while node
       break if doc.css("h2").index(node)
+      break if doc.css("h3").index(node)
       Staff.make_from_data(node, val, rebuild)
       old_node = node
       node = old_node.next_element
