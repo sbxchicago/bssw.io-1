@@ -30,7 +30,7 @@ class Page < GithubImport
   def update_from_content(doc, rebuild)
     self.slug = nil
     update_featured(doc)
-    update_staff(doc, rebuild)
+    update_staff(doc, rebuild) if path.match('About')
     super(doc, rebuild)
     self.slug = 'homepage' if path.match('Home')
     save
@@ -67,14 +67,22 @@ class Page < GithubImport
   private
 
   def update_staff(doc, rebuild)
-    doc.css('h3').each do |node|
-      update_staffers(doc, node.text, rebuild)      
+    start_node = doc.css("h2")[0]
+    puts self.slug
+    puts start_node.inspect
+    return unless start_node
+    node = start_node.next_element 
+    while node
+      puts node.text
+      break if doc.css("h2").index(node)
+      update_staffers(doc, node, rebuild) if doc.css("h3").index(node)
+      node = node.next_element
     end
   end
 
-  def update_staffers(doc, val, rebuild)
-    node = doc.at("h3:contains('#{val}')")
-    return unless node
+  def update_staffers(doc, node, rebuild)
+    # node = doc.at("h3:contains('#{val}')")
+    # return unless node
 
     node = node.next_element
 
