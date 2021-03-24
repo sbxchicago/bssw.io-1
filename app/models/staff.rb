@@ -10,7 +10,7 @@ class Staff < Author
       #      auth.update_attribute(:associate, true) unless val.match?('Senior')
       auth.update_attribute(:section, val)
       auth.update_attribute(:type, 'Staff')
-      puts "making staff #{auth.website} with affil #{auth.affiliation}" if auth.website == 'maherou'
+
       auth.update_from_link(link)
     end
     # rescue => e

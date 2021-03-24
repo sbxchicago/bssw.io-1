@@ -67,13 +67,13 @@ class Page < GithubImport
   private
 
   def update_staff(doc, rebuild)
-    doc.css('h2').each do |node|
+    doc.css('h3').each do |node|
       update_staffers(doc, node.text, rebuild)      
     end
   end
 
   def update_staffers(doc, val, rebuild)
-    node = doc.at("h2:contains('#{val}')")
+    node = doc.at("h3:contains('#{val}')")
     return unless node
 
     node = node.next_element
