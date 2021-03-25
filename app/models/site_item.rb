@@ -17,7 +17,7 @@ class SiteItem < GithubImport
   extend FriendlyId
   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 
-  store_methods :topic_list, :author_list, :topics_count
+  store_methods :topic_list, :topics_count
 
   def slug_candidates
     if custom_slug.blank? || custom_slug.nil?
@@ -334,7 +334,7 @@ class SiteItem < GithubImport
     items.each(&:delete)
     all.each do |si|
       si.refresh_topic_list
-      si.refresh_author_list
+#      si.refresh_author_list
       si.refresh_topics_count
     end
   end
