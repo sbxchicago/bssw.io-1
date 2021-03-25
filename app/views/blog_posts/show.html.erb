@@ -46,13 +46,13 @@
 
 
 			       <span class="small-caps">                     
-                      <% if @post.authors.empty? %>
-<strong>Contributed by BSSW Community</strong>
-<% else %>
-<span class='topics-wrapper'>
-<%= author_list(@post) %>
+		   <div class="topics-wrapper">
+		       
+			       <span class="small-caps">                     
+                      <strong><%= "Author".pluralize(@post.authors.count) %></strong><%= author_list(@post) %>
+
 </span>
-                      <% end %>
+
 </span>
 </div>
               </div>
