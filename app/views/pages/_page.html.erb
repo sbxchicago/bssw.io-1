@@ -54,11 +54,10 @@
 
 
 			<% if @page.name.match("About") %>
-		    </div>
+
 
 		    <%= page.main.split('<h2>Partners</h2>').first.html_safe %>
 		    <div class="limiter">
-			<div class="container">
 
 			    <% Staff.displayed.order('title desc, last_name desc').group_by(&:section).each do |section, staff| %>
 				<h3 class="mb-3"><%= section %></h3>
