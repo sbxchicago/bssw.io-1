@@ -12,7 +12,7 @@
          <p class='small-caps'><strong>Published</strong> <%= post.published_at.try(:strftime, '%b %d, %Y') %></p>
        </div>
        <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12">
-         <p class='small-caps'><strong>By</strong> <%= author_list_without_links(post) %></p>
+         <p class='small-caps'><%= author_list_without_links(post)  %></p>
        </div>
      </div>
    </a>
