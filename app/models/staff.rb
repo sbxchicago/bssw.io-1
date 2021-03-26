@@ -7,10 +7,9 @@ class Staff < Author
     node.css('a').each do |link|
       auth = Author.find_or_create_by(website: link['href'].split('/').try(:last), rebuild_id: rebuild)
 
-      #      auth.update_attribute(:associate, true) unless val.match?('Senior')
-      auth.update_attribute(:section, val)
+      auth.update_attribute(:associate, true) unless val.match?('Senior')
       auth.update_attribute(:type, 'Staff')
-
+      puts "making staff #{auth.website} with affil #{auth.affiliation}" if auth.website == 'maherou'
       auth.update_from_link(link)
     end
     # rescue => e

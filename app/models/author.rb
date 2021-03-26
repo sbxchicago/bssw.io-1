@@ -105,7 +105,6 @@ class Author < ApplicationRecord
   end
 
   def update_from_link(link)
-    return unless link.parent
     siblings = link.parent.children
     siblings.each do |kid|
       kid.remove if kid.text.blank?
@@ -116,7 +115,6 @@ class Author < ApplicationRecord
     end
     update_name(siblings.first.text)
     siblings.first.remove
-    return unless link.parent
     update_attribute(:affiliation,
                      link.parent.children.first.text.strip)
   end
