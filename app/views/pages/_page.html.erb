@@ -58,6 +58,8 @@
 
 			    <%= page.main.split('<h2>Partners</h2>').first.html_safe %>
 		    </div>
+		</div>
+	    </div>
 		    <div class="limiter">
 
 			    <% Staff.displayed.order('title desc, last_name desc').group_by(&:section).each do |section, staff| %>
@@ -74,7 +76,8 @@
 		    <div class="page-content">
 			    <h2>Partners</h2>
 			    <%= page.main.split('<h2>Partners</h2>').last.html_safe %>
-			    </div>
+		    </div>
+		    
 			<% else %>
 			    <%= page.main %>
 			<% end %>
