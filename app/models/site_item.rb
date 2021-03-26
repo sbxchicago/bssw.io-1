@@ -34,7 +34,7 @@ class SiteItem < GithubImport
   
   def author_list_without_links
     if authors.empty?
-      "Contributed by BSSw Community"
+      "By BSSw Community"
     else
       "By " +  authors.map  {|auth|
         "#{auth.first_name} #{auth.last_name}"
