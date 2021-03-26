@@ -60,7 +60,7 @@
 		    <div class="limiter">
 			<div class="container">
 
-			    <% Staff.displayed.order('title desc last_name desc').group_by(&:section).each do |section, staff| %>
+			    <% Staff.displayed.order('title desc, last_name desc').group_by(&:section).each do |section, staff| %>
 				<h3 class="mb-3"><%= section %></h3>
 				<div class="row">
 				    <% staff.each do |author| %>
