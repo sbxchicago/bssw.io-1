@@ -27,7 +27,7 @@ class RebuildsController < ApplicationController
     branch = Rails.env.preview? ? 'preview' : 'master'
     cont = GithubImport.github.archive_link(Rails.application.credentials[:github][:repo],
                                             ref: branch)
-    RebuildStatus.in_progress_rebuild.update(:content_branch, branch)
+    RebuildStatus.in_progress_rebuild.update(content_branch: branch)
     file_path = "#{Rails.root}/tmp/repo.gz"
     GithubImport.agent.get(cont).save(file_path)
     tar_extract = GithubImport.tar_extract(file_path)
