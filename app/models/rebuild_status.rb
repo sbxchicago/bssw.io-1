@@ -6,6 +6,10 @@ class RebuildStatus < ApplicationRecord
     Rebuild.find(first.display_rebuild_id)
   end
 
+  def self.in_progress_rebuild
+    Rebuild.find(first.in_progress_rebuild_id)
+  end
+
   def self.content_branch
     displayed_rebuild.content_branch
   end
