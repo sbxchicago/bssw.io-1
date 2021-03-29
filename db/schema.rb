@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_23_152602) do
+ActiveRecord::Schema.define(version: 2021_03_29_195507) do
 
   create_table "acronyms", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
@@ -247,6 +247,7 @@ ActiveRecord::Schema.define(version: 2021_03_23_152602) do
     t.integer "in_progress_rebuild_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code_branch"
   end
 
   create_table "rebuilds", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -259,6 +260,7 @@ ActiveRecord::Schema.define(version: 2021_03_23_152602) do
     t.string "location"
     t.text "files_processed"
     t.text "errors_encountered"
+    t.string "content_branch"
   end
 
   create_table "resources", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|

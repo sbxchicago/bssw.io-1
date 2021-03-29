@@ -11,7 +11,7 @@ set :repo_url, 'git@github.com:Parallactic/bssw.io.git'
 set :branch, ENV['BRANCH'] || 'main'
 
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
-
+nn
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
 
@@ -35,6 +35,13 @@ set :linked_dirs,
                                  'public/uploads',
                                  'config/credentials')
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
+
+after :finishing, :notify do
+  within release_path do
+    execute :bundle, "exec rails runner -e #{fetch(:rails_env)} 'RebuildStatus.set_code_branch(#{fetch(:branch)}) '"
+  end
+
+end
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
