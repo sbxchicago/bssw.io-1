@@ -37,11 +37,13 @@ set :linked_dirs,
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
 
 namespace :deploy do
-after :finishing, :notify do
-  within release_path do
-    execute :bundle, "exec rails runner -e #{fetch(:rails_env)} 'RebuildStatus.set_code_branch(#{fetch(:branch)}) '"
+  after :finishing, :notify do
+    on roles(:web), in: :groups, limit: 3, wait: 10 do
+      within release_path do
+        execute :bundle, "exec rails runner -e #{fetch(:rails_env)} 'RebuildStatus.set_code_branch(#{fetch(:branch)}) '"
+      end
+    end
   end
-end
 end
 
 # Default value for default_env is {}
