@@ -71,7 +71,7 @@ class ApplicationController < ActionController::Base
   private
 
   def check_auth
-    if request.base_url.to_s.match?('preview') && controller.controller_name != 'rebuilds'
+    if request.base_url.to_s.match?('preview') && !(controller_path.match ('rebuilds/index')) 
       authenticate_or_request_with_http_basic do |username, password|
         (username == Rails.application.credentials[:preview][:name]) &&
           (password == Rails.application.credentials[:preview][:password])
