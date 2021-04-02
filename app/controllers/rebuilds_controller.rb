@@ -3,8 +3,10 @@
 # display and perform rebuilds
 class RebuildsController < ApplicationController
 
+  if Rails.env != 'preview'
     http_basic_authenticate_with name: Rails.application.credentials[:import][:name],
                                  password: Rails.application.credentials[:import][:password]
+  end
 
   before_action :check_rebuilds, only: ['import']
 
