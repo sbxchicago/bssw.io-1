@@ -51,11 +51,8 @@
 		   <div class="topics-wrapper">
 		       
 			       <span class="small-caps">                     
-                      <% if @resource.authors.empty? %>
-<strong>Contributed by BSSW Community</strong>
-<% else %>
-                      <strong><%= "Contributor".pluralize(@resource.authors.count) %></strong><%= author_list(@resource) %>
-                      <% end %>
+                      <strong><%= "Author".pluralize(@event.authors.count) %></strong><%= author_list(@event) %>
+
 </span>
 
 

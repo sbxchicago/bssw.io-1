@@ -43,7 +43,9 @@ class Author < ApplicationRecord
   end
 
   def resource_count(preview = false)
-    (preview ? Resource.preview : Resource.published).displayed.with_author(self).count
+    (preview ? SiteItem.preview : SiteItem.published).displayed.with_author(self).count -
+      blog_count(preview) -
+      event_count(preview)
   end
 
   def blog_count(preview = false)

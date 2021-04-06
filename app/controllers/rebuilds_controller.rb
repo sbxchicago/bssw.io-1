@@ -2,10 +2,12 @@
 
 # display and perform rebuilds
 class RebuildsController < ApplicationController
+
   if Rails.env != 'preview'
     http_basic_authenticate_with name: Rails.application.credentials[:import][:name],
                                  password: Rails.application.credentials[:import][:password]
   end
+
   before_action :check_rebuilds, only: ['import']
 
   def index
@@ -24,8 +26,10 @@ class RebuildsController < ApplicationController
   end
 
   def populate_from_github(rebuild)
+    branch = Rails.env.preview? ? 'preview' : 'master'
     cont = GithubImport.github.archive_link(Rails.application.credentials[:github][:repo],
-                                            ref: Rails.env.preview? ? 'preview' : 'master')
+                                            ref: branch)
+    RebuildStatus.in_progress_rebuild.update(content_branch: branch)
     file_path = "#{Rails.root}/tmp/repo.gz"
     GithubImport.agent.get(cont).save(file_path)
     tar_extract = GithubImport.tar_extract(file_path)

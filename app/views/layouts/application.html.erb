@@ -65,12 +65,25 @@
   <%= render 'layouts/flash' %>
 
   <% if session[:preview] %>
-  <div id='preview' class='announcements-row'>
-    <div class='container'>
-      <p>YOU ARE VIEWING THE PREVIEW SITE</p>
-    </div>
+  <div class='alert alert-warning alert-dismissable' role="alert">
+    <button type="button" class="close" data-dismiss="alert">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+      YOU ARE VIEWING THE PREVIEW SITE
   </div>
   <% end %>
+
+  <% unless Rails.env == 'production' %>
+  <div class='alert alert-warning alert-dismissable' role="alert">
+    <button type="button" class="close" data-dismiss="alert">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+      You are seeing the <strong><%= RebuildStatus.code_branch %></strong> code branch and the <strong><%= RebuildStatus.content_branch %></strong> content branch.
+  </div>
+  <% end %>
+
 
   <% if @announcement && @announcement.site_item %>
 

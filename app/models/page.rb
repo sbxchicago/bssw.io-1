@@ -30,7 +30,7 @@ class Page < GithubImport
   def update_from_content(doc, rebuild)
     self.slug = nil
     update_featured(doc)
-    update_staff(doc, rebuild)
+    update_staff(doc, rebuild) if path.match('About')
     super(doc, rebuild)
     self.slug = 'homepage' if path.match('Home')
     save
@@ -67,17 +67,27 @@ class Page < GithubImport
   private
 
   def update_staff(doc, rebuild)
-    update_staffers(doc, 'Associate', rebuild)
-    update_staffers(doc, 'Senior', rebuild)
+    start_node = doc.css("h2")[0]
+    return unless start_node
+    node = start_node.next_element 
+    while node
+      break if doc.css("h2").index(node)
+      update_staffers(doc, node, rebuild) if doc.css("h3").index(node)
+      old_node = node
+      node = old_node.next_element
+      old_node.remove
+    end
   end
 
-  def update_staffers(doc, val, rebuild)
-    node = doc.at("h2:contains('#{val}')")
-    return unless node
-
+  def update_staffers(doc, node, rebuild)
+    # node = doc.at("h3:contains('#{val}')")
+    # return unless node
+    val = node.text
     node = node.next_element
 
     while node
+      break if doc.css("h2").index(node)
+      break if doc.css("h3").index(node)
       Staff.make_from_data(node, val, rebuild)
       old_node = node
       node = old_node.next_element
