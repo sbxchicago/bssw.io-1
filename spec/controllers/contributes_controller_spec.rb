@@ -3,13 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe ContributesController, type: :controller do
-
   before(:each) do
     InvisibleCaptcha.init!
     InvisibleCaptcha.timestamp_threshold = 1
     InvisibleCaptcha.spinner_enabled = false
   end
-  
+
   describe 'get new' do
     it 'renders the new template' do
       get :new

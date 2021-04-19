@@ -4,7 +4,7 @@
 class ContributesController < ApplicationController
   before_action :set_page
   invisible_captcha only: [:create]
-  
+
   def new
     @contribute = Contribute.new
   end

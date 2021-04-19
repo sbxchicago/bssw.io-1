@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe ContactsController, type: :controller do
-
   render_views
 
   before(:each) do
@@ -43,7 +42,6 @@ RSpec.describe ContactsController, type: :controller do
     end
 
     it 'wont send without recaptcha' do
-
       expect do
         post :create, params: { contact_form: { name: 'foo', email: 'foo@example.com' } }
       end.not_to change(ActionMailer::Base.deliveries, :count)

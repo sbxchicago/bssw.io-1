@@ -105,5 +105,4 @@ class ApplicationController < ActionController::Base
         "Error: message not sent! #{contact.errors.full_messages.to_sentence}"
     end
   end
-
 end

@@ -31,30 +31,26 @@ class SiteItem < GithubImport
     custom_slug_changed? || name_changed? || super
   end
 
-  
   def author_list_without_links
     if authors.empty?
-      "<strong>By</strong> BSSw Community".html_safe
+      '<strong>By</strong> BSSw Community'.html_safe
     else
-      "<strong>By</strong> " +  authors.map  {|auth|
+      '<strong>By</strong> ' +  authors.map do |auth|
         "#{auth.first_name} #{auth.last_name}"
-      }.to_sentence.html_safe
+      end.to_sentence.html_safe
     end
   end
 
   def author_list
     if authors.empty?
-      "BSSw Community"
+      'BSSw Community'
     else
-      authors.map { |auth|
+      authors.map do |auth|
         "<a class='author' href='/items?author=#{auth.slug}'>#{auth.first_name} #{auth.last_name}</a>".html_safe
-      }.to_sentence.html_safe
+      end.to_sentence.html_safe
     end
   end
 
-
-
-  
   scope :past, lambda {
     where(
       'end_at < ?', Date.today
@@ -152,12 +148,12 @@ class SiteItem < GithubImport
   def self.prepare_strings(string)
     if string.match(Regexp.new('"[^"]*"'))
       [[string.gsub(
-          '"', ''
-        )]]
+        '"', ''
+      )]]
     elsif string.match(Regexp.new("'[^']*'"))
       [[string.gsub(
-          "'", ''
-        )]]
+        "'", ''
+      )]]
     else
       lem = Lemmatizer.new
       string.split(' ').map do |str|
@@ -334,7 +330,7 @@ class SiteItem < GithubImport
     items.each(&:delete)
     all.each do |si|
       si.refresh_topic_list
-#      si.refresh_author_list
+      #      si.refresh_author_list
       si.refresh_topics_count
     end
   end

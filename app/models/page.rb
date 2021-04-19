@@ -67,12 +67,14 @@ class Page < GithubImport
   private
 
   def update_staff(doc, rebuild)
-    start_node = doc.css("h2")[0]
+    start_node = doc.css('h2')[0]
     return unless start_node
-    node = start_node.next_element 
+
+    node = start_node.next_element
     while node
-      break if doc.css("h2").index(node)
-      update_staffers(doc, node, rebuild) if doc.css("h3").index(node)
+      break if doc.css('h2').index(node)
+
+      update_staffers(doc, node, rebuild) if doc.css('h3').index(node)
       old_node = node
       node = old_node.next_element
       old_node.remove
@@ -86,8 +88,9 @@ class Page < GithubImport
     node = node.next_element
 
     while node
-      break if doc.css("h2").index(node)
-      break if doc.css("h3").index(node)
+      break if doc.css('h2').index(node)
+      break if doc.css('h3').index(node)
+
       Staff.make_from_data(node, val, rebuild)
       old_node = node
       node = old_node.next_element
