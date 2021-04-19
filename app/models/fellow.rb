@@ -41,6 +41,10 @@ class Fellow < GithubImport
     update_attribute(:honorable_mention, path.match?('HM'))
   end
 
+  def modified_path
+    GithubImport.modified_path(image_path)
+  end
+
   def update_from_content(doc, _rebuild)
     fellow_links.each(&:destroy)
     save
@@ -57,14 +61,6 @@ class Fellow < GithubImport
     node.try(:remove)
     send('long_bio=', doc.to_html)
     save
-  end
-
-  def modified_path
-    if image_path.match?('http')
-      "#{image_path.strip}?raw=true"
-    elsif image_path
-      "https://github.com/betterscientificsoftware/#{image_path.strip}?raw=true"
-    end
   end
 
   private

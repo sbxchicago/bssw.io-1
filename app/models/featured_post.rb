@@ -11,7 +11,8 @@ class FeaturedPost < ApplicationRecord
   end
 
   def image
-    "<img src='https://github.com/betterscientificsoftware/#{path.gsub(' ', '')}' />".html_safe
+    "<img src='#{GithubImport.modified_path(path)}' />".html_safe
+#    "<img src='https://github.com/betterscientificsoftware/#{path.gsub(' ', '')}' />".html_safe
   end
 
   def site_item
