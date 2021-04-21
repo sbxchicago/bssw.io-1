@@ -3,7 +3,11 @@
 # display content pages
 class PagesController < ApplicationController
   def show
-    @page = Page.displayed.find_by_slug(params[:id])
+    if params[:id] == 'team'
+      @page = Page.displayed.find_by_slug('about')
+    else
+      @page = Page.displayed.find_by_slug(params[:id])
+    end
     raise ActionController::RoutingError, 'Not Found' unless @page
 
     @quote = Quote.displayed.find(Quote.displayed.pluck(:id).sample) unless Quote.displayed.empty? || !@page.home?

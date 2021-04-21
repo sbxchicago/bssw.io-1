@@ -66,11 +66,6 @@ Rails.application.routes.draw do
 
   match '/announcements/close', to: 'announcements#close', via: :post
 
-    match '/pages/team',
-        to: 'pages#show',
-        defaults: { id: 'about' },
-        via: :get
-
 
   get '*path', to: 'application#not_found'
 end
