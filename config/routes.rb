@@ -26,10 +26,6 @@ Rails.application.routes.draw do
           id: 'what-to-contribute-content-for-better-scientific-software'
         },
         via: :get
-  match '/pages/team',
-        to: 'pages#show',
-        defaults: { id: 'about' },
-        via: :get
 
   resources :fellows, only: %i[index show]
   resources 'contacts', only: %i[new create]
@@ -69,6 +65,12 @@ Rails.application.routes.draw do
   match '/rebuild/search', to: 'rebuilds#search', via: :get
 
   match '/announcements/close', to: 'announcements#close', via: :post
+
+    match '/pages/team',
+        to: 'pages#show',
+        defaults: { id: 'about' },
+        via: :get
+
 
   get '*path', to: 'application#not_found'
 end
