@@ -26,7 +26,7 @@ Rails.application.routes.draw do
           id: 'what-to-contribute-content-for-better-scientific-software'
         },
         via: :get
-  match '/team',
+  match '/pages/team',
         to: 'pages#show',
         defaults: { id: 'about' },
         via: :get
