@@ -2,13 +2,6 @@
 
 # Events e.g. conferences
 class Event < SiteItem
-  # validates_uniqueness_of :path
-
-  # has_many :announcements
-
-  # extend FriendlyId
-  # friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
-
   def update_from_content(doc, rebuild)
     update_details(doc)
     overview = doc.at("p:contains('Overview')")
@@ -28,28 +21,26 @@ class Event < SiteItem
       send("#{method}=", node.text.split(':').last) if node
     end
     self.website = "http:#{website}" if website
-    update_dates(doc.at("li:contains('Date')"))
+    date_node = doc.at("li:contains('Date')")
+    update_dates(date_node) if date_node
     doc.at("strong:contains('Description')").try(:remove)
   end
 
   def update_dates(date_node)
-    return unless date_node
-
     dates = date_node.text.split(':').last.split(' -')
-
-    start_text = dates.first
     end_text = dates.last
-    self.start_at = Chronic.parse(start_text)
+    self.start_at = Chronic.parse(dates.first)
     self.end_at = Chronic.parse(end_text)
+    fix_end_year(end_text)
+    date_node.try(:parent).try(:remove)
+  end
 
+  def fix_end_year(end_text)
     end_year = end_text.match(/\d{4}/)
     if broken_range? && end_year
       self.start_at = start_at.change(year: end_year[0].to_i)
     elsif broken_range?
       self.start_at = end_at.change(year: end_at.year + 1)
     end
-
-    save
-    date_node.try(:parent).try(:remove)
   end
 end

@@ -14,14 +14,17 @@ class RebuildsController < ApplicationController
   end
 
   def make_displayed
-    p rs = RebuildStatus.first
+    rs = RebuildStatus.first
     rs.update_attribute(:display_rebuild_id, params[:id])
     flash[:notice] = 'Reverted!'
     redirect_to '/rebuilds'
   end
 
   def update_links_and_images(build_id)
-    (Page.where(rebuild_id: build_id) + SiteItem.where(rebuild_id: build_id) + Community.where(rebuild_id: build_id)).each(&:update_links_and_images)
+    (Page.where(rebuild_id: build_id) +
+     SiteItem.where(rebuild_id: build_id) +
+     Community.where(rebuild_id: build_id)
+    ).each(&:update_links_and_images)
   end
 
   def populate_from_github(rebuild)
@@ -29,10 +32,9 @@ class RebuildsController < ApplicationController
     cont = GithubImport.github.archive_link(Rails.application.credentials[:github][:repo],
                                             ref: branch)
     RebuildStatus.in_progress_rebuild.update(content_branch: branch)
-    file_path = "#{Rails.root}/tmp/repo.gz"
+    file_path = "#{Rails.root}/tmp/repo-#{branch}.gz"
     GithubImport.agent.get(cont).save(file_path)
-    tar_extract = GithubImport.tar_extract(file_path)
-    tar_extract.each do |file|
+    GithubImport.tar_extract(file_path).each do |file|
       rebuild.process_file(file)
     end
     File.delete(file_path)
@@ -58,7 +60,6 @@ class RebuildsController < ApplicationController
     rebuild.clean
     RebuildStatus.complete(rebuild)
     Author.refresh_author_counts
-    puts rebuild.errors_encountered
     flash[:notice] = 'Import completed!'
     redirect_to controller: 'rebuilds', action: 'index', rebuilt: true
   end

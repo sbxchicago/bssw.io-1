@@ -26,11 +26,15 @@ class Rebuild < ApplicationRecord
       resource = GithubImport.process_path(file.full_name, file.read, id)
       update_attribute(:files_processed, "#{files_processed}<li>#{resource.try(:path)}</li>")
     rescue StandardError => e
-      update_attribute(:errors_encountered,
-                       "#{errors_encountered}
-                       <h4>#{file_name}:</h4>
-                       <h5>#{e}</h5> #{e.backtrace.first(10).join('<br />')}<hr />")
+      record_errors(file_name, e)
     end
+  end
+
+  def record_errors(file_name, error)
+    update_attribute(:errors_encountered,
+                     "#{errors_encountered}
+                       <h4>#{file_name}:</h4>
+                       <h5>#{error}</h5> #{error.backtrace.first(10).join('<br />')}<hr />")
   end
 
   def clean

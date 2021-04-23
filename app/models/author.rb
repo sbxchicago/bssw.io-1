@@ -20,6 +20,10 @@ class Author < ApplicationRecord
     (new_record? || slug.nil?) && !last_name.blank?
   end
 
+  def display_name
+    "#{first_name} #{last_name}"
+  end
+
   def self.process_authors(rebuild)
     where(rebuild_id: rebuild).each(&:update_from_github)
   end
@@ -35,24 +39,24 @@ class Author < ApplicationRecord
     end
   end
 
-  def single_contribution(preview = false)
-    nums = [resource_count(preview),
-            event_count(preview),
-            blog_count(preview)]
+  def single_contribution(preview: false)
+    nums = [resource_count(preview: preview),
+            event_count(preview: preview),
+            blog_count(preview: preview)]
     nums.sort == [0, 0, 1]
   end
 
-  def resource_count(preview = false)
+  def resource_count(preview: false)
     (preview ? SiteItem.preview : SiteItem.published).displayed.with_author(self).count -
-      blog_count(preview) -
-      event_count(preview)
+      blog_count(preview: preview) -
+      event_count(preview: preview)
   end
 
-  def blog_count(preview = false)
+  def blog_count(preview: false)
     (preview ? BlogPost.preview : BlogPost.published).displayed.with_author(self).count
   end
 
-  def event_count(preview = false)
+  def event_count(preview: false)
     (preview ? Event.preview : Event.published).displayed.with_author(self).count
   end
 

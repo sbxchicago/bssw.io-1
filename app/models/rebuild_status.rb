@@ -18,7 +18,7 @@ class RebuildStatus < ApplicationRecord
     first.code_branch
   end
 
-  def self.set_code_branch(name)
+  def self.code_branch=(name)
     first.update(code_branch: name)
   end
 

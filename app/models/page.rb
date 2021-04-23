@@ -102,13 +102,10 @@ class Page < GithubImport
     node = doc.at("//comment()[contains(.,'Slide1')]")
     return unless node
 
-    slides = node.text.split("\n").map do |slide|
+    node.text.split("\n").map do |slide|
       slide_info = slide.split(':')
-      [slide_info.first, slide_info.last]
-    end
-    slides.each do |slide|
-      path = slide.last
-      FeaturedPost.create(path: path, label: slide.first, rebuild_id: rebuild_id) unless path == '-'
+      path = slide_info.last
+      FeaturedPost.create(path: path, label: slide_info.first, rebuild_id: rebuild_id) unless path == '-'
     end
     node.remove
   end

@@ -13,18 +13,11 @@ class ApplicationController < ActionController::Base
       #{params[:controller]}##{params[:action]}:
       #{exception.inspect}\n#{exception.backtrace[0..50]}\n")
     end
-    respond_to do |format|
-      format.json do
-        render json: {}, status: :not_found
-      end
-      format.html do
-        render(
-          template: 'errors/not_found_error',
-          layout: 'layouts/application',
-          status: :not_found
-        )
-      end
-    end
+    render(
+      template: 'errors/not_found_error',
+      layout: 'layouts/application',
+      status: :not_found
+    )
   end
 
   def send_error(exception)
@@ -42,18 +35,11 @@ class ApplicationController < ActionController::Base
     #{params[:controller]}##{params[:action]}:
     #{exception.inspect}\n#{exception.backtrace[0..50]}\n"
     logger.error(error_string)
-    respond_to do |format|
-      format.json do
-        render json: {}, status: :unprocessable_entity
-      end
-      format.html do
-        render(
-          template: 'errors/internal_server_error',
-          layout: 'layouts/application',
-          status: '500'
-        )
-      end
-    end
+    render(
+      template: 'errors/internal_server_error',
+      layout: 'layouts/application',
+      status: '500'
+    )
   end
 
   include ActionController::HttpAuthentication::Basic::ControllerMethods

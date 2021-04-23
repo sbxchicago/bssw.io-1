@@ -42,8 +42,8 @@ namespace :deploy do
       within release_path do
         execute :bundle, 'exec rake db:migrate RAILS_ENV=preview'
         execute :bundle,
-                "exec rails runner -e #{fetch(:rails_env)} 'RebuildStatus.set_code_branch(\"#{fetch(:branch)}\") '"
-        execute :bundle, "exec rails runner -e preview 'RebuildStatus.set_code_branch(\"#{fetch(:branch)}\") '"
+                "exec rails runner -e #{fetch(:rails_env)} 'RebuildStatus.code_branch=(\"#{fetch(:branch)}\") '"
+        execute :bundle, "exec rails runner -e preview 'RebuildStatus.code_branch=(\"#{fetch(:branch)}\") '"
       end
     end
   end

@@ -39,12 +39,10 @@ class GithubImport < ApplicationRecord
     res.update_resources(doc) if res.respond_to?(:update_resources)
     content_string = doc.css('body').to_s + "\n<!-- file: #{res.path} -->".html_safe
     res.update_attribute(:content, content_string)
-    do_dates(res)
+    do_dates(res) unless res.is_a?(Event) || !res.has_attribute?(:published_at) || !res.published_at.blank?
   end
 
   def do_dates(res)
-    return unless res.has_attribute?(:published_at) && res.published_at.blank? && !res.is_a?(Event)
-
     gh_path = res.path.split('/')
     gh_path.shift
     gh_path = gh_path.join('/')
@@ -141,17 +139,17 @@ class GithubImport < ApplicationRecord
     add_lightbox(img, src) if class_name.match('lightbox') # lb
   end
 
-
   def self.modified_path(image_path)
+    image_path = image_path.strip
     if image_path.match?('http')
-      "#{image_path.strip}?raw=true"
+      "#{image_path}?raw=true"
     elsif image_path
       branch = Rails.env.preview? ? 'preview' : 'master'
-      "https://raw.githubusercontent.com/betterscientificsoftware/bssw.io/#{branch}/images/#{File.basename(image_path.strip)}?raw=true"
+      repo = 'betterscientificsoftware/bssw.io'
+      "https://raw.githubusercontent.com/#{repo}/#{branch}/images/#{File.basename(image_path)}?raw=true"
     end
   end
 
-  
   def self.add_caption(img, caption)
     return unless caption
 

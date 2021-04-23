@@ -11,7 +11,6 @@ RSpec.describe SiteItem, type: :model do
     expect(SiteItem.preview).to include(published)
     expect(SiteItem.preview).not_to include(hidden)
     expect(SiteItem.published).not_to include(previewer)
-    expect(SiteItem.rss).to include(published)
   end
 
   it 'deals with topics + categories' do
@@ -25,7 +24,6 @@ RSpec.describe SiteItem, type: :model do
     expect(SiteItem.with_category(cat)).to include(resource)
     expect(SiteItem.with_category(cat)).not_to include(second_resource)
     expect(SiteItem.get('category' => cat)).to include(resource)
-    resource.topics.delete(top)
   end
 
   it 'can search' do

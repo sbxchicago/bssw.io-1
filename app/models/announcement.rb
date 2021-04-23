@@ -13,7 +13,7 @@ class Announcement < GithubImport
     doc.css("p:contains('Announcement')").each do |elem|
       next if elem.next_element.blank? || elem.next_element.text.blank?
 
-      a = Announcement.create_from(elem.next_element, rebuild_id)
+      Announcement.create_from(elem.next_element, rebuild_id)
     end
   end
 

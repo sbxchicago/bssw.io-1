@@ -35,9 +35,8 @@ class SiteItem < GithubImport
     if authors.empty?
       '<strong>By</strong> BSSw Community'.html_safe
     else
-      '<strong>By</strong> ' +  authors.map do |auth|
-        "#{auth.first_name} #{auth.last_name}"
-      end.to_sentence.html_safe
+      "<strong>By</strong> #{authors.map(&:display_name).to_sentence}
+      ".html_safe
     end
   end
 
@@ -147,22 +146,15 @@ class SiteItem < GithubImport
 
   def self.prepare_strings(string)
     if string.match(Regexp.new('"[^"]*"'))
-      [[string.gsub(
-        '"', ''
-      )]]
+      [[string.gsub('"', '')]]
     elsif string.match(Regexp.new("'[^']*'"))
-      [[string.gsub(
-        "'", ''
-      )]]
+      [[string.gsub("'", '')]]
     else
       lem = Lemmatizer.new
       string.split(' ').map do |str|
-        [
-          str, lem.lemma(str), str.stem
-        ].uniq
+        [str, lem.lemma(str), str.stem].uniq
       end
     end
-    #    strings
   end
 
   def self.order_results(words, results)
@@ -173,21 +165,15 @@ class SiteItem < GithubImport
         word_array << "name REGEXP \"#{Regexp.escape((str_var))}\" DESC"
       end
     end
-    results.order(Arel.sql("field (type, 'WhatIs', 'HowTo', 'Resource', 'BlogPost', 'Event') ASC, #{word_array.join(',')}"))
+    results.order(
+      Arel.sql("field (type, 'WhatIs', 'HowTo', 'Resource', 'BlogPost', 'Event') ASC, #{word_array.join(',')}")
+    )
   end
 
   def self.perform_search(words, page, preview)
-    o_results = if preview
-                  SiteItem.preview.displayed
-                else
-                  SiteItem.published.displayed
-                end
-    results = o_results
-    results = get_word_results(
-      words, results
-    )
+    o_results = preview ? SiteItem.preview.displayed : SiteItem.published.displayed
     results = order_results(
-      words, results
+      words, get_word_results(words, o_results)
     )
     Fellow.perform_search(
       words, page
@@ -198,14 +184,17 @@ class SiteItem < GithubImport
     word_results = nil
     words.each do |word|
       word.flatten.uniq.each do |str_var|
-        str_var = Regexp.escape(sanitize_sql_like(str_var))
-        str = "search_text REGEXP \"([\\W]*|^)#{str_var}\" or search_text REGEXP \"#{str_var}([\\W]*|$)\""
-        relation = results.where(Arel.sql(str))
+        relation = results.where(Arel.sql(word_str(str_var)))
         word_results = word_results ? word_results.or(relation) : relation
       end
       results = results.merge(word_results)
     end
     results
+  end
+
+  def self.word_str(str_var)
+    str_var = Regexp.escape(sanitize_sql_like(str_var))
+    "search_text REGEXP \"([\\W]*|^)#{str_var}\" or search_text REGEXP \"#{str_var}([\\W]*|$)\""
   end
 
   def set_search_text
@@ -286,51 +275,12 @@ class SiteItem < GithubImport
     topics.size
   end
 
-  # private
-
-  # def subresource_content(header, doc, rebuild)
-  #   subrs = header.next_element
-  #   return unless subrs
-
-  #   create_subresources(
-  #     subrs, doc, header, rebuild
-  #   )
-  # end
-
-  # def create_subresources(subrs, doc, header, rebuild)
-  #   subrs.css('a').each do |subr|
-  #     create_subresource(
-  #       subr, rebuild
-  #     )
-  #     subr.parent.try(:remove)
-  #   end
-  #   header.content = ''
-  #   subresources.each do |subr|
-  #     subr.add_to_parent(
-  #       self, doc, header
-  #     )
-  #   end
-  # end
-
-  # def create_subresource(subr, rebuild)
-  #   con = subr.attr('href')
-  #   res = SiteItem.find_or_create_by(
-  #     path: File.basename(con), rebuild_id: rebuild
-  #   )
-  #   SubresourceRelation.create(
-  #     order: subresource_relations.map(&:order).max || 0 + 1,
-  #     parent_resource: self,
-  #     subresource: res
-  #   )
-  # end
-
   def self.clean
     items = where(name: nil)
 
     items.each(&:delete)
     all.each do |si|
       si.refresh_topic_list
-      #      si.refresh_author_list
       si.refresh_topics_count
     end
   end
