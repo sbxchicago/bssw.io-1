@@ -44,7 +44,6 @@ class Page < GithubImport
 
   def self.orientation
     names_to_pages(['Communities Overview',
-                    'Site Overview',
                     'Intro To CSE',
                     'Intro To HPC'])
   end
