@@ -31,7 +31,7 @@ class Announcement < GithubImport
   end
 
   def site_item
-    SiteItem.find_by(path: File.basename(path))
+    SiteItem.find_by(base_path: File.basename(path))
   end
 
   def update_dates(item)

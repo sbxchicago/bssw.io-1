@@ -84,9 +84,7 @@ class Author < ApplicationRecord
     begin
       hash = client.user(website.split('/').last)
       update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
-
       update(affiliation: hash.company) if affiliation.blank?
-
       update_name(hash.name)
     rescue StandardError
     end
@@ -113,15 +111,19 @@ class Author < ApplicationRecord
   def update_from_link(link)
     siblings = link.parent.children
     siblings.each do |kid|
-      kid.remove if kid.text.blank?
-      if kid.text.match?('Title')
-        update_attribute(:title, kid.text.gsub('Title: ', ''))
-        kid.remove
-      end
+      process_kid(kid)
     end
     update_name(siblings.first.text)
     siblings.first.remove
     update_attribute(:affiliation,
                      link.parent.children.first.text.strip)
+  end
+
+  def process_kid(kid)
+    kid.remove if kid.text.blank?
+    if kid.text.match?('Title')
+      update_attribute(:title, kid.text.gsub('Title: ', ''))
+      kid.remove
+    end
   end
 end

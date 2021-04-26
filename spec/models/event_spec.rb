@@ -10,7 +10,7 @@ RSpec.describe Event, type: :model do
 
     event = Resource.find_or_create_resource('Events/foo.md', 1)
     expect(event).to be_a(Event)
-    expect(event.path).to eq 'foo.md'
+    expect(event.path).to eq 'Events/foo.md'
     event.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
     event.reload
     event.update_attribute(:publish, true)

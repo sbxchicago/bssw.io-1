@@ -13,7 +13,7 @@ class Community < GithubImport
   friendly_id :name, use: %i[finders slugged scoped], scope: :rebuild_id
 
   def resources
-    resource_paths.map { |path| SiteItem.find_by_path(File.basename(path)) }.delete_if(&:nil?)
+    resource_paths.map { |path| SiteItem.find_by_base_path(File.basename(path)) }.delete_if(&:nil?)
   end
 
   def update_from_content(doc, rebuild)
@@ -21,7 +21,7 @@ class Community < GithubImport
     our_items = update_resources(doc)
     super(doc, rebuild)
     our_items.each do |item|
-      resource_paths << item
+      resource_paths << File.basename(item)
     end
     save
   end

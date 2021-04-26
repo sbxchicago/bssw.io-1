@@ -34,12 +34,15 @@ class GithubImport < ApplicationRecord
   def update_from_content(doc, rebuild_id)
     title_chunk = GithubImport.get_title_chunk(doc)
     res = find_from_title(title_chunk)
-    res.update_date(doc) if res.has_attribute?(:published_at)
+    if res.has_attribute?(:published_at)
+      res.update_date(doc)
+      do_dates(res) unless res.is_a?(Event) || !res.published_at.blank?
+    end
+
     res.update_taxonomy(doc, rebuild_id)
-    res.update_resources(doc) if res.respond_to?(:update_resources)
+
     content_string = doc.css('body').to_s + "\n<!-- file: #{res.path} -->".html_safe
     res.update_attribute(:content, content_string)
-    do_dates(res) unless res.is_a?(Event) || !res.has_attribute?(:published_at) || !res.published_at.blank?
   end
 
   def do_dates(res)
@@ -47,8 +50,11 @@ class GithubImport < ApplicationRecord
     gh_path.shift
     gh_path = gh_path.join('/')
     res.update_attribute(:published_at,
-                         GithubImport.github.commits(Rails.application.credentials[:github][:repo], 'master',
-                                                     path: gh_path).first.commit.author.date)
+                         GithubImport.github.commits(
+                           Rails.application.credentials[:github][:repo],
+                           RebuildStatus.code_branch,
+                           path: gh_path
+                         ).first.commit.author.date)
   end
 
   def update_date(doc)
@@ -82,7 +88,7 @@ class GithubImport < ApplicationRecord
       'Articles/WhatAre' => WhatIs,
       'Articles/HowTo' => HowTo,
       'Site/Topic' => Category,
-      'Site/BSSwFellowshipProgram/People/' => Fellow,
+      '/People/' => Fellow,
       'Site/Communities/..+.md' => Community,
       'Site/' => Page,
       'Events' => Event,
@@ -96,7 +102,9 @@ class GithubImport < ApplicationRecord
       end
     end
     res = Category if path.match('Site/Topics')
-    res.find_or_create_by(path: File.basename(path), rebuild_id: rebuild_id)
+    item = res.find_or_create_by(base_path: File.basename(path), rebuild_id: rebuild_id)
+    item.update(path: path)
+    item
   end
 
   def snippet

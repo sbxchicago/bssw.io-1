@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Community, type: :model do
   describe 'with some content...' do
     before(:each) do
-      FactoryBot.create(:resource, path: 'itspath.md')
+      FactoryBot.create(:resource, base_path: 'itspath.md')
       content = "# Foo \n#### Contributed by [Jane Does](https://github.com)\n \n bar\n
 <!-- Featured resources: -->
 - [A Resource](/itspath.md)
@@ -22,7 +22,7 @@ Aggregate: Base
 
     it 'can create itself from content' do
       expect(@community).to be_a(Community)
-      expect(@community.path).to eq 'foo.md'
+      expect(@community.path).to eq 'Site/Communities/foo.md'
       expect(@community.name).to eq 'Foo'
     end
     it 'updates resources' do

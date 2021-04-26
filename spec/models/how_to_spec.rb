@@ -4,7 +4,8 @@ require 'rails_helper'
 
 RSpec.describe WhatIs, type: :model do
   it 'can create itself from content' do
-    content = "# Foo \n#### Contributed by [Jane Does](https://github.com)\n \n bar
+    content = "# Foo \n#### Contributed by [Jane Does](https://github.com)\n
+\n#### Publication Date: May 1, 2020 \n bar
 <!---
 Topics: foo, bar
 Categories: Blah Blah

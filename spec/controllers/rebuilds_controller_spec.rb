@@ -34,6 +34,7 @@ RSpec.describe RebuildsController, type: :controller do
       expect(SiteItem.count).to be > @min_site_item_count
       expect(SiteItem.displayed.count).to be > @min_site_item_count
       expect(Community.displayed.count).to eq @community_count
+
       expect(Community.first.resources).not_to be_empty
       topic = Topic.displayed.where(slug: @topic_slug).first
       wi = SiteItem.displayed.find(@what_is_slug)

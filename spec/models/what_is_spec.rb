@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe WhatIs, type: :model do
   it 'can create itself from content' do
     content = "# Foo \n#### Contributed by [Jane Does](https://github.com)\n \n bar
+\n#### Publication Date: May 1, 2020
 <!---
 Topics: first topic, second topic
 Categories: Blah Blah

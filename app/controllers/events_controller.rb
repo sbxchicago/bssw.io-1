@@ -24,7 +24,13 @@ class EventsController < ApplicationController
     events = scoped_resources.events
     if author
       @events = events.with_author(Author.displayed.find(author))
-    elsif params[:past]
+    else
+      filter_events_by_time(events)
+    end
+  end
+
+  def filter_events_by_time(events)
+    if params[:past]
       @page = Page.find_by_name('Past Events')
       @events = @past_events = events.past
     else

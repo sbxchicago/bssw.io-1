@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_29_195507) do
+ActiveRecord::Schema.define(version: 2021_04_23_205914) do
 
   create_table "acronyms", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 2021_03_29_195507) do
     t.text "homepage"
     t.integer "rebuild_id"
     t.string "slug"
+    t.string "base_path"
   end
 
   create_table "categories_resources", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -106,6 +107,7 @@ ActiveRecord::Schema.define(version: 2021_03_29_195507) do
     t.text "resource_paths"
     t.integer "rebuild_id"
     t.string "slug"
+    t.string "base_path"
     t.index ["path"], name: "index_communities_on_path"
     t.index ["rebuild_id"], name: "index_communities_on_rebuild_id"
   end
@@ -190,6 +192,7 @@ ActiveRecord::Schema.define(version: 2021_03_29_195507) do
     t.integer "rebuild_id"
     t.string "slug"
     t.text "search_text"
+    t.string "base_path"
   end
 
   create_table "friendly_id_slugs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -229,6 +232,7 @@ ActiveRecord::Schema.define(version: 2021_03_29_195507) do
     t.string "version_no"
     t.integer "rebuild_id"
     t.string "slug"
+    t.string "base_path"
     t.index ["path"], name: "index_pages_on_path"
     t.index ["rebuild_id"], name: "index_pages_on_rebuild_id"
   end
@@ -325,6 +329,7 @@ ActiveRecord::Schema.define(version: 2021_03_29_195507) do
     t.string "topic_list"
     t.text "author_list"
     t.string "custom_slug"
+    t.string "base_path"
     t.index ["name"], name: "index_site_items_on_name"
     t.index ["path"], name: "index_site_items_on_path"
     t.index ["rebuild_id"], name: "index_site_items_on_rebuild_id"

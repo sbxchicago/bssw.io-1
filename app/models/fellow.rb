@@ -38,7 +38,7 @@ class Fellow < GithubImport
   end
 
   def set_hm
-    update_attribute(:honorable_mention, path.match?('HM'))
+    update_attribute(:honorable_mention, base_path.to_s.match?('HM'))
   end
 
   def modified_path

@@ -10,7 +10,7 @@ RSpec.describe Resource, type: :model do
   it 'can create itself from content' do
     FactoryBot.create(:page, path: 'foo.md')
     content = "# Foo \n#### Contributed by [Jane Does](https://github.com)\n \n bar
-
+\n#### Publication Date: June 1, 2020
 ![bloo](blah.jpg)[okay]
 
 <img src='blaj.jpg' class='lightbox'>
@@ -29,7 +29,7 @@ RSS update: 01-01-18
 
     res = Resource.find_or_create_resource('CuratedContent/foo.md', 1)
     expect(res).to be_a(Resource)
-    expect(res.path).to eq 'foo.md'
+    expect(res.path).to eq 'CuratedContent/foo.md'
     res.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
     res.reload
     expect(res.name).to eq 'Foo'
