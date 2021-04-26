@@ -52,7 +52,7 @@ class GithubImport < ApplicationRecord
     res.update_attribute(:published_at,
                          GithubImport.github.commits(
                            Rails.application.credentials[:github][:repo],
-                           RebuildStatus.code_branch,
+                           RebuildStatus.content_branch,
                            path: gh_path
                          ).first.commit.author.date)
   end
