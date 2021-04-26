@@ -103,7 +103,7 @@ class GithubImport < ApplicationRecord
     end
     res = Category if path.match('Site/Topics')
     item = res.find_or_create_by(base_path: File.basename(path), rebuild_id: rebuild_id)
-    item.update(path: path)
+    item.update(path: path.gsub(path.split('\/')[1].to_s, ''))
     item
   end
 
