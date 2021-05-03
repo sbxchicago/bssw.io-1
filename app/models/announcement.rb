@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Announcements display on homepage
-class Announcement < GithubImport
+class Announcement < MarkdownImport
   self.table_name = 'announcements'
 
   scope :for_today, lambda {

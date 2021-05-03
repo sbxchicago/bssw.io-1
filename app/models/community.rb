@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # a bss community
-class Community < GithubImport
+class Community < MarkdownImport
   validates_presence_of :path, :name
 
   scope :published, -> { where(publish: true) }
