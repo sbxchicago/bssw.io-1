@@ -41,7 +41,7 @@ class GithubImport < ApplicationRecord
 
     res.update_taxonomy(doc, rebuild_id)
 
-    content_string = doc.css('body').to_s + "\n<!-- file path: #{res.path.try(:split, '/').try(:last).try(:join)} -->".html_safe
+    content_string = doc.css('body').to_s + "\n<!-- file path: #{res.path.try(:split, '/').try(:shift).try(:join, '/')} -->".html_safe
     res.update_attribute(:content, content_string)
   end
 
