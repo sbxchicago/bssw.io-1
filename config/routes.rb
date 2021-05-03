@@ -66,6 +66,5 @@ Rails.application.routes.draw do
 
   match '/announcements/close', to: 'announcements#close', via: :post
 
-
   get '*path', to: 'application#not_found'
 end

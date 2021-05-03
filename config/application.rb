@@ -1,6 +1,6 @@
-# application config file
 # frozen_string_literal: true
 
+# application config file
 require_relative 'boot'
 
 require 'rails/all'

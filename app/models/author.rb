@@ -7,8 +7,6 @@ class Author < ApplicationRecord
   has_many :contributions, autosave: false
   has_many :site_items, through: :contributions
 
-  #  validates_uniqueness_of :website, scope: :rebuild_id
-
   extend FriendlyId
   friendly_id :last_name, use: %i[finders slugged scoped], scope: :rebuild_id
 
@@ -29,14 +27,14 @@ class Author < ApplicationRecord
   end
 
   def self.refresh_author_counts
-    displayed.each do |auth|
-      auth.refresh_resource_count
-      auth.refresh_event_count
-      auth.refresh_blog_count
-      auth.refresh_resource_listing
-      auth.refresh_blog_listing
-      auth.refresh_event_listing
-    end
+    # displayed.each do |auth|
+    #   auth.refresh_resource_count
+    #   auth.refresh_event_count
+    #   auth.refresh_blog_count
+    #   auth.refresh_resource_listing
+    #   auth.refresh_blog_listing
+    #   auth.refresh_event_listing
+    # end
   end
 
   def single_contribution(preview: false)
@@ -60,7 +58,7 @@ class Author < ApplicationRecord
     (preview ? Event.preview : Event.published).displayed.with_author(self).count
   end
 
-  store_methods :resource_count, :blog_count, :event_count, :resource_listing, :blog_listing, :event_listing
+  # store_methods :resource_count, :blog_count, :event_count, :resource_listing, :blog_listing, :event_listing
 
   def resource_listing
     "#{resource_count} #{'resource'.pluralize(resource_count)}"
@@ -80,13 +78,10 @@ class Author < ApplicationRecord
 
     client = GithubImport.github
     client.login
-
     begin
-      hash = client.user(website.split('/').last)
-      update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
-      update(affiliation: hash.company) if affiliation.blank?
-      update_name(hash.name)
-    rescue StandardError
+      update_info(client.user(website.split('/').last))
+    rescue Octokit::NotFound
+      # if we have an invalid GH id, don't worry about it
     end
   end
 
@@ -100,8 +95,16 @@ class Author < ApplicationRecord
     authors
   end
 
-  def update_name(author_name)
-    names = author_name.split(' ')
+  def update_info(hash)
+    update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
+    update(affiliation: hash.company) if affiliation.blank?
+    return unless hash.name.respond_to?(:split)
+
+    update_name(hash.name)
+  end
+
+  def update_name(name)
+    names = name.split(' ')
     last_name = names.last
     update(
       first_name: [names - [last_name]].join(' '), last_name: last_name
@@ -121,9 +124,9 @@ class Author < ApplicationRecord
 
   def process_kid(kid)
     kid.remove if kid.text.blank?
-    if kid.text.match?('Title')
-      update_attribute(:title, kid.text.gsub('Title: ', ''))
-      kid.remove
-    end
+    return unless kid.text.match?('Title')
+
+    update_attribute(:title, kid.text.gsub('Title: ', ''))
+    kid.remove
   end
 end
