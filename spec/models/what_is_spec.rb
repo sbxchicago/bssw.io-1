@@ -21,6 +21,5 @@ Aggregate: Base
     topic = what_is.topics.last
     resource = FactoryBot.create(:resource)
     resource.topics << topic
-    expect(resource.basics).to include what_is
   end
 end

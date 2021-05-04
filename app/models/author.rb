@@ -98,9 +98,10 @@ class Author < ApplicationRecord
   def update_info(hash)
     update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
     update(affiliation: hash.company) if affiliation.blank?
-    return unless hash.name.respond_to?(:split)
+    name = hash.name
+    return unless name.respond_to?(:split)
 
-    update_name(hash.name)
+    update_name(name)
   end
 
   def update_name(name)
@@ -112,21 +113,23 @@ class Author < ApplicationRecord
   end
 
   def update_from_link(link)
-    siblings = link.parent.children
+    parent = link.parent
+    siblings = parent.children
     siblings.each do |kid|
       process_kid(kid)
     end
     update_name(siblings.first.text)
     siblings.first.remove
     update_attribute(:affiliation,
-                     link.parent.children.first.text.strip)
+                     parent.children.first.text.strip)
   end
 
   def process_kid(kid)
-    kid.remove if kid.text.blank?
-    return unless kid.text.match?('Title')
+    text = kid.text
+    kid.remove if text.blank?
+    return unless text.match?('Title')
 
-    update_attribute(:title, kid.text.gsub('Title: ', ''))
+    update_attribute(:title, text.gsub('Title: ', ''))
     kid.remove
   end
 end

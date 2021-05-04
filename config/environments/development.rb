@@ -6,7 +6,7 @@ Rails.application.configure do
     Bullet.alert         = true
     Bullet.bullet_logger = true
     Bullet.console       = true
-  # Bullet.growl         = true
+    # Bullet.growl         = true
     Bullet.rails_logger  = true
     Bullet.add_footer    = true
   end
@@ -64,26 +64,20 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.sentry = true
+    Bullet.alert = true
+    Bullet.bullet_logger = true
+    Bullet.console = true
 
-config.after_initialize do
-  Bullet.enable = true
-  Bullet.sentry = true
-  Bullet.alert = true
-  Bullet.bullet_logger = true
-  Bullet.console = true
-
-
-  Bullet.rails_logger = true
- # Bullet.honeybadger = true
- # Bullet.bugsnag = true
- # Bullet.appsignal = true
- # Bullet.airbrake = true
- # Bullet.rollbar = true
-  Bullet.add_footer = true
-  Bullet.skip_html_injection = false
-#  Bullet.stacktrace_includes = [ 'your_gem', 'your_middleware' ]
- # Bullet.stacktrace_excludes = [ 'their_gem', 'their_middleware', ['my_file.rb', 'my_method'], ['my_file.rb', 16..20] ]
-  #Bullet.slack = { webhook_url: 'http://some.slack.url', channel: '#default', username: 'notifier' }
-end
-  
+    Bullet.rails_logger = true
+    # Bullet.honeybadger = true
+    # Bullet.bugsnag = true
+    # Bullet.appsignal = true
+    # Bullet.airbrake = true
+    # Bullet.rollbar = true
+    Bullet.add_footer = true
+    Bullet.skip_html_injection = false
+  end
 end

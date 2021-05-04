@@ -10,31 +10,13 @@ class GithubImport < ApplicationRecord
 
   def self.excluded_filenames
     ['README.md', 'LICENSE', '.gitignore', 'Abbreviations.md', 'CODE_OF_CONDUCT.md', 'CONTRIBUTING.md', 'index.md',
-     'StyleGuide.md']
-  end
-
-  def self.agent
-    agent = Mechanize.new
-    agent.pluggable_parser.default = Mechanize::Download
-    agent
-  end
-
-  def self.tar_extract(file_path)
-    tar = Gem::Package::TarReader.new(Zlib::GzipReader.open(file_path))
-    tar.rewind
-    tar
+     'StyleGuide.md', 'WhatToContribute.md', 'Skills.md']
   end
 
   def parse_and_update(content, rebuild_id)
     doc = Resource.parse_html_from(content)
     update_from_content(doc, rebuild_id)
     self
-  end
-
-  def normalized_path
-    new_path = path.split('/')
-    new_path.shift
-    new_path.join('/')
   end
 
   def update_from_content(doc, rebuild_id)
@@ -47,10 +29,9 @@ class GithubImport < ApplicationRecord
 
     res.update_taxonomy(doc, rebuild_id)
 
-    content_string = doc.css('body').to_s + "\n<!-- file path: #{res.normalized_path} -->".html_safe
+    content_string = doc.css('body').to_s + "\n<!-- file path: #{res.path} -->".html_safe
     res.update_attribute(:content, content_string)
   end
-
 
   def self.parse_html_from(updated_content)
     markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML,
@@ -64,6 +45,29 @@ class GithubImport < ApplicationRecord
 
   def self.find_or_create_resource(path, rebuild_id)
     res = Page
+    GithubImport.file_structure.each do |expression, class_name|
+      if path.match(Regexp.new(expression))
+        res = class_name
+        break
+      end
+    end
+    item = res.find_or_create_by(base_path: File.basename(path), rebuild_id: rebuild_id)
+    item.update(path: normalized_path(path))
+    item
+  end
+
+  def snippet
+    pars = Nokogiri::HTML.parse(content, nil, 'UTF-8')
+    pars.css('p').try(:first).to_s.html_safe
+  end
+
+  def main
+    pars = Nokogiri::HTML.parse(content, nil, 'UTF-8')
+    pars.css('p').try(:first).try(:remove)
+    pars.to_s.html_safe
+  end
+
+  def self.file_structure
     {
       'CuratedContent/WhatIs' => WhatIs,
       'CuratedContent/WhatAre' => WhatIs,
@@ -79,33 +83,17 @@ class GithubImport < ApplicationRecord
       'Blog/' => BlogPost,
       'Articles/' => Resource,
       'CuratedContent/' => Resource
-    }.each do |expression, class_name|
-      if path.match(Regexp.new(expression))
-        res = class_name
-        break
-      end
-    end
-    res = Category if path.match('Site/Topics')
-    item = res.find_or_create_by(base_path: File.basename(path), rebuild_id: rebuild_id)
-    item.update(path: path.gsub(path.split('\/')[1].to_s, ''))
-    item
+    }
   end
 
-  def snippet
-    pars = Nokogiri::HTML.parse(content, nil, 'UTF-8')
-    pars.css('p').try(:first).to_s.html_safe
+  def self.normalized_path(path)
+    new_path = path.split('/')
+    new_path.shift
+    new_path.join('/')
   end
-
-  def main
-    pars = Nokogiri::HTML.parse(content, nil, 'UTF-8')
-    pars.css('p').try(:first).try(:remove)
-    pars.to_s.html_safe
-  end
-
-
 
   def self.process_path(path, content, rebuild)
-    return if path.match('test/') || path.match('docs/') || content.nil?
+    return if path.match('utils/') || path.match('test/') || path.match('docs/') || content.nil?
 
     if path.match('Quote')
       Quote.import(content)
@@ -114,12 +102,24 @@ class GithubImport < ApplicationRecord
     else
       resource = find_or_create_resource(path, rebuild)
       resource.parse_and_update(content, rebuild)
-      resource
+      #      resource
     end
   end
 
   def self.github
     Octokit::Client.new(access_token: Rails.application.credentials[:github][:token])
+  end
+
+  def self.agent
+    agent = Mechanize.new
+    agent.pluggable_parser.default = Mechanize::Download
+    agent
+  end
+
+  def self.tar_extract(file_path)
+    tar = Gem::Package::TarReader.new(Zlib::GzipReader.open(file_path))
+    tar.rewind
+    tar
   end
 
   def self.get_title_chunk(doc)

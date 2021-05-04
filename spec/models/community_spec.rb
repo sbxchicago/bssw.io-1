@@ -16,7 +16,7 @@ Publish: true
 Aggregate: Base
 --->"
 
-      @community = Community.find_or_create_resource('Site/Communities/foo.md', 1)
+      @community = Community.find_or_create_resource('stuff/Site/Communities/foo.md', 1)
       @community.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
     end
 

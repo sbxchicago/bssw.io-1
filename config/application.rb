@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# application config file
 require_relative 'boot'
 
 require 'rails/all'
@@ -10,6 +9,7 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 module Bss
+  # application config file
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

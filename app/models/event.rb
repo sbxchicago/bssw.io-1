@@ -9,6 +9,15 @@ class Event < SiteItem
     super(doc, rebuild)
   end
 
+  scope :past, lambda {
+    where(
+      'end_at < ?', Date.today
+    ).order('start_at DESC')
+  }
+  scope :upcoming, lambda {
+    where('end_at >= ?', Date.today).order('start_at ASC')
+  }
+
   private
 
   def broken_range?

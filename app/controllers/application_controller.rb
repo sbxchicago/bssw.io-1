@@ -9,9 +9,8 @@ class ApplicationController < ActionController::Base
 
   def not_found(exception = nil)
     if exception
-      logger.error("404: rescued_from:
-      #{params[:controller]}##{params[:action]}:
-      #{exception.inspect}\n#{exception.backtrace[0..50]}\n")
+      logger.error("404: rescued_from: #{print_exception(exception)}
+")
     end
     render(
       template: 'errors/not_found_error',
@@ -32,8 +31,7 @@ class ApplicationController < ActionController::Base
   def render_error(exception)
     error_string =
       "500: rescued_from:
-    #{params[:controller]}##{params[:action]}:
-    #{exception.inspect}\n#{exception.backtrace[0..50]}\n"
+      #{print_exception(exception)}"
     logger.error(error_string)
     render(
       template: 'errors/internal_server_error',
@@ -55,6 +53,11 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def print_exception(exception)
+    "#{params[:controller]}##{params[:action]}:
+    #{exception.inspect}\n#{exception.backtrace[0..50]}\n"
+  end
 
   def check_auth
     session[:preview] = false

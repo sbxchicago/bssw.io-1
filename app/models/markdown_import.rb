@@ -1,7 +1,9 @@
+# frozen_string_literal: true
 
+# process markdown into content for site
 class MarkdownImport < GithubImport
   self.abstract_class = true
-  
+
   def update_links_and_images
     doc = Nokogiri::HTML.parse(content, nil, 'UTF-8')
     update_links(doc)
@@ -78,8 +80,7 @@ class MarkdownImport < GithubImport
     update_attribute(:pinned, true) if val.downcase.match('y') && has_attribute?(:pinned)
   end
 
-
-    def self.add_caption(img, caption)
+  def self.add_caption(img, caption)
     return unless caption
 
     span = Nokogiri::XML::Node.new 'span', img.document
@@ -102,12 +103,12 @@ class MarkdownImport < GithubImport
     )
   end
 
-
-    def self.update_image(img, _doc)
+  def self.update_image(img, _doc)
     class_name = img['class'].to_s
     src = modified_path(img['src'])
+    par = img.parent
     img['src'] = "#{image_classes(class_name)}#{src}" # adjusted_src
-    add_caption(img,  img.parent.try(:content).try(:match, Regexp.new('\[(.*?)\]'))) unless img.parent.nil?
+    add_caption(img,  par.try(:content).try(:match, Regexp.new('\[(.*?)\]'))) unless par.nil?
     add_lightbox(img, src) if class_name.match('lightbox') # lb
   end
 
@@ -148,7 +149,7 @@ class MarkdownImport < GithubImport
                          GithubImport.github.commits(
                            Rails.application.credentials[:github][:repo],
                            RebuildStatus.content_branch,
-                           path: res.normalized_path
+                           path: "/#{path}"
                          ).first.commit.author.date)
   end
 
@@ -162,5 +163,4 @@ class MarkdownImport < GithubImport
     self.published_at = date
     node.try(:remove)
   end
-
 end

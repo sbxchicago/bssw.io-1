@@ -18,7 +18,7 @@ class Community < MarkdownImport
 
   def update_from_content(doc, rebuild)
     save
-    our_items = update_resources(doc)
+    our_items = update_resources(doc.xpath("//comment()[contains(.,'Featured resources')]").first)
     super(doc, rebuild)
     our_items.each do |item|
       resource_paths << File.basename(item)
@@ -26,23 +26,26 @@ class Community < MarkdownImport
     save
   end
 
-  def update_resources(doc)
+  def update_resources(node)
     our_links = []
-    node = doc.xpath("//comment()[contains(.,'Featured resources')]").first
 
     while node
       node = node.next_element
       next unless node
 
       node.css('a').each do |link|
-        href = link['href']
-        our_links << href
-
-        link.ancestors('li').first.try(:remove)
+        add_to_resources(link, our_links)
       end
 
       node.try(:remove)
     end
     our_links
+  end
+
+  def add_to_resources(link, our_links)
+    href = link['href']
+    our_links << href
+
+    link.ancestors('li').first.try(:remove)
   end
 end

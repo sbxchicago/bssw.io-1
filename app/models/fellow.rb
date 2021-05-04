@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 # bios etc for fellows
-class Fellow < GithubImport
+class Fellow < MarkdownImport
   scope :displayed, lambda {
-                      where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
-                    }
+    where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
+  }
+
+  self.table_name = 'fellows'
 
   has_many :fellow_links
 

@@ -8,7 +8,7 @@ RSpec.describe Event, type: :model do
         \n* Dates: December 3, #{Date.today.year} - January 5
         \n* Location: Place \n* \n* <!--- Publish: Yes --->"
 
-    event = Resource.find_or_create_resource('Events/foo.md', 1)
+    event = Resource.find_or_create_resource('stuff/Events/foo.md', 1)
     expect(event).to be_a(Event)
     expect(event.path).to eq 'Events/foo.md'
     event.parse_and_update(content, RebuildStatus.displayed_rebuild.id)

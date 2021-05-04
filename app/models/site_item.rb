@@ -86,6 +86,7 @@ class SiteItem < MarkdownImport
   scope :events, lambda {
     where(type: 'Event')
   }
+
   scope :blog, lambda {
     where(type: 'BlogPost').order('published_at desc')
   }
@@ -115,8 +116,8 @@ class SiteItem < MarkdownImport
     result
   }
 
-  has_many :events,
-           class_name: 'SiteItem', through: :event_resources, foreign_key: :event_id, primary_key: :resource_id
+  # has_many :events,
+  #          class_name: 'SiteItem', through: :event_resources, foreign_key: :event_id, primary_key: :resource_id
 
   # has_many :subresource_relations,
   #          foreign_key: :parent_resource_id
@@ -125,20 +126,20 @@ class SiteItem < MarkdownImport
   # has_many :parent_resources, class_name: 'SiteItem', through: :subresource_relations,
   #                             foreign_key: :parent_resource_id, primary_key: :subresource_id
 
-  has_and_belongs_to_many :children, lambda {
-    distinct
-  },
-                          join_table: 'children_parents',
-                          class_name: 'SiteItem',
-                          foreign_key: 'child_id',
-                          association_foreign_key: 'parent_id'
-  has_and_belongs_to_many :parents, lambda {
-    distinct
-  },
-                          join_table: 'children_parents',
-                          class_name: 'SiteItem',
-                          foreign_key: 'parent_id',
-                          association_foreign_key: 'child_id'
+  # has_and_belongs_to_many :children, lambda {
+  #   distinct
+  # },
+  #                         join_table: 'children_parents',
+  #                         class_name: 'SiteItem',
+  #                         foreign_key: 'child_id',
+  #                         association_foreign_key: 'parent_id'
+  # has_and_belongs_to_many :parents, lambda {
+  #   distinct
+  # },
+  #                         join_table: 'children_parents',
+  #                         class_name: 'SiteItem',
+  #                         foreign_key: 'parent_id',
+  #                         association_foreign_key: 'child_id'
 
   def basic?
     is_a?(WhatIs) || is_a?(HowTo)
@@ -209,12 +210,6 @@ class SiteItem < MarkdownImport
     update_author(
       doc.at("h4:contains('Contributed')"), rebuild_id
     )
-    # header = doc.at("p:contains('Subresources:')")
-    # if header
-    #   subresource_content(
-    #     header, doc, rebuild_id
-    #   )
-    # end
     super(doc, rebuild_id)
   end
 
@@ -250,38 +245,8 @@ class SiteItem < MarkdownImport
     topics.map(&:category).uniq
   end
 
-  # def add_to_parent(res, doc, header)
-  #   res.update_taxonomy_from_child(self)
-  #   return unless content
-
-  #   h3 = Nokogiri::XML::Node.new(
-  #     'h3', doc
-  #   )
-  #   h3.content = name
-  #   header.before h3
-  #   new_node = Nokogiri::HTML(content).at('body')
-  #   header.before new_node.inner_html if new_node
-  # end
-
-  # def update_taxonomy_from_child(child)
-  #   self.topics = topics + child.topics
-  # end
-
-  def basics
-    topics.map(&:basics).flatten.uniq
-  end
-
-  def topics_count
-    topics.size
-  end
-
   def self.clean
     items = where(name: nil)
-
     items.each(&:delete)
-    all.each do |si|
-      si.refresh_topic_list
-      si.refresh_topics_count
-    end
   end
 end

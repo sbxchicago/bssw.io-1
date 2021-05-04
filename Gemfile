@@ -9,8 +9,8 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.0'
 gem 'mysql2'
+gem 'rails', '~> 6.0.0'
 gem 'sqlite3'
 
 # Use Puma as the app server
@@ -27,10 +27,8 @@ gem 'execjs'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
-
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', github: 'rails/jbuilder', branch: 'master'
-
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
@@ -44,19 +42,20 @@ end
 gem 'bootstrap-sass'
 
 group :development, :test do
-gem 'factory_bot_rails'
-gem 'faker'
-gem 'rails-controller-testing'
-gem 'rspec'
-gem 'rspec-rails'
-gem 'simplecov'
-gem 'metric_fu'
-gem 'reek'
-gem 'rubocop'
-gem 'rubocop-rails'
-gem 'rubocop-rspec'
-gem 'bullet'
-gem 'brakeman'
+  gem 'brakeman'
+  gem 'bullet'
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'metric_fu'
+  gem 'rails-controller-testing'
+  gem 'reek'
+  gem 'rspec'
+  gem 'rspec-rails'
+  gem 'rubocop'
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
+  gem 'rubycritic'
+  gem 'simplecov'
 end
 
 gem 'github_api'
@@ -68,14 +67,12 @@ gem 'redcarpet'
 gem 'capistrano', '~> 3.7'
 gem 'capistrano-rails', '~> 1.2'
 
-
 gem 'capistrano-bundler'
 gem 'capistrano-rvm'
 
 gem 'acts-as-taggable-on', '~> 4.0'
 gem 'chronic'
 gem 'friendly_id', '5.3.0'
-
 
 gem 'headhunter'
 gem 'pry'
@@ -101,20 +98,17 @@ gem 'attempt'
 
 gem 'ffi'
 
-
 gem 'invisible_captcha'
 
 gem 'octokit'
 
 gem 'awesome_print'
 
-
 gem 'stemmify'
 
 gem 'lemmatizer'
 
 gem 'geocoder'
-
 
 gem 'mechanize'
 gem 'rubyzip'
@@ -123,6 +117,5 @@ gem 'scout_apm'
 
 gem 'activerecord-import'
 gem 'store_method', github: 'fomichov/store_method'
-
 
 gem 'sucker_punch'
