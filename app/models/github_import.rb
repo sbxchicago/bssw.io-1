@@ -9,8 +9,7 @@ class GithubImport < ApplicationRecord
   }
 
   def self.excluded_filenames
-    ['README.md', 'LICENSE', '.gitignore', 'Abbreviations.md', 'CODE_OF_CONDUCT.md', 'CONTRIBUTING.md', 'index.md',
-     'StyleGuide.md', 'WhatToContribute.md', 'Skills.md']
+    ['README.md', 'LICENSE', '.gitignore', 'Abbreviations.md', 'CODE_OF_CONDUCT.md', 'CONTRIBUTING.md', 'index.md']
   end
 
   def parse_and_update(content, rebuild_id)
