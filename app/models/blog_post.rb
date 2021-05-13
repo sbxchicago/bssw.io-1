@@ -27,7 +27,7 @@ class BlogPost < SiteItem
     if li
       caption = li.content.match(Regexp.new('\[(.*?)\]'))
       self.hero_image_caption = caption.try(:[], 1)
-      self.hero_image_url = GithubImport.modified_path(doc.at('img').try(:[], 'src')) 
+      self.hero_image_url = MarkdownImport.modified_path(doc.at('img').try(:[], 'src')) 
       li.try(:remove)
     end
     hero.try(:remove)
