@@ -126,12 +126,13 @@ class MarkdownImport < GithubImport
 
   def self.update_link(path)
     route = Rails.application.routes.url_helpers
-    site_item = SiteItem.find_by_path(path)
-    page = Page.find_by_path(path)
-    community = Community.find_by_path(path)
+    site_item = SiteItem.displayed.where(base_path: path).first
+    page = Page.displayed.where(base_path: path).first
+    community = Community.displayed.where(base_path: path).first
     return route.site_item_path(site_item) if site_item.try(:id)
     return route.page_path(page) if page.try(:id)
     return route.community_path(community) if community.try(:id)
+    return path
   end
 
   def self.image_classes(name)
