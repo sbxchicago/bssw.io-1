@@ -55,9 +55,9 @@ class RebuildsController < ApplicationController
     rebuild = Rebuild.create(started_at: Time.now, ip: request.ip)
     RebuildStatus.start(rebuild)
     populate_from_github(rebuild)
-    update_links_and_images(rebuild.id)
     clear_all
     rebuild.clean
+    update_links_and_images(rebuild.id)
     RebuildStatus.complete(rebuild)
     Author.refresh_author_counts
     flash[:notice] = 'Import completed!'
