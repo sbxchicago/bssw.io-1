@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
       template: 'errors/internal_server_error',
       layout: 'layouts/application',
       status: '500',
-      format: 'html'
+      formats: 'html'
     )
   end
 
