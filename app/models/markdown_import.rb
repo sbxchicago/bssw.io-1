@@ -29,7 +29,6 @@ class MarkdownImport < GithubImport
       next unless href&.match('\.md$') && !href.match('^http')
 
       href = href.split('/').last
-      puts href
 
       link['href'] = MarkdownImport.update_link(href)
     end

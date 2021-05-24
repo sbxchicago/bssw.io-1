@@ -73,7 +73,10 @@ class Author < ApplicationRecord
   end
 
   def update_from_github
-    return unless website
+    if website.match('maherou')
+      puts website
+    end
+    return unless website && website.match('github')
     return unless affiliation.blank? || avatar_url.blank?
 
     client = GithubImport.github
@@ -88,8 +91,14 @@ class Author < ApplicationRecord
   def self.make_from_data(node, rebuild)
     authors = []
     node.css('a').each do |link|
-      auth = find_or_create_by(website: link['href'].split('/').try(:last), rebuild_id: rebuild)
-      auth.update_name(link.text) if auth.last_name.blank?
+      names = self.names_from(link.text)
+      # # if link['href'].match('github')
+      # #   website = link['href'].split('/').try(:last)
+      # # else
+      website = link['href']
+####      end
+      auth = find_or_create_by(website: website, rebuild_id: rebuild, last_name: names.last, first_name: names.first)
+
       authors << auth
     end
     authors
@@ -98,18 +107,16 @@ class Author < ApplicationRecord
   def update_info(hash)
     update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
     update(affiliation: hash.company) if affiliation.blank?
-    name = hash.name
-    return unless name.respond_to?(:split)
-
-    update_name(name)
+    names = Author.names_from(hash.name)
+    update(first_name: names.first, last_name: names.last)
   end
 
-  def update_name(name)
+  def self.names_from(name)
+    return [nil, nil] unless name.respond_to?(:split)
     names = name.split(' ')
     last_name = names.last
-    update(
-      first_name: [names - [last_name]].join(' '), last_name: last_name
-    )
+    first_name = [names - [last_name]].join(' ')
+    return [first_name, last_name]
   end
 
   def update_from_link(link)
