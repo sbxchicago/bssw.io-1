@@ -11,7 +11,7 @@ RSpec.describe RebuildsController, type: :controller do
     @what_is_slug = 'what-is-revision-control'
     @category_name = 'Better Development'
     @blog_post_slug = 'improve-user-confidence-in-your-software-updates'
-    @author_slug = 'curfman'
+    @author_slug = 'https://github.com/curfman'
     @search_expectations = { 'integration testing' => 57,
                              'testing' => 80,
                              'elaine' => 10,
@@ -63,7 +63,12 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Author.displayed.where(website: @author_slug).size).to eq 1
 
       expect(Author.displayed.where(website: @author_slug).first.resource_listing).not_to eq '0 resources'
-      expect(Staff.displayed.where(website: 'maherou').first.affiliation).to eq 'Sandia National Laboratories'
+
+      Author.displayed.select{|a| a.website.try(:match?, 'maherou')}.each do |a|          
+      puts a.inspect
+end
+
+      expect(Author.displayed.select{|a| a.website.try(:match?, 'maherou')}.first.affiliation).to eq 'Sandia National Laboratories'
       @search_expectations.each do |key, val|
         expect(SiteItem.perform_search(SiteItem.prepare_strings(key), 1, false).size).to be > val
       end

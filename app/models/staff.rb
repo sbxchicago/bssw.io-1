@@ -5,7 +5,7 @@ class Staff < Author
   def self.make_from_data(node, val, rebuild)
     #    begin
     node.css('a').each do |link|
-      auth = Author.find_or_create_by(website: link['href'].split('/').try(:last), rebuild_id: rebuild)
+      auth = Author.find_or_create_by(website: link['href'], rebuild_id: rebuild)
 
       #      auth.update_attribute(:associate, true) unless val.match?('Senior')
       auth.update_attribute(:section, val)

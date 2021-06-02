@@ -73,9 +73,7 @@ class Author < ApplicationRecord
   end
 
   def update_from_github
-    if website.match('maherou')
-      puts website
-    end
+
     return unless website && website.match('github')
     return unless affiliation.blank? || avatar_url.blank?
 
@@ -92,15 +90,20 @@ class Author < ApplicationRecord
     authors = []
     node.css('a').each do |link|
       names = self.names_from(link.text)
-      # # if link['href'].match('github')
-      # #   website = link['href'].split('/').try(:last)
-      # # else
       website = link['href']
-####      end
       auth = find_or_create_by(website: website, rebuild_id: rebuild, last_name: names.last, first_name: names.first)
-
+      link.remove
       authors << auth
     end
+    txt = node.text.gsub('Contributed by', '')
+    txt.split(',').each do |text|
+      text = text.gsub(' and ', '').strip
+      next if text.blank? || text == ':' || text == 'and'
+      names = self.names_from(text)
+      auth = find_or_create_by(website: nil, rebuild_id: rebuild, last_name: names.last, first_name: names.first)
+      authors << auth
+    end
+
     authors
   end
 
@@ -121,14 +124,27 @@ class Author < ApplicationRecord
 
   def update_from_link(link)
     parent = link.parent
+    puts "parent"
+
     siblings = parent.children
+    puts "siblings"
     siblings.each do |kid|
+      puts "kid"
       process_kid(kid)
+      puts "kidded"
     end
-    update_name(siblings.first.text)
-    siblings.first.remove
+    puts "name"
+    puts siblings.first.inspect
+    names = Author.names_from(siblings.first.text)
+    update(first_name: names.first, last_name: names.last)
+    puts "named"
+    siblings.first.try(:remove)
+    puts "removed"
+    puts parent.inspect
     update_attribute(:affiliation,
                      parent.children.first.text.strip)
+    puts "#{display_name} #{website} #{id} #{affiliation}"
+
   end
 
   def process_kid(kid)
