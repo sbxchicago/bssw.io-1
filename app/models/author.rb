@@ -91,7 +91,8 @@ class Author < ApplicationRecord
     node.css('a').each do |link|
       names = self.names_from(link.text)
       website = link['href']
-      auth = find_or_create_by(website: website, rebuild_id: rebuild, last_name: names.last, first_name: names.first)
+      auth = find_by(website: website, rebuild_id: rebuild)
+      auth = find_or_create_by(website: website, rebuild_id: rebuild, last_name: names.last, first_name: names.first) unless auth
       link.remove
       authors << auth
     end
@@ -124,27 +125,15 @@ class Author < ApplicationRecord
 
   def update_from_link(link)
     parent = link.parent
-    puts "parent"
-
     siblings = parent.children
-    puts "siblings"
     siblings.each do |kid|
-      puts "kid"
       process_kid(kid)
-      puts "kidded"
     end
-    puts "name"
-    puts siblings.first.inspect
     names = Author.names_from(siblings.first.text)
     update(first_name: names.first, last_name: names.last)
-    puts "named"
     siblings.first.try(:remove)
-    puts "removed"
-    puts parent.inspect
     update_attribute(:affiliation,
                      parent.children.first.text.strip)
-    puts "#{display_name} #{website} #{id} #{affiliation}"
-
   end
 
   def process_kid(kid)
