@@ -90,7 +90,8 @@ class Author < ApplicationRecord
     authors = []
     node.css('a').each do |link|
       names = self.names_from(link.text)
-      website = link['href']
+      website = URI.parse(link['href'])
+      website = "https://#{website.host}#{website.path}"
       auth = find_by(website: website, rebuild_id: rebuild)
       unless auth
         auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
