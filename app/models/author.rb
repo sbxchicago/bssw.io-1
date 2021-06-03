@@ -92,7 +92,10 @@ class Author < ApplicationRecord
       names = self.names_from(link.text)
       website = link['href']
       auth = find_by(website: website, rebuild_id: rebuild)
-      auth = find_or_create_by(website: website, rebuild_id: rebuild, last_name: names.last, first_name: names.first) unless auth
+      unless auth
+        auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
+        auth.update(website: website)
+      end
       link.remove
       authors << auth
     end
@@ -101,7 +104,7 @@ class Author < ApplicationRecord
       text = text.gsub(' and ', '').strip
       next if text.blank? || text == ':' || text == 'and'
       names = self.names_from(text)
-      auth = find_or_create_by(website: nil, rebuild_id: rebuild, last_name: names.last, first_name: names.first)
+      auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
       authors << auth
     end
 
