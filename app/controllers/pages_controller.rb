@@ -3,8 +3,8 @@
 # display content pages
 class PagesController < ApplicationController
   def show
-    @page = if params[:id] == 'team'
-              Page.displayed.find_by_slug('about')
+    @page = if params[:id] == 'about'
+              Page.displayed.find_by_slug('team')
             else
               Page.displayed.find_by_slug(params[:id])
             end
