@@ -29,7 +29,7 @@ class RebuildsController < ApplicationController
 
   def populate_from_github(rebuild)
     branch = Rails.env.preview? ? 'preview' : 'master'
-    branch = Rails.env.test? ? 'preview' : branch
+
     cont = GithubImport.github.archive_link(Rails.application.credentials[:github][:repo],
                                             ref: branch)
     RebuildStatus.in_progress_rebuild.update(content_branch: branch)

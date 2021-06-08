@@ -5,7 +5,7 @@ class MarkdownImport < GithubImport
   self.abstract_class = true
 
   def self.caption_regexp
-    '\[(\[^\]\]+)\]'
+    '\[(.*?)\]'
   end
 
   def update_links_and_images
@@ -84,45 +84,48 @@ class MarkdownImport < GithubImport
     update_attribute(:pinned, true) if val.downcase.match('y') && has_attribute?(:pinned)
   end
 
-  def self.add_caption(img, par)
-    caption = par.try(:content).try(:match, Regexp.new(caption_regexp))
-    return unless caption
+  def self.add_caption(img)
 
+    caption = img.parent.try(:content).try(:match, Regexp.new(caption_regexp))
+ 
+    return unless caption
+        
     span = Nokogiri::XML::Node.new 'span', img.document
     span['class'] = 'caption'
     span.content = caption[1]
-    
-    puts "parent: \n #{par.content} #{par.inspect}" 
-    return unless par
-
-    par.children.each do |child|
-      if child == img
- #       if child.previous.try(:text).try(:match, caption[1])
-          child.previous.replace(span)
-  #      end
+     img.parent.children.each do |child|
+      next unless child.respond_to?(:text) && !(child.text.blank?)
+ 
+      if caption[1].match?(Regexp.escape(child.text))
+        child.replace(span)
+        break
       end
-    end      
-    # cont = par.content
-    # par.content = cont.gsub(Regexp.new(caption_regexp), '')
-    # par << img
-    # par << span
+ 
+    end
+
   end
 
   def self.add_lightbox(img, src)
-    new_size = 'w_1366,h_768,c_fit'
-    big_src = "https://res.cloudinary.com/bssw/image/fetch/#{new_size}/#{src}"
-    img.replace(
-      "<a href='#{big_src}' data-toggle='lightbox'>#{img.to_xml}</a>"
-    )
+
+    begin
+      new_size = 'w_1366,h_768,c_fit'
+      big_src = "https://res.cloudinary.com/bssw/image/fetch/#{new_size}/#{src}"
+      link = Nokogiri::XML::Node.new 'a', img.document
+      link['href'] = big_src
+      link['data-toggle'] = 'lightbox'
+      link.content = img.to_xml
+
+      img.replace(link)
+    rescue StandardError => e
+       puts "\nhrmrmrmrm #{src} #{e.inspect}\n"
+    end
   end
 
   def self.update_image(img, _doc)
     class_name = img['class'].to_s
     src = modified_path(img['src'])
-    par = img.parent
-    puts "beforehand: \n #{par.content} #{par.inspect}" 
     img['src'] = "#{image_classes(class_name)}#{src}" # adjusted_src
-    add_caption(img, par) unless par.nil?
+    add_caption(img)
     add_lightbox(img, src) if class_name.match('lightbox') # lb
   end
 
