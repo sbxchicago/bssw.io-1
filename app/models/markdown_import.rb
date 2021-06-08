@@ -4,6 +4,10 @@
 class MarkdownImport < GithubImport
   self.abstract_class = true
 
+  def self.caption_regexp
+    '\[(\[^\]\]+)\]'
+  end
+
   def update_links_and_images
     doc = Nokogiri::HTML.parse(content, nil, 'UTF-8')
     update_links(doc)
@@ -29,7 +33,6 @@ class MarkdownImport < GithubImport
       next unless href&.match('\.md$') && !href.match('^http')
 
       href = href.split('/').last
-      puts href
 
       link['href'] = MarkdownImport.update_link(href)
     end
@@ -81,19 +84,28 @@ class MarkdownImport < GithubImport
     update_attribute(:pinned, true) if val.downcase.match('y') && has_attribute?(:pinned)
   end
 
-  def self.add_caption(img, caption)
+  def self.add_caption(img, par)
+    caption = par.try(:content).try(:match, Regexp.new(caption_regexp))
     return unless caption
 
     span = Nokogiri::XML::Node.new 'span', img.document
     span['class'] = 'caption'
     span.content = caption[1]
-    par = img.parent
+    
+    puts "parent: \n #{par.content} #{par.inspect}" 
     return unless par
 
-    cont = par.content
-    par.content = cont.gsub(Regexp.new('\[.*?\]'), '')
-    par << img
-    par << span
+    par.children.each do |child|
+      if child == img
+        if child.previous.try(:text).try(:match, Regexp.new(caption_regexp))
+          child.previous.replace(span)
+        end
+      end
+    end      
+    # cont = par.content
+    # par.content = cont.gsub(Regexp.new(caption_regexp), '')
+    # par << img
+    # par << span
   end
 
   def self.add_lightbox(img, src)
@@ -108,8 +120,9 @@ class MarkdownImport < GithubImport
     class_name = img['class'].to_s
     src = modified_path(img['src'])
     par = img.parent
+    puts "beforehand: \n #{par.content} #{par.inspect}" 
     img['src'] = "#{image_classes(class_name)}#{src}" # adjusted_src
-    add_caption(img,  par.try(:content).try(:match, Regexp.new('\[(.*?)\]'))) unless par.nil?
+    add_caption(img, par) unless par.nil?
     add_lightbox(img, src) if class_name.match('lightbox') # lb
   end
 
