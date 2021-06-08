@@ -97,9 +97,9 @@ class MarkdownImport < GithubImport
 
     par.children.each do |child|
       if child == img
-        if child.previous.try(:text).try(:match, Regexp.new(caption_regexp))
+ #       if child.previous.try(:text).try(:match, caption[1])
           child.previous.replace(span)
-        end
+  #      end
       end
     end      
     # cont = par.content
