@@ -110,7 +110,7 @@ class MarkdownImport < GithubImport
     link = Nokogiri::XML::Node.new 'a', img.document
     link['href'] = big_src
     link['data-toggle'] = 'lightbox'
-    link.content = img.to_xml.html_safe
+    link.inner_html = img.to_xml.html_safe
     img.replace(link)
   end
 
