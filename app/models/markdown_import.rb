@@ -93,11 +93,11 @@ class MarkdownImport < GithubImport
     span = Nokogiri::XML::Node.new 'span', img.document
     span['class'] = 'caption'
     span.content = caption[1]
-     img.parent.children.each do |child|
+    img.parent.children.each do |child|
       next unless child.respond_to?(:text) && !(child.text.blank?)
- 
-      if caption[1].match?(Regexp.escape(child.text))
+      if caption[1] #.match?(Regexp.escape(child.text))
         child.replace(span)
+        puts img.parent.content
         break
       end
  
