@@ -111,7 +111,6 @@ class MarkdownImport < GithubImport
     link['href'] = big_src
     link['data-toggle'] = 'lightbox'
     link.content = img.to_xml.html_safe
-    
     img.replace(link)
   end
 
