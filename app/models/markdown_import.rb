@@ -97,7 +97,6 @@ class MarkdownImport < GithubImport
       next unless child.respond_to?(:text) && !(child.text.blank?)
       if caption[1] #.match?(Regexp.escape(child.text))
         child.replace(span)
-        puts img.parent.content
         break
       end
  
@@ -106,19 +105,14 @@ class MarkdownImport < GithubImport
   end
 
   def self.add_lightbox(img, src)
-
-    begin
-      new_size = 'w_1366,h_768,c_fit'
-      big_src = "https://res.cloudinary.com/bssw/image/fetch/#{new_size}/#{src}"
-      link = Nokogiri::XML::Node.new 'a', img.document
-      link['href'] = big_src
-      link['data-toggle'] = 'lightbox'
-      link.content = img.to_xml
-
-      img.replace(link)
-    rescue StandardError => e
-       puts "\nhrmrmrmrm #{src} #{e.inspect}\n"
-    end
+    new_size = 'w_1366,h_768,c_fit'
+    big_src = "https://res.cloudinary.com/bssw/image/fetch/#{new_size}/#{src}"
+    link = Nokogiri::XML::Node.new 'a', img.document
+    link['href'] = big_src
+    link['data-toggle'] = 'lightbox'
+    link.content = img.to_xml.html_safe
+    
+    img.replace(link)
   end
 
   def self.update_image(img, _doc)
