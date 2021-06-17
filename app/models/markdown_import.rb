@@ -85,21 +85,30 @@ class MarkdownImport < GithubImport
   end
 
   def self.add_caption(img)
-
     caption = img.parent.try(:content).try(:match, Regexp.new(caption_regexp))
- 
     return unless caption
+    puts caption
         
     span = Nokogiri::XML::Node.new 'span', img.document
     span['class'] = 'caption'
     span.content = caption[1]
     img.parent.children.each do |child|
-      next unless child.respond_to?(:text) && !(child.text.blank?)
-      if caption[1] #.match?(Regexp.escape(child.text))
-        child.replace(span)
-        break
+#      next unless child.respond_to?(:content) && !(child.text.blank?)
+      begin
+        if child.content.match?(Regexp.new(Regexp.escape(caption.to_s) ))
+          puts "text: #{child.text}"
+          
+
+          child.replace(
+            child.content.gsub(Regexp.new(Regexp.escape(caption.to_s) ) ,  span.to_xml.html_safe)
+          )
+          puts "content: #{child.content}"
+        end
+      rescue Exception => e
+        puts e.inspect
       end
- 
+      #       break
+
     end
 
   end

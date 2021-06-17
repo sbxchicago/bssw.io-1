@@ -67,7 +67,9 @@ RSpec.describe RebuildsController, type: :controller do
       @search_expectations.each do |key, val|
         expect(SiteItem.perform_search(SiteItem.prepare_strings(key), 1, false).size).to be > val
       end
-
+      @blankline = BlogPost.displayed.where(base_path: '2021-06-ES4Blog3.md').first
+      expect(@blankline.main).to match('<span class="caption">Figure 4')
+      expect(@blankline.main).to match('<span class="caption">Figure 3')
       rebuild = Rebuild.where('started_at > ?', 10.minutes.ago).last
       expect(Rebuild.in_progress).to be_falsey
       rebuild.update_attribute(:ended_at, nil)
