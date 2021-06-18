@@ -42,7 +42,7 @@
 		<% if page.slug == 'bssw-blog' %> blog-content<% end %>
 		<% if page.slug == 'bssw-fellowship-program' %> fellowship-content<% end %>
 		<% if page.slug == 'contributors' %> contributors-content<% end %>
-		<% if page.slug == 'about' %> about-content<% end %>
+		<% if page.slug == 'team' %> about-content<% end %>
 		<% if page.slug == 'policies' %> policies-content<% end %>
 		<% if page.slug == 'contribute-to-the-better-scientific-software-site' %> contributions-content<% end %>
 		<% if page.name.match("Email") %> email-content<% end %>'>
@@ -53,7 +53,7 @@
 
 
 
-			<% if @page.name == ("About") %>
+			<% if @page.name == ("Team") %>
 
 
 			    <%= page.main.split('<h2>Partners</h2>').first.html_safe %>

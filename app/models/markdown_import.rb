@@ -4,6 +4,10 @@
 class MarkdownImport < GithubImport
   self.abstract_class = true
 
+  def self.caption_regexp
+    '\[(.*?)\]'
+  end
+
   def update_links_and_images
     doc = Nokogiri::HTML.parse(content, nil, 'UTF-8')
     update_links(doc)
@@ -80,35 +84,41 @@ class MarkdownImport < GithubImport
     update_attribute(:pinned, true) if val.downcase.match('y') && has_attribute?(:pinned)
   end
 
-  def self.add_caption(img, caption)
-    return unless caption
+  def self.add_caption(img)
 
+    caption = img.parent.try(:content).try(:match, Regexp.new(caption_regexp))
+ 
+    return unless caption
+        
     span = Nokogiri::XML::Node.new 'span', img.document
     span['class'] = 'caption'
     span.content = caption[1]
-    par = img.parent
-    return unless par
+    img.parent.children.each do |child|
+      next unless child.respond_to?(:text) && !(child.text.blank?)
+      if caption[1] #.match?(Regexp.escape(child.text))
+        child.replace(span)
+        break
+      end
+ 
+    end
 
-    cont = par.content
-    par.content = cont.gsub(Regexp.new('\[.*?\]'), '')
-    par << img
-    par << span
   end
 
   def self.add_lightbox(img, src)
     new_size = 'w_1366,h_768,c_fit'
     big_src = "https://res.cloudinary.com/bssw/image/fetch/#{new_size}/#{src}"
-    img.replace(
-      "<a href='#{big_src}' data-toggle='lightbox'>#{img.to_xml}</a>"
-    )
+    link = Nokogiri::XML::Node.new 'a', img.document
+    link['href'] = big_src
+    link['data-toggle'] = 'lightbox'
+    link.inner_html = img.to_xml.html_safe
+    img.replace(link)
   end
 
   def self.update_image(img, _doc)
     class_name = img['class'].to_s
     src = modified_path(img['src'])
-    par = img.parent
     img['src'] = "#{image_classes(class_name)}#{src}" # adjusted_src
-    add_caption(img,  par.try(:content).try(:match, Regexp.new('\[(.*?)\]'))) unless par.nil?
+    add_caption(img)
     add_lightbox(img, src) if class_name.match('lightbox') # lb
   end
 
