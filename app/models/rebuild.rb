@@ -42,6 +42,5 @@ class Rebuild < ApplicationRecord
     SiteItem.clean
     Fellow.displayed.each(&:set_search_text)
     SiteItem.displayed.each(&:refresh_topic_list)
-    Category.displayed.each { |category| category.update(slug: nil) }
   end
 end

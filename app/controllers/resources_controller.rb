@@ -52,7 +52,7 @@ class ResourcesController < ApplicationController
   def populate_resources
     set_filters
     @resources = scoped_resources
-    @resources = scoped_resources.with_topic(@topic) if @topic
+    @resources = scoped_resources.joins(:siteitems_topics).with_topic(@topic) if @topic
     @resources = scoped_resources.with_category(@category) if @category
     @resources = scoped_resources.with_author(@author) if @author
     @resources = @resources.standard_scope

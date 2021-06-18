@@ -72,7 +72,7 @@ class SiteItem < MarkdownImport
   }
 
   scope :with_category, lambda { |category|
-    joins([:topics]).where('topics.category_id = ?', category)
+    joins([:topics]).joins([:siteitems_topics]).where('topics.category_id = ?', category)
   }
 
   scope :with_author, lambda { |author|
@@ -107,7 +107,6 @@ class SiteItem < MarkdownImport
     result = self
     options.each do |key, val|
       result = result.send("with_#{key}", val) if val
-      p
     end
     result
   }

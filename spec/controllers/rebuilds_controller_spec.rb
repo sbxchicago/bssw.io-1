@@ -70,6 +70,8 @@ RSpec.describe RebuildsController, type: :controller do
       @blankline = BlogPost.displayed.where(base_path: '2021-06-ES4Blog3.md').first
       expect(@blankline.main).to match('<span class="caption">Figure 4')
       expect(@blankline.main).to match('<span class="caption">Figure 3')
+      expect(Category.displayed.first.slug).to eq 'better-planning'
+      expect(SiteItem.displayed.last.topic_list).not_to be_empty
       rebuild = Rebuild.where('started_at > ?', 10.minutes.ago).last
       expect(Rebuild.in_progress).to be_falsey
       rebuild.update_attribute(:ended_at, nil)

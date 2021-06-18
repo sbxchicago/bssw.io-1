@@ -56,10 +56,11 @@ class RebuildsController < ApplicationController
     RebuildStatus.start(rebuild)
     populate_from_github(rebuild)
     clear_all
-    rebuild.clean
     update_links_and_images(rebuild.id)
     RebuildStatus.complete(rebuild)
+    Category.displayed.each { |category| category.update(slug: nil) }
     Author.process_authors(rebuild.id)
+    rebuild.clean
     flash[:notice] = 'Import completed!'
     redirect_to controller: 'rebuilds', action: 'index', rebuilt: true
   end
