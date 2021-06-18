@@ -66,7 +66,7 @@ class GithubImport < ApplicationRecord
     pars.to_s.html_safe
   end
 
-  def self.file_structure
+  def self.file_structure # rubocop:disable Metrics/MethodLength
     {
       'CuratedContent/WhatIs' => WhatIs,
       'CuratedContent/WhatAre' => WhatIs,

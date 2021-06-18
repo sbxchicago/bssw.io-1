@@ -18,7 +18,7 @@
                 <% if @community || @search %>
                   <strong>Topics </strong>
                 <% else %>
-                 <strong><% "Topic".pluralize(resource.topics.size) %>&nbsp; </strong>
+                 <strong><% "Topic".pluralize(resource.topics_count) %>&nbsp; </strong>
                 <% end %>
 		<%= resource.topic_list %>
               </p>

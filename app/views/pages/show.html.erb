@@ -135,7 +135,7 @@
 			</div>
 
 
-			<% Category.displayed.each_with_index do |category, index|
+			<% Category.displayed.includes([:topics]).each_with_index do |category, index|
 			cat = category.name.split(' ') %>
 			<div class="row tool-row">
 			    <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-12">

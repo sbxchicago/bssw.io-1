@@ -87,18 +87,21 @@ class MarkdownImport < GithubImport
   def self.add_caption(img)
     caption = img.parent.try(:content).try(:match, Regexp.new(caption_regexp))
     return unless caption
-        
+
     span = Nokogiri::XML::Node.new 'span', img.document
     span['class'] = 'caption'
     span.content = caption[1]
     img.parent.children.each do |child|
-        if child.content.match?(Regexp.new(Regexp.escape(caption.to_s) ))
-          child.replace(
-            child.content.gsub(Regexp.new(Regexp.escape(caption.to_s) ) ,  span.to_xml.html_safe)
-          )
-        end
+      replace_caption(child, caption, span)
     end
+  end
 
+  def self.replace_caption(child, caption, span)
+    return unless child.content.match?(Regexp.new(Regexp.escape(caption.to_s)))
+
+    child.replace(
+      child.content.gsub(Regexp.new(Regexp.escape(caption.to_s)), span.to_xml.html_safe)
+    )
   end
 
   def self.add_lightbox(img, src)
@@ -138,7 +141,8 @@ class MarkdownImport < GithubImport
     return route.site_item_path(site_item) if site_item.try(:id)
     return route.page_path(page) if page.try(:id)
     return route.community_path(community) if community.try(:id)
-    return path
+
+    path
   end
 
   def self.image_classes(name)

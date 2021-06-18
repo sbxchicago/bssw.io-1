@@ -43,3 +43,5 @@ config/credentials/production.key
 /config/credentials/test.key
 
 /config/credentials/production.key
+
+/config/master.key

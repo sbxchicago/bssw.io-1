@@ -17,7 +17,7 @@ class SiteItem < MarkdownImport
   extend FriendlyId
   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 
-  store_methods :topic_list, :topics_count
+  store_methods :topic_list, :topics_count, :author_list
 
   def slug_candidates
     if custom_slug.blank? || custom_slug.nil?
@@ -68,20 +68,16 @@ class SiteItem < MarkdownImport
   }
 
   scope :with_topic, lambda { |topic|
-    joins(:topics).where('topics.id = ?', topic) if topic.present?
+    joins([:topics]).where('topics.id = ?', topic) if topic.present?
   }
 
   scope :with_category, lambda { |category|
-    joins(:topics).where('topics.category_id = ?', category)
+    joins([:topics]).where('topics.category_id = ?', category)
   }
 
   scope :with_author, lambda { |author|
-    joins(:contributions).where('contributions.author_id = ?', author.id)
+    joins([:contributions]).where('contributions.author_id = ?', author.id)
   }
-
-  # scope :resources, lambda {
-  #   where(type: 'Resource')
-  # }
 
   scope :events, lambda {
     where(type: 'Event')
@@ -115,31 +111,6 @@ class SiteItem < MarkdownImport
     end
     result
   }
-
-  # has_many :events,
-  #          class_name: 'SiteItem', through: :event_resources, foreign_key: :event_id, primary_key: :resource_id
-
-  # has_many :subresource_relations,
-  #          foreign_key: :parent_resource_id
-  # has_many :subresources, class_name: 'SiteItem', through: :subresource_relations, foreign_key: :subresource_id,
-  #                         primary_key: :parent_resource_id
-  # has_many :parent_resources, class_name: 'SiteItem', through: :subresource_relations,
-  #                             foreign_key: :parent_resource_id, primary_key: :subresource_id
-
-  # has_and_belongs_to_many :children, lambda {
-  #   distinct
-  # },
-  #                         join_table: 'children_parents',
-  #                         class_name: 'SiteItem',
-  #                         foreign_key: 'child_id',
-  #                         association_foreign_key: 'parent_id'
-  # has_and_belongs_to_many :parents, lambda {
-  #   distinct
-  # },
-  #                         join_table: 'children_parents',
-  #                         class_name: 'SiteItem',
-  #                         foreign_key: 'parent_id',
-  #                         association_foreign_key: 'child_id'
 
   def basic?
     is_a?(WhatIs) || is_a?(HowTo)
