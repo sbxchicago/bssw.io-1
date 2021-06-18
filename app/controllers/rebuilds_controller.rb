@@ -59,6 +59,7 @@ class RebuildsController < ApplicationController
     rebuild.clean
     update_links_and_images(rebuild.id)
     RebuildStatus.complete(rebuild)
+    Author.process_authors(rebuild.id)
     flash[:notice] = 'Import completed!'
     redirect_to controller: 'rebuilds', action: 'index', rebuilt: true
   end

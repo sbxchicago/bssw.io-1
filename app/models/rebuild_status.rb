@@ -28,9 +28,9 @@ class RebuildStatus < ApplicationRecord
   end
 
   def self.complete(rebuild)
-    Author.refresh_author_counts
     first.update(display_rebuild_id: rebuild.id, in_progress_rebuild_id: nil)
     rebuild.update(files_processed: "<ul>#{rebuild.files_processed}</ul>",
                    ended_at: Time.now)
+    Author.refresh_author_counts
   end
 end
