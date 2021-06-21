@@ -83,7 +83,12 @@ class Fellow < MarkdownImport
       node = doc.at("strong:contains('#{name}')")
       par = node.try(:parent)
       node.try(:remove)
-      send("#{meth}=", par.try(:content))
+        par.children.each do |p|
+          if p.name == 'em'
+            p.replace("\_#{p.text}\_")
+          end
+        end
+        send("#{meth}=", par.try(:content))
       par.try(:remove)
       save
     end
