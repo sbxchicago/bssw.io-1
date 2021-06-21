@@ -16,10 +16,6 @@ class BlogPostsController < ApplicationController
     blog = scoped_resources.blog
     @post = blog.find(params[:id])
     @resource = @post
-    @related_posts = []
-    @post.topics.each do |topic|
-      @related_posts += blog.get(topic: topic)
-    end
-    @related_posts = @related_posts.uniq - [@post]
+    @related_posts = @post.related_posts
   end
 end

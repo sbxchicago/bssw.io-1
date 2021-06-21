@@ -13,24 +13,6 @@ class Topic < GithubImport
   extend FriendlyId
   friendly_id :name, use: %i[finders history slugged scoped], scope: :rebuild_id
 
-  #  after_create :set_slug
-
-  # def update_resource_categories
-  #   site_items.each {|res| res.categories << category if category; res.save }
-  # end
-
-  # def update_from_content(doc)
-  #   super(doc)
-  #   doc.at("") do |elem|
-  #     Announcement.create_from(elem.next_element)
-  #   end
-
-  # end
-
-  # def set_slug
-  #    update_attribute(:slug, name.parameterize) if name
-  # end
-
   def self.create_from_node(child, cat_id, rebuild_id)
     name = child.at('strong').content
     child.at('strong').remove

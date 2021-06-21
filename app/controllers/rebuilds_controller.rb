@@ -28,13 +28,10 @@ class RebuildsController < ApplicationController
   end
 
   def populate_from_github(rebuild)
-    branch = Rails.env.preview? ? 'preview' : 'master'
-    branch = Rails.env.test? ? 'preview' : branch
-
     cont = GithubImport.github.archive_link(Rails.application.credentials[:github][:repo],
-                                            ref: branch)
-    RebuildStatus.in_progress_rebuild.update(content_branch: branch)
-    file_path = "#{Rails.root}/tmp/repo-#{branch}.gz"
+                                            ref: @branch)
+    RebuildStatus.in_progress_rebuild.update(content_branch: @branch)
+    file_path = "#{Rails.root}/tmp/repo-#{@branch}.gz"
     GithubImport.agent.get(cont).save(file_path)
     GithubImport.tar_extract(file_path).each do |file|
       rebuild.process_file(file)
@@ -54,16 +51,24 @@ class RebuildsController < ApplicationController
   end
 
   def import
+    branch
     rebuild = Rebuild.create(started_at: Time.now, ip: request.ip)
     RebuildStatus.start(rebuild)
     populate_from_github(rebuild)
     clear_all
-    rebuild.clean
     update_links_and_images(rebuild.id)
     RebuildStatus.complete(rebuild)
-    Author.refresh_author_counts
+    Category.displayed.each { |category| category.update(slug: nil) }
+    Author.process_authors(rebuild.id)
+    rebuild.clean
     flash[:notice] = 'Import completed!'
     redirect_to controller: 'rebuilds', action: 'index', rebuilt: true
+  end
+
+  private
+
+  def branch
+    @branch = Rails.env.preview? || Rails.env.test? ? 'preview' : 'master'
   end
 
   def check_rebuilds

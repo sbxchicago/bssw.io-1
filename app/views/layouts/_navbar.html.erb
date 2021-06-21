@@ -65,7 +65,7 @@
           <div class="dropdown-menu dropdown-menu-full w-100" aria-labelledby="dropdown2">
             <div class="container">
               <div class="row">
-                <% Category.displayed.each_with_index do |category, index| 
+                <% Category.displayed.includes([:topics]).each_with_index do |category, index| 
                   cat = category.name.split(' ') %>
                   <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-6 col-sp-12 gap">
                     <div class="nav-heading">

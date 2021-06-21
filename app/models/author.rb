@@ -27,14 +27,14 @@ class Author < ApplicationRecord
   end
 
   def self.refresh_author_counts
-    # displayed.each do |auth|
-    #   auth.refresh_resource_count
-    #   auth.refresh_event_count
-    #   auth.refresh_blog_count
-    #   auth.refresh_resource_listing
-    #   auth.refresh_blog_listing
-    #   auth.refresh_event_listing
-    # end
+    displayed.each do |auth|
+      auth.refresh_resource_count
+      auth.refresh_event_count
+      auth.refresh_blog_count
+      auth.refresh_resource_listing
+      auth.refresh_blog_listing
+      auth.refresh_event_listing
+    end
   end
 
   def single_contribution(preview: false)
@@ -58,7 +58,7 @@ class Author < ApplicationRecord
     (preview ? Event.preview : Event.published).displayed.with_author(self).count
   end
 
-  # store_methods :resource_count, :blog_count, :event_count, :resource_listing, :blog_listing, :event_listing
+  store_methods :resource_count, :blog_count, :event_count, :resource_listing, :blog_listing, :event_listing
 
   def resource_listing
     "#{resource_count} #{'resource'.pluralize(resource_count)}"
