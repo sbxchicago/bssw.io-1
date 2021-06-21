@@ -79,12 +79,10 @@ class Fellow < MarkdownImport
   end
 
   def do_fields(doc)
-    puts base_path
     fields.each do |name, meth|
       node = doc.at("strong:contains('#{name}')")
       par = node.try(:parent)
       node.try(:remove)
-      begin
       if par.respond_to?(:children)
         par.children.each do |p|
           if p.name == 'em'
@@ -95,9 +93,6 @@ class Fellow < MarkdownImport
       send("#{meth}=", par.try(:content))
       par.try(:remove)
       save
-      rescue => e
-        puts e.inspect
-      end
     end
     puts image_path
   end
