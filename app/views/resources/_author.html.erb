@@ -5,7 +5,7 @@
 	    <%= cl_image_tag(author.avatar_url,
 			     :type => :fetch, :width => 350, :height => 350, :invalidate => true, :cloud_name => 'bssw') %>
 	<% else %>
-	    <div style='width: 350px; height: 350px; background: #3c3c40;'>&nbsp;</div>
+	    <img  src="url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mO0sXGoBwACrQE5MbOwdAAAAABJRU5ErkJggg==);"/>
 
 	<% end %>
 
