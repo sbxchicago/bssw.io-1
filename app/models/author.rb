@@ -82,6 +82,7 @@ class Author < ApplicationRecord
     begin
       update_info(client.user(website.split('/').last))
     rescue Octokit::NotFound
+      puts "oOps #{website}"
       # if we have an invalid GH id, don't worry about it
     end
   end
@@ -91,7 +92,11 @@ class Author < ApplicationRecord
     node.css('a').each do |link|
       names = self.names_from(link.text)
       website = URI.parse(link['href'])
-      website = "https://#{website.host}#{website.path}"
+      if website.host.blank?
+        website = nil
+      else
+        website = "https://#{website.host}#{website.path}"
+      end
       auth = find_by(website: website, rebuild_id: rebuild)
       unless auth
         auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
@@ -101,9 +106,9 @@ class Author < ApplicationRecord
       authors << auth
     end
     txt = node.text.gsub('Contributed by', '')
+    txt = txt.gsub(' and ', ',').strip
     txt.split(',').each do |text|
-      text = text.gsub(' and ', '').strip
-      next if text.blank? || text == ':' || text == 'and'
+      next if text.blank? || text.match?("\:") || text.match?("\#")
       names = self.names_from(text)
       auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
       authors << auth
@@ -122,6 +127,7 @@ class Author < ApplicationRecord
   def self.names_from(name)
     return [nil, nil] unless name.respond_to?(:split)
     names = name.split(' ')
+    names = names.map{|n| n.blank? ? nil : n }
     last_name = names.last
     first_name = [names - [last_name]].join(' ')
     return [first_name, last_name]

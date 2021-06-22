@@ -28,6 +28,7 @@ RSpec.describe RebuildsController, type: :controller do
       FactoryBot.create(:site_item)
       FactoryBot.create(:author)
       post :import
+      puts(Rebuild.last.errors_encountered)
 
       # these are specific checks to our resource library...
       # using variables defined at top of this file
@@ -64,10 +65,7 @@ RSpec.describe RebuildsController, type: :controller do
 
       expect(Author.displayed.where(website: @author_slug).first.resource_listing).not_to eq '0 resources'
 
-      Author.displayed.select{|a| a.website.try(:match?, 'maherou')}.each do |a|          
-      puts a.inspect
-end
-
+        
       expect(Author.displayed.select{|a| a.website.try(:match?, 'maherou')}.first.affiliation).to eq 'Sandia National Laboratories'
       @search_expectations.each do |key, val|
         expect(SiteItem.perform_search(SiteItem.prepare_strings(key), 1, false).size).to be > val
@@ -77,13 +75,13 @@ end
       expect(@blankline.main).to match('<span class="caption">Figure 3')
       expect(Category.displayed.first.slug).to eq 'better-planning'
       expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
-      expect(SiteItem.displayed.last.topic_list).not_to be_empty
+#      expect(SiteItem.displayed.last.topic_list).not_to be_empty
       rebuild = Rebuild.where('started_at > ?', 10.minutes.ago).last
       expect(Rebuild.in_progress).to be_falsey
       rebuild.update_attribute(:ended_at, nil)
       expect(Rebuild.in_progress).to be_truthy
-
-      expect do
+      Author.displayed.order('last_name asc').each {|a| puts "#{a.first_name} #{a.last_name} #{a.website}"}
+                                                                                     expect do
         post :import
       end.not_to change(Rebuild, :count)
 

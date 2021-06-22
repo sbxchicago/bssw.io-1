@@ -94,6 +94,5 @@ class Fellow < MarkdownImport
       par.try(:remove)
       save
     end
-    puts image_path
   end
 end

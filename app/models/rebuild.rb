@@ -38,7 +38,7 @@ class Rebuild < ApplicationRecord
   end
 
   def clean
-
+    Author.process_authors(rebuild.id)
     SiteItem.clean
     Fellow.displayed.each(&:set_search_text)
     SiteItem.displayed.each(&:refresh_topic_list)
