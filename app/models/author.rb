@@ -81,6 +81,7 @@ class Author < ApplicationRecord
     client.login
     begin
       update_info(client.user(website.split('/').last))
+      puts "updated #{website} #{display_name}"
     rescue Octokit::NotFound
       puts "oOps #{website}"
       # if we have an invalid GH id, don't worry about it
@@ -121,14 +122,14 @@ class Author < ApplicationRecord
     update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
     update(affiliation: hash.company) if affiliation.blank?
     names = Author.names_from(hash.name)
-    update(first_name: names.first, last_name: names.last)
+    update(first_name: names.first, last_name: names.last) unless names == [nil, nil]
   end
 
   def self.names_from(name)
     return [nil, nil] unless name.respond_to?(:split)
     names = name.split(' ')
     names = names.map{|n| n.blank? ? nil : n }
-    last_name = names.last
+    last_name = names.last 
     first_name = [names - [last_name]].join(' ')
     return [first_name, last_name]
   end
