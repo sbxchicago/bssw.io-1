@@ -1,5 +1,5 @@
 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
-    <div class='author-col'>
+  <div class='author-col'>
 
 	<% if author.avatar_url %>
 	    <%= cl_image_tag(author.avatar_url,
@@ -7,15 +7,15 @@
 	<% else %>
 	    <img  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mO0sXGoBwACrQE5MbOwdAAAAABJRU5ErkJggg=="/>
 
-	<% end %>
+  <% end %>
 
 
-	<h3>
-	    <%= link_to "#{author.first_name} #{author.last_name}", site_items_path(:author => author.slug) %>
-	</h3>
-	<% if author.title %>
-	    <p><%= author.title %></p>
-	<% end %>
+  <h3>
+<%= link_to "#{author.first_name} #{author.last_name}", site_items_path(:author => author.slug) %>
+</h3>
+  <% if author.title %>
+    <p><%= author.title %></p>
+    <% end %>
 
 	<p>
 	    <% unless @page && @page.name == 'About' %>
