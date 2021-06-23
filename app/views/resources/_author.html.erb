@@ -1,45 +1,38 @@
 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
-  <div class='author-col'>
+    <div class='author-col'>
 
-  <% if author.avatar_url %>
-    <%= cl_image_tag(author.avatar_url,
-  :type => :fetch, :width => 350, :height => 350, :invalidate => true, :cloud_name => 'bssw') %>
+	<% if author.avatar_url %>
+	    <%= cl_image_tag(author.avatar_url,
+			     :type => :fetch, :width => 350, :height => 350, :invalidate => true, :cloud_name => 'bssw') %>
 
-  <% end %>
-
-
-  <h3>
-<%= link_to "#{author.first_name} #{author.last_name}", site_items_path(:author => author.slug) %>
-</h3>
-  <% if author.title %>
-    <p><%= author.title %></p>
-    <% end %>
-
-<p>
-<% unless @page && @page.name == 'About' %>
-   
-
-    <% if author.resource_listing != "0 resources" %>
-<%= author.resource_listing %><% if (author.blog_listing != "0 blog posts" || author.event_listing != "0 events") %>,<% end %>
-    <% end %>
-
-    <% if author.blog_listing != "0 blog posts" %>
-<%= author.blog_listing %><% if author.event_listing != "0 events" %>, <% end %><% end %><%= author.event_listing unless author.event_listing == '0 events' %>
+	<% end %>
 
 
-   
+	<h3>
+	    <%= link_to "#{author.first_name} #{author.last_name}", site_items_path(:author => author.slug) %>
+	</h3>
+	<% if author.title %>
+	    <p><%= author.title %></p>
+	<% end %>
 
-<% end %>
- </p>
+	<p>
+	    <% unless @page && @page.name == 'About' %>
+		<% if author.resource_listing != "0 resources" %>
+		    <%= author.resource_listing %><% if (author.blog_listing != "0 blog posts" || author.event_listing != "0 events") %>,<% end %>
+		<% end %>
+		<% if author.blog_listing != "0 blog posts" %>
+		    <%= author.blog_listing %><% if author.event_listing != "0 events" %>, <% end %><% end %><%= author.event_listing unless author.event_listing == '0 events' %>
+	    <% end %>
+	</p>
 
-  <% if author.affiliation %>
-    <p><strong>Affiliation(s):</strong> <%= author.affiliation %></p>
-  <% end %>
+	<% if author.affiliation %>
+	    <p><strong>Affiliation(s):</strong> <%= author.affiliation %></p>
+	<% end %>
 
-  <% if author.website %>
-    <p class="offsite"><%= link_to "Github", "https://github.com/" + author.website %> </p>
-  <% end %>
+	<% if author.website %>
+	    <p class="offsite"><%= link_to "Github", author.website %></p>
+	<% end %>
 
 
-</div>
+    </div>
 </div>

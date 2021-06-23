@@ -1,42 +1,6 @@
-<% if (page.snippet) && page.name != 'Resources'   %>
-
-    <div class="hero <% if page.slug == 'homepage' %> home-hero <% end %>">
-	<div class="container">
-	    <div class="row">
-		<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-		    <h1><%= page.name %></h1>
-		    <p><%= page.snippet %></p>
-		</div>
-	    </div>
-            <div class="row">
-		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-		    <% if Page.orientation.include?(page) || page.home? %>
-			<ul class="list-inline" id="orientation">
-			    <%= render 'pages/orientation_menu', :page => page %>
-			</ul>
-		    <% end %>
-		    <% if Page.fellows.include?(page) %>
-			<ul class="list-inline">
-			    <%= render 'pages/fellows_menu', :page => page %>
-			</ul>
-		    <% end %>
-		    <% if Page.contribute.include?(page) %>
-			<ul class="list-inline">
-			    <%= render 'pages/contribute_menu', :page => page %>
-			</ul>
-		    <% end %>
-
-		</div>
-
-	    </div>
-	</div>
-    </div>
-
-<% end %>
-
+<%= render 'pages/deck', page: page %>
 
 <% if page.regular %>
-
     <div class='page-content
 		<% if page.home? %> home-content<% end %>
 		<% if page.slug == 'bssw-blog' %> blog-content<% end %>
@@ -50,54 +14,18 @@
 	    <div class='row'>
 		<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
 		    <div class='content <% if page.slug == 'communities-overview' %>communities-overview<% end %>'>
-
-
-
 			<% if @page.name == ("Team") %>
-
-
-			    <%= page.main.split('<h2>Partners</h2>').first.html_safe %>
-		    </div>
-		</div>
-	    </div>
-    </div>
-    <div class="container mt-2">
-
-		    <div class="limiter team">
-
-			    <% Staff.displayed.order('title desc, last_name asc').group_by(&:section).each do |section, staff| %>
-				<h3 class="mb-3"><%= section %></h3>
-				<div class="row">
-				    <% staff.each do |author| %>
-					<%= render 'resources/author', :author => author %>
-				    <% end %>
-				</div>
-
-
-			    <% end  %>
-		    </div>
-
-			    <h2>Partners</h2>
-			    <%= page.main.split('<h2>Partners</h2>').last.html_safe %>
-		    </div>
-	</div>
-
-		    
+			    <%= render 'pages/team' %>
 			<% else %>
 			    <%= page.main %>
 			<% end %>
-
 			<% if page.name.match("Email") %>
 			    <%= render 'email_signup' %>
 			<% end %>
-
-
 		    </div>
 		</div>
 	    </div>
 	</div>
     </div>
-
-
 <% end %>
 

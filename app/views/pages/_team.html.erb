@@ -1,0 +1,26 @@
+<%= page.main.split('<h2>Partners</h2>').first.html_safe %>
+		    </div>
+		    </div>
+		    </div>
+		    </div>
+		    <div class="container mt-2">
+
+			<div class="limiter team">
+
+			    <% Staff.displayed.order('title desc, last_name asc').group_by(&:section).each do |section, staff| %>
+				<h3 class="mb-3"><%= section %></h3>
+				<div class="row">
+				    <% staff.each do |author| %>
+					<%= render 'resources/author', :author => author %>
+				    <% end %>
+				</div>
+
+
+			    <% end  %>
+			</div>
+
+			<h2>Partners</h2>
+			<%= page.main.split('<h2>Partners</h2>').last.html_safe %>
+		    </div>
+		    </div>
+

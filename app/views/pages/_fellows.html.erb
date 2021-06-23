@@ -1,0 +1,76 @@
+	    <style>
+	     .page-content {
+		 padding-top: 0;
+		 	 }
+	    </style>
+	    <div class="limiter">
+		<% Fellow.displayed.order('year desc, honorable_mention asc').group_by(&:year).each do |year, fellows| %>
+		    <% unless year.blank? %>
+			<div class="class-year">
+			    <div class="container">
+				<div class="row">
+				    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+					<h2><%= year %> Class</h2>
+				    </div>
+				</div>
+				<% fellows.group_by(&:honorable_mention).each do |hm, fellows_group| %>
+
+				    <div class="row">
+					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+					    <h3 class="mb-2"><%= hm ? 'Honorable Mentions' : 'Fellows' %></h3>
+					</div>
+				    </div>
+				    <div class="row">
+					<% fellows_group.sort_by(&:last_name).each do |fellow| %>
+					    <div class='col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12'>
+						<div class="author-col">
+						    <% if fellow.image_path %>
+							<div class="author-photo" style="background:url('<%= cl_image_path(fellow.modified_path,
+															   :type => :fetch, :width => 350, :height => 350, :invalidate => true, :cloud_name => 'bssw') %>') no-repeat center center;">
+							    
+							</div>
+						    <% end %>
+						    <% if fellow.honorable_mention %>
+							<h3><%= fellow.name %></h3>
+						    <% else %>
+							<h3><%= link_to fellow.name, fellow %></h3>
+						    <% end %>
+						    <% if fellow.affiliation %>
+							<p><strong><%= fellow.affiliation %></strong></p>
+						    <% end %>
+						    <p><%= fellow.short_bio %></p>
+						</div>
+					    </div>
+					<% end %>
+				    </div>
+				<% end %>
+			    </div>
+			</div>
+		    <% end %>
+		<% end %>
+		<div class='class-year'>
+		    <div class="container page-content">
+			<div class='row'>
+			    <div class='col-md-9'>
+				<p>		    <strong>The BSSw Fellowship is sponsored by the U.S. Department of Energy and National Science Foundation.</strong>
+				</p>
+			    </div>
+			    <div class='fellow'>
+
+				<div class='col'>
+
+				    <div class="img_div">
+					<img src="https://res.cloudinary.com/bssw/image/fetch/w_200,h_200,c_fit/https://github.com/betterscientificsoftware/bssw.io/raw/master/images/Logo_DOE_Unofficial_Sm.png" class="logo"> 
+				    </div>  
+
+				    <div class="img_div">
+					<img src="https://res.cloudinary.com/bssw/image/fetch/w_200,h_200,c_fit/https://github.com/betterscientificsoftware/bssw.io/raw/master/images/Logo_NSF_4ColorB_Sm.png" class="logo"> 
+				    </div>  
+
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>
+
+		

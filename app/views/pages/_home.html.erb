@@ -1,0 +1,81 @@
+    <div class="featured bg-white">
+	<div class="container featured-container">
+	    <div class="owl-carousel owl-theme">
+		<% FeaturedPost.displayed.each_with_index do |item, index| %>
+
+		    <% if index % 2 == 0 %>
+			<div class="row">
+			    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+				<h3>Featured</h3>
+			    </div>
+		    <% end %>
+		    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+			<% if item.image? %>
+			    <%= item.image %>
+			<% elsif item.site_item %>
+			    <div class="featured-inner">
+				<h3>
+				    <%= link_to item.site_item.name, site_item_path(item.site_item) %>
+				</h3>
+				<p><% if item.site_item.is_a?(Event)  %>
+				    Event
+				<% elsif item.site_item.is_a?(BlogPost) %>
+				    Blog Post
+				<% else %>
+				    Resource
+				<% end %>
+				</p>
+			    </div>
+			<% end %>
+		    </div>
+		    <% if index % 2 == 1 %>
+			</div><!-- /row -->
+		    <% end %>
+		<% end %>
+	    </div>
+	</div>
+    </div>
+    <div class="tools bg-white">
+	<div class="container tools-container">
+	    <div class="row tools-row">
+		<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+		    <h2>Resources for Developer Productivity and Software Sustainability</h2>
+		</div>
+		<div class="col-xl-4 offset-xl-2 col-lg-4 offset-lg-2 col-md-12 col-sm-12 col-12">
+		    <img src="/assets/diagram.png" alt="Diagram" class="img-fluid" />
+		</div>
+	    </div>
+
+
+	    <% Category.displayed.includes([:topics]).each_with_index do |category, index|
+	    cat = category.name.split(' ') %>
+	    <div class="row tool-row">
+		<div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-12">
+		    <div class="tool-link">
+			<div class="circle">
+			    <i class="fas fa-angle-right"></i>
+			</div>
+			<h3><%= link_to cat.first, site_items_path(:category => category.to_param) %></h3>
+			<h2><%= link_to cat.last, site_items_path(:category => category.to_param)  %></h2>
+			<div class="tool-content"><%= category.homepage.try(:html_safe) %></div>
+		    </div>
+		</div>
+		<div class="col-xl-4 offset-xl-1 col-lg-4 offset-lg-1 col-md-12 col-sm-12 col-12">
+		    <ul class="caret-list">
+			<% category.topics.each_with_index do |topic| %>
+			    <li><%= link_to topic.name, site_items_path(:topic => topic.to_param) %></li>
+			<% end %>
+		    </ul>
+		</div>
+	    </div>
+<% end %>
+
+<div class="row tool-row tool-row-last">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+	<a href="/items?page=1&view=all" class="circle-icon-cta"><span class="circle circle-white"><i class="fas fa-angle-right"></i></span>View All Resources</a>
+    </div>
+</div>
+
+	</div>
+    </div>
+    </div>
