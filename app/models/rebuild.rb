@@ -41,6 +41,6 @@ class Rebuild < ApplicationRecord
 
     SiteItem.clean
     Fellow.displayed.each(&:set_search_text)
-    SiteItem.displayed.each(&:refresh_topic_list)
+    SiteItem.displayed.each{|si| si.refresh_topic_list; si.refresh_author_list    }
   end
 end
