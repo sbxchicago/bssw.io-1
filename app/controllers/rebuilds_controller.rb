@@ -51,7 +51,7 @@ class RebuildsController < ApplicationController
   end
 
   def import
-    branch
+    @branch = branch
     rebuild = Rebuild.create(started_at: Time.now, ip: request.ip)
     RebuildStatus.start(rebuild)
     populate_from_github(rebuild)
@@ -68,7 +68,13 @@ class RebuildsController < ApplicationController
   private
 
   def branch
-    @branch = Rails.env.preview? || Rails.env.test? ? 'preview' : 'master'
+    if Rails.env.preview?
+      'preview'
+    elsif Rails.env.test? || Rails.env.staging?
+      'parallactic-test'
+    else
+      'master'
+    end
   end
 
   def check_rebuilds

@@ -73,11 +73,12 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Category.displayed.first.slug).to eq 'better-planning'
       expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
       expect(SiteItem.displayed.last.topic_list).not_to be_empty
+      puts Rebuild.last.errors_encountered
       rebuild = Rebuild.where('started_at > ?', 10.minutes.ago).last
       expect(Rebuild.in_progress).to be_falsey
       rebuild.update_attribute(:ended_at, nil)
       expect(Rebuild.in_progress).to be_truthy
-
+      
       expect do
         post :import
       end.not_to change(Rebuild, :count)
