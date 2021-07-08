@@ -73,17 +73,14 @@ class Author < ApplicationRecord
   end
 
   def update_from_github
-
-    return unless website && website.match('github')
+    return unless website&.match('github')
     return unless affiliation.blank? || avatar_url.blank?
 
     client = GithubImport.github
     client.login
     begin
       update_info(client.user(website.split('/').last))
-      puts "updated #{website} #{display_name}"
     rescue Octokit::NotFound
-      puts "oOps #{website}"
       # if we have an invalid GH id, don't worry about it
     end
   end

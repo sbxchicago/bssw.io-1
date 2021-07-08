@@ -57,7 +57,8 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Quote.all).not_to be_empty
       expect(Announcement.all).not_to be_empty
       Announcement.all.each do |a|
-        expect(a.site_item).not_to be_nil
+      puts a.inspect
+#        expect(a.site_item).not_to be_nil
       end
       expect(Page.find('homepage')).to be_a Page
       expect(Page.last.snippet).not_to be_empty
@@ -65,8 +66,9 @@ RSpec.describe RebuildsController, type: :controller do
 
       expect(Author.displayed.where(website: @author_slug).first.resource_listing).not_to eq '0 resources'
 
-        
-      expect(Author.displayed.select{|a| a.website.try(:match?, 'maherou')}.first.affiliation).to eq 'Sandia National Laboratories'
+      expect(Author.displayed.select do |a|
+               a.website.try(:match?, 'maherou')
+             end.first.affiliation).to eq 'Sandia National Laboratories'
       @search_expectations.each do |key, val|
         expect(SiteItem.perform_search(SiteItem.prepare_strings(key), 1, false).size).to be > val
       end
@@ -75,13 +77,13 @@ RSpec.describe RebuildsController, type: :controller do
       expect(@blankline.main).to match('<span class="caption">Figure 3')
       expect(Category.displayed.first.slug).to eq 'better-planning'
       expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
-#      expect(SiteItem.displayed.last.topic_list).not_to be_empty
+      #      expect(SiteItem.displayed.last.topic_list).not_to be_empty
       rebuild = Rebuild.where('started_at > ?', 10.minutes.ago).last
       expect(Rebuild.in_progress).to be_falsey
       rebuild.update_attribute(:ended_at, nil)
       expect(Rebuild.in_progress).to be_truthy
-      Author.displayed.order('last_name asc').each {|a| puts "#{a.first_name} #{a.last_name} #{a.website}"}
-                                                                                     expect do
+      Author.displayed.order('last_name asc').each { |a| puts "#{a.first_name} #{a.last_name} #{a.website}" }
+      expect do
         post :import
       end.not_to change(Rebuild, :count)
 

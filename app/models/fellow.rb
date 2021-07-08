@@ -85,9 +85,7 @@ class Fellow < MarkdownImport
       node.try(:remove)
       if par.respond_to?(:children)
         par.children.each do |p|
-          if p.name == 'em'
-            p.replace("\_#{p.text}\_")
-          end
+          p.replace("\_#{p.text}\_") if p.name == 'em'
         end
       end
       send("#{meth}=", par.try(:content))
