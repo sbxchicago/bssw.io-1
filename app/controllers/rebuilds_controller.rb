@@ -33,9 +33,14 @@ class RebuildsController < ApplicationController
     RebuildStatus.in_progress_rebuild.update(content_branch: @branch)
     file_path = "#{Rails.root}/tmp/repo-#{@branch}.gz"
     GithubImport.agent.get(cont).save(file_path)
+    contrib_file = nil
     GithubImport.tar_extract(file_path).each do |file|
+      contrib_file = file.read if file.header.name.match('Contributors.md')
+      prefix = file.header.name.split('/').first 
       rebuild.process_file(file)
     end
+    Author.process_authors(rebuild.id)
+    Author.process_overrides(Resource.parse_html_from(contrib_file), rebuild.id)
     File.delete(file_path)
   end
 
@@ -51,6 +56,7 @@ class RebuildsController < ApplicationController
   end
 
   def import
+    puts "starting import"
     branch
     rebuild = Rebuild.create(started_at: Time.now, ip: request.ip)
     RebuildStatus.start(rebuild)
@@ -63,12 +69,19 @@ class RebuildsController < ApplicationController
     rebuild.clean
     flash[:notice] = 'Import completed!'
     redirect_to controller: 'rebuilds', action: 'index', rebuilt: true
+    puts "ending import"
   end
 
   private
 
   def branch
-    @branch = Rails.env.preview? || Rails.env.test? ? 'preview' : 'master'
+    if Rails.env.preview?
+      @branch = 'preview'
+    elsif Rails.env.test?
+      @branch = 'parallactic-test'
+    else
+      @branch = 'master'
+    end
   end
 
   def check_rebuilds
@@ -79,4 +92,5 @@ class RebuildsController < ApplicationController
         Please wait for this rebuild to complete, or wait 10 minutes to override.'
     redirect_to controller: 'rebuilds', action: 'index'
   end
+
 end

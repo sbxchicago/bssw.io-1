@@ -119,7 +119,7 @@ class Author < ApplicationRecord
     update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
     update(affiliation: hash.company) if affiliation.blank?
     names = Author.names_from(hash.name)
-    update(first_name: names.first, last_name: names.last) unless names == [nil, nil]
+    update(first_name: names.first, last_name: names.last, alphabetized_name: names.last) unless names == [nil, nil]
   end
 
   def self.names_from(name)
@@ -138,7 +138,7 @@ class Author < ApplicationRecord
       process_kid(kid)
     end
     names = Author.names_from(siblings.first.text)
-    update(first_name: names.first, last_name: names.last)
+    update(first_name: names.first, last_name: names.last, alphabetized_name: names.last)
     siblings.first.try(:remove)
     update_attribute(:affiliation,
                      parent.children.first.text.strip)
@@ -152,4 +152,25 @@ class Author < ApplicationRecord
     update_attribute(:title, text.gsub('Title: ', ''))
     kid.remove
   end
+
+  def self.process_overrides(doc, rebuild)
+    puts "processing"
+    comments = doc.xpath('//comment()') if doc
+    comments&.each do |comment|
+      puts comment.text
+      next unless comment.text.match?('Overrides')
+      array = comment.text.split(/\n/).collect do |val|
+        next if val.match?('Overrides')
+        vals = val.split(',')
+        vals = vals.map{|v| v.delete('"')}
+        author = Author.find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
+        next unless author && vals[1]
+        author.update(alphabetized_name: vals[1])
+        next unless vals[2]
+        names = Author.names_from(vals[2])
+        author.update(first_name: names.first, last_name: names.last)
+      end
+    end
+  end
+  
 end
