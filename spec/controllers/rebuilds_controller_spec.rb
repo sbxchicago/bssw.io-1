@@ -57,9 +57,9 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Quote.all).not_to be_empty
       expect(Announcement.all).not_to be_empty
       Announcement.all.each do |a|
-      puts a.inspect
-#        expect(a.site_item).not_to be_nil
+        expect(a.site_item).not_to be_nil
       end
+      expect(Author.displayed.where(website: 'https://github.com/nniiicc').first.last_name).not_to eq 'Nic'
       expect(Page.find('homepage')).to be_a Page
       expect(Page.last.snippet).not_to be_empty
       expect(Author.displayed.where(website: @author_slug).size).to eq 1
