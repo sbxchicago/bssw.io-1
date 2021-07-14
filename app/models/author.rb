@@ -155,19 +155,14 @@ class Author < ApplicationRecord
   end
 
   def self.process_overrides(doc, rebuild)
-    puts "processing"
     comments = doc.xpath('//comment()') if doc
     comments&.each do |comment|
-      puts comment.text
       next unless comment.text.match?(/Overrides/i)
       array = comment.text.split(/\n/).collect do |val|
         next if val.match?(/Overrides/i)
         vals = val.split(',')
         vals = vals.map{|v| v.delete('"')}
-        puts vals
         author = Author.find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
-        puts author.inspect
-        puts vals
         next unless author && vals[1]
         author.update(alphabetized_name: vals[1])
         next unless vals[2]

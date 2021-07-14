@@ -82,7 +82,7 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Rebuild.in_progress).to be_falsey
       rebuild.update_attribute(:ended_at, nil)
       expect(Rebuild.in_progress).to be_truthy
-      Author.displayed.order('last_name asc').each { |a| puts "#{a.first_name} #{a.last_name} #{a.website}" }
+      Author.displayed.order('last_name asc').each { |a| puts "#{a.first_name} #{a.last_name} #{a.website} #{a.alphabetized_name}" }
       expect do
         post :import
       end.not_to change(Rebuild, :count)
