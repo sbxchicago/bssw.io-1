@@ -98,7 +98,7 @@ class Author < ApplicationRecord
       auth = find_by(website: website, rebuild_id: rebuild)
       unless auth
         auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
-        auth.update(website: website)
+        auth.update(website: website, alphabetized_name: names.last)
       end
       link.remove
       authors << auth
@@ -109,6 +109,7 @@ class Author < ApplicationRecord
       next if text.blank? || text.match?("\:") || text.match?("\#")
       names = self.names_from(text)
       auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
+      auth.update(alphabetized_name: names.last)
       authors << auth
     end
 
