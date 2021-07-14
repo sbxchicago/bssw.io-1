@@ -164,7 +164,7 @@ class Author < ApplicationRecord
         vals = vals.map{|v| v.delete('"')}
         author = Author.find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
         next unless author && vals[1]
-        author.update(alphabetized_name: vals[1])
+        author.update(alphabetized_name: vals[1].strip)
         next unless vals[2]
         names = Author.names_from(vals[2])
         author.update(first_name: names.first, last_name: names.last)
