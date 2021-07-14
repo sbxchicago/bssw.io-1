@@ -34,13 +34,21 @@ class RebuildsController < ApplicationController
     file_path = "#{Rails.root}/tmp/repo-#{@branch}.gz"
     GithubImport.agent.get(cont).save(file_path)
     contrib_file = nil
-    GithubImport.tar_extract(file_path).each do |file|
-      contrib_file = file.read if file.header.name.match('Contributors.md')
-      prefix = file.header.name.split('/').first 
-      rebuild.process_file(file)
+    begin
+      GithubImport.tar_extract(file_path).each do |file|
+        rebuild.process_file(file)
+      end
+      GithubImport.tar_extract(file_path).each do |file|
+        if file.header.name.match('Contributors.md')
+          contrib_file = file.read
+        end
+      end
+      Author.process_authors(rebuild.id)
+      Author.process_overrides(Resource.parse_html_from(contrib_file), rebuild.id)
+    rescue Exception => e
+      puts e.inspect
+      puts e.backtrace
     end
-    Author.process_authors(rebuild.id)
-    Author.process_overrides(Resource.parse_html_from(contrib_file), rebuild.id)
     File.delete(file_path)
   end
 
