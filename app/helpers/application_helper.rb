@@ -2,6 +2,22 @@
 
 # view helpers
 module ApplicationHelper
+
+
+  def social_title
+    return @post.name if @post
+    return @page.name if @page
+    return @event.name if @event
+    return @resource.name if @resource
+  end
+
+  def social_description
+    return @post.snippet if @post
+    return @page.snippet if @page
+    return @event.snippet if @event
+    return @resource.snippet if @resource
+  end
+  
   def author_list(resource)
     resource.author_list.html_safe
   end
