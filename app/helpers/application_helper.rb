@@ -12,10 +12,10 @@ module ApplicationHelper
   end
 
   def social_description
-    return @post.snippet if @post
-    return @page.snippet if @page
-    return @event.snippet if @event
-    return @resource.snippet if @resource
+    return strip_tags(@post.snippet) if @post
+    return strip_tags(@page.snippet) if @page
+    return strip_tags(@event.snippet) if @event
+    return strip_tags(@resource.snippet) if @resource
   end
   
   def author_list(resource)
