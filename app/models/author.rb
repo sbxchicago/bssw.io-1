@@ -125,6 +125,7 @@ class Author < ApplicationRecord
 
   def self.names_from(name)
     return [nil, nil] unless name.respond_to?(:split)
+    return ["BSSw", "Community"] if name.match?(/BSSw Community/i)
     names = name.split(' ')
     names = names.map{|n| n.blank? ? nil : n }
     last_name = names.last 
