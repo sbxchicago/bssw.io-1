@@ -62,7 +62,8 @@
 <meta name="twitter:description" content="<%= social_description %>">
 <meta property="og:title" content="<%= social_title %>">
 <meta property="og:description" content="<%= social_description %>">
-<meta property="og:image" content="<%= image_url('bssw.png') %>">
+
+<meta property="og:url" content="<%= request.url %>">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
@@ -115,7 +116,7 @@
 
 
 <%= yield %>
-
+<meta property="og:image" content="<%= image_url('bssw.png') %>">
 
 
 <%= render 'layouts/footer', :quote => @quote %>
