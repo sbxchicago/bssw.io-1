@@ -83,6 +83,7 @@ RSpec.describe RebuildsController, type: :controller do
       rebuild.update_attribute(:ended_at, nil)
       expect(Rebuild.in_progress).to be_truthy
       Author.displayed.order('last_name asc').each { |a| puts "#{a.first_name} #{a.last_name} #{a.website} #{a.alphabetized_name}" }
+                                                                                     expect(Author.displayed.where(last_name: 'Community').first.alphabetized_name).to eq 'BSSw'
       expect do
         post :import
       end.not_to change(Rebuild, :count)

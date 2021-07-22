@@ -163,7 +163,12 @@ class Author < ApplicationRecord
         next if val.match?(/Overrides/i)
         vals = val.split(',')
         vals = vals.map{|v| v.delete('"')}
-        author = Author.find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
+        if vals.first == '-'
+          names = self.names_from(vals.last)
+          author = Author.find_by(rebuild_id: rebuild, first_name: names.first, last_name: names.last)
+        else
+          author = Author.find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
+        end
         next unless author && vals[1]
         author.update(alphabetized_name: vals[1].strip)
         next unless vals[2]
