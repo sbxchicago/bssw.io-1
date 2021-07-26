@@ -37,7 +37,7 @@ class ResourcesController < ApplicationController
   end
 
   def authors
-    @authors = Author.displayed.order('alphabetized_name ASC')
+    @authors = Author.displayed.order('alphabetized_name ASC, first_name ASC')
     @page = Page.displayed.find_by_name('Contributors')
   end
 
