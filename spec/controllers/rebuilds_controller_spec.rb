@@ -67,9 +67,9 @@ RSpec.describe RebuildsController, type: :controller do
       @search_expectations.each do |key, val|
         expect(SiteItem.perform_search(SiteItem.prepare_strings(key), 1, false).size).to be > val
       end
-      @blankline = BlogPost.displayed.where(base_path: '2021-06-ES4Blog3.md').first
-      expect(@blankline.main).to match('<span class="caption">Figure 4')
-      expect(@blankline.main).to match('<span class="caption">Figure 3')
+      # @blankline = BlogPost.displayed.where(base_path: '2021-06-ES4Blog3.md').first
+      # expect(@blankline.main).to match('<span class="caption">Figure 4')
+      # expect(@blankline.main).to match('<span class="caption">Figure 3')
       expect(Category.displayed.first.slug).to eq 'better-planning'
       expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
       expect(SiteItem.displayed.last.topic_list).not_to be_empty
