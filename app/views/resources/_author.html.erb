@@ -30,8 +30,7 @@
 	<% end %>
 
 	<% if author.website %>
-			    <p class="offsite mt-0"><%= link_to 'GitHub',  ("https://github.com/" + author.website).html_safe  %></p>
-
+	    <p class="offsite"><%= link_to "Github", author.website %> </p>
 	<% end %>
 
 

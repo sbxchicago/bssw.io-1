@@ -83,19 +83,14 @@ class Fellow < MarkdownImport
       node = doc.at("strong:contains('#{name}')")
       par = node.try(:parent)
       node.try(:remove)
-
       if par.respond_to?(:children)
         par.children.each do |p|
-          if p.name == 'em'
-            p.replace("\_#{p.text}\_")
-          end
+          p.replace("\_#{p.text}\_") if p.name == 'em'
         end
       end
       send("#{meth}=", par.try(:content))
       par.try(:remove)
       save
-
     end
-    puts image_path
   end
 end

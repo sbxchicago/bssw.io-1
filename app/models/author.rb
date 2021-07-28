@@ -73,7 +73,7 @@ class Author < ApplicationRecord
   end
 
   def update_from_github
-    return unless website
+    return unless website&.match('github')
     return unless affiliation.blank? || avatar_url.blank?
 
     client = GithubImport.github
@@ -88,28 +88,49 @@ class Author < ApplicationRecord
   def self.make_from_data(node, rebuild)
     authors = []
     node.css('a').each do |link|
-      auth = find_or_create_by(website: link['href'].split('/').try(:last), rebuild_id: rebuild)
-      auth.update_name(link.text) if auth.last_name.blank?
+      names = self.names_from(link.text)
+      website = URI.parse(link['href'])
+      if website.host.blank?
+        website = nil
+      else
+        website = "https://#{website.host}#{website.path}"
+      end
+      auth = find_by(website: website, rebuild_id: rebuild)
+      unless auth
+        auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
+        auth.update(website: website, alphabetized_name: names.last)
+      end
+      link.remove
       authors << auth
     end
+    txt = node.text.gsub('Contributed by', '')
+    txt = txt.gsub(' and ', ',').strip
+    txt.split(',').each do |text|
+      next if text.blank? || text.match?("\:") || text.match?("\#")
+      names = self.names_from(text)
+      auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
+      auth.update(alphabetized_name: names.last)
+      authors << auth
+    end
+
     authors
   end
 
   def update_info(hash)
     update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
     update(affiliation: hash.company) if affiliation.blank?
-    name = hash.name
-    return unless name.respond_to?(:split)
-
-    update_name(name)
+    names = Author.names_from(hash.name)
+    update(first_name: names.first, last_name: names.last, alphabetized_name: names.last) unless names == [nil, nil]
   end
 
-  def update_name(name)
+  def self.names_from(name)
+    return [nil, nil] unless name.respond_to?(:split)
+    return ["BSSw", "Community"] if name.match?(/BSSw Community/i)
     names = name.split(' ')
-    last_name = names.last
-    update(
-      first_name: [names - [last_name]].join(' '), last_name: last_name
-    )
+    names = names.map{|n| n.blank? ? nil : n }
+    last_name = names.last 
+    first_name = [names - [last_name]].join(' ')
+    return [first_name, last_name]
   end
 
   def update_from_link(link)
@@ -118,8 +139,9 @@ class Author < ApplicationRecord
     siblings.each do |kid|
       process_kid(kid)
     end
-    update_name(siblings.first.text)
-    siblings.first.remove
+    names = Author.names_from(siblings.first.text)
+    update(first_name: names.first, last_name: names.last, alphabetized_name: names.last)
+    siblings.first.try(:remove)
     update_attribute(:affiliation,
                      parent.children.first.text.strip)
   end
@@ -132,4 +154,28 @@ class Author < ApplicationRecord
     update_attribute(:title, text.gsub('Title: ', ''))
     kid.remove
   end
+
+  def self.process_overrides(doc, rebuild)
+    comments = doc.xpath('//comment()') if doc
+    comments&.each do |comment|
+      next unless comment.text.match?(/Overrides/i)
+      array = comment.text.split(/\n/).collect do |val|
+        next if val.match?(/Overrides/i)
+        vals = val.split(',')
+        vals = vals.map{|v| v.delete('"')}
+        if vals.first == '-'
+          names = self.names_from(vals.last)
+          author = Author.find_by(rebuild_id: rebuild, first_name: names.first, last_name: names.last)
+        else
+          author = Author.find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
+        end
+        next unless author && vals[1]
+        author.update(alphabetized_name: vals[1].strip)
+        next unless vals[2]
+        names = Author.names_from(vals[2])
+        author.update(first_name: names.first, last_name: names.last)
+      end
+    end
+  end
+  
 end

@@ -11,7 +11,7 @@ RSpec.describe RebuildsController, type: :controller do
     @what_is_slug = 'what-is-revision-control'
     @category_name = 'Better Development'
     @blog_post_slug = 'improve-user-confidence-in-your-software-updates'
-    @author_slug = 'curfman'
+    @author_slug = 'https://github.com/curfman'
     @search_expectations = { 'integration testing' => 57,
                              'testing' => 80,
                              'elaine' => 10,
@@ -28,6 +28,7 @@ RSpec.describe RebuildsController, type: :controller do
       FactoryBot.create(:site_item)
       FactoryBot.create(:author)
       post :import
+      puts(Rebuild.last.errors_encountered)
 
       # these are specific checks to our resource library...
       # using variables defined at top of this file
@@ -58,12 +59,16 @@ RSpec.describe RebuildsController, type: :controller do
       Announcement.all.each do |a|
         expect(a.site_item).not_to be_nil
       end
+      expect(Author.displayed.where(website: 'https://github.com/nniiicc').first.last_name).not_to eq 'Nic'
       expect(Page.find('homepage')).to be_a Page
       expect(Page.last.snippet).not_to be_empty
       expect(Author.displayed.where(website: @author_slug).size).to eq 1
-
+      expect(Page.displayed.where(name: 'Contributors')).not_to be_empty
       expect(Author.displayed.where(website: @author_slug).first.resource_listing).not_to eq '0 resources'
-      expect(Staff.displayed.where(website: 'maherou').first.affiliation).to eq 'Sandia National Laboratories'
+
+      expect(Author.displayed.select do |a|
+               a.website.try(:match?, 'maherou')
+             end.first.affiliation).to eq 'Sandia National Laboratories'
       @search_expectations.each do |key, val|
         expect(SiteItem.perform_search(SiteItem.prepare_strings(key), 1, false).size).to be > val
       end
@@ -73,12 +78,11 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Category.displayed.first.slug).to eq 'better-planning'
       expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
       expect(SiteItem.displayed.last.topic_list).not_to be_empty
-      puts Rebuild.last.errors_encountered
       rebuild = Rebuild.where('started_at > ?', 10.minutes.ago).last
       expect(Rebuild.in_progress).to be_falsey
       rebuild.update_attribute(:ended_at, nil)
       expect(Rebuild.in_progress).to be_truthy
-      
+
       expect do
         post :import
       end.not_to change(Rebuild, :count)

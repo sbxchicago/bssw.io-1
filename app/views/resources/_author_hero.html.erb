@@ -20,16 +20,18 @@
 		<h1 > <%= @author.first_name %> <%= @author.last_name %></h1></div>
 	</div>
 	<div class="row">
+<% unless @author.avatar_url.blank? %>
 	    <div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 col-12 ">
 		<%= cl_image_tag(@author.avatar_url, :type => :fetch, :invalidate => true, :cloud_name => 'bssw', :class => 'fellows-photo') %>
 
 	    </div>
+<% end %>
 	    <div class="col-xl-8 col-lg-8 col-md-7 col-sm-12 col-12">
 		<div class="fellows-info">
 		    <div class="fellows-info-inner">
 			
 			<% if @author.website %>
-			    <p class="offsite mt-0"><%= link_to 'GitHub',  ("https://github.com/" + @author.website).html_safe  %></p>
+			    <p class="offsite mt-0"><%= link_to 'GitHub', @author.website  %></p>
 			<% end %>
 			
 			
