@@ -57,6 +57,10 @@ class MarkdownImport < GithubImport
     end
   end
 
+  def add_opengraph_image(val)
+    update_attribute(:open_graph_image_tag, MarkdownImport.modified_path(val)) 
+  end
+  
   def add_rss_update(val)
     date = Chronic.parse(val)
     update_attribute(:rss_date, date)

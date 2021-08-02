@@ -11,6 +11,15 @@ module ApplicationHelper
     return @resource.name if @resource
   end
 
+  def social_image
+    return @post.open_graph_image_tag if @post
+    return @event.open_graph_image_tag if @event
+    if @resource && @resource.respond_to?(:open_graph_image_tag)
+      return @resource.open_graph_image_tag
+    end
+  end
+
+  
   def social_description
     return strip_tags(@post.snippet) if @post
     return strip_tags(@page.snippet) if @page

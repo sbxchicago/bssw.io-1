@@ -116,7 +116,11 @@
 
 
 <%= yield %>
+<% if social_image.blank? %>
 <meta property="og:image" content="<%= image_url('bssw.png') %>">
+<% else %>
+<meta property="og:image" content="<%= social_image %>">
+<% end %>
 
 
 <%= render 'layouts/footer', :quote => @quote %>
