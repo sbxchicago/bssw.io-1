@@ -28,7 +28,7 @@ class GithubImport < ApplicationRecord
 
     res.update_taxonomy(doc, rebuild_id)
 
-    content_string = doc.css('body').to_s + "\n<!-- file path: #{res.path} -->".html_safe
+    content_string = CGI.unescapeHTML(doc.css('body').to_s) + "\n<!-- file path: #{res.path} -->".html_safe
     res.update_attribute(:content, content_string)
   end
 
