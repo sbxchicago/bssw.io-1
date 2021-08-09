@@ -43,7 +43,7 @@ class Event < SiteItem
     end
     end_text = dates.last
     self.start_at = Chronic.parse(dates.first)
-    end_text = "#{start_at.month} #{end_text}" unless (Date.parse(end_text) rescue false)
+    end_text = "#{start_at.strftime('%B')} #{end_text}" unless (Date.parse(end_text) rescue false)
     self.end_at = Chronic.parse(end_text)
     fix_end_year(end_text)
     date_node.try(:parent).try(:remove)
