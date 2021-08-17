@@ -31,7 +31,7 @@ class Announcement < MarkdownImport
   end
 
   def site_item
-    SiteItem.find_by(base_path: File.basename(path))
+    SiteItem.displayed.find_by(base_path: File.basename(path))
   end
 
   def update_dates(item)

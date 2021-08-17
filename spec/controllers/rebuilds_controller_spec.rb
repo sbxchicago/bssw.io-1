@@ -56,6 +56,7 @@ RSpec.describe RebuildsController, type: :controller do
 
       expect(Quote.all).not_to be_empty
       expect(Announcement.all).not_to be_empty
+      expect(FeaturedPost.displayed.first.site_item).not_to be_nil
       Announcement.all.each do |a|
         expect(a.site_item).not_to be_nil
       end
