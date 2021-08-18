@@ -14,6 +14,7 @@ module ApplicationHelper
   def social_image
     return @post.open_graph_image_tag if @post
     return @event.open_graph_image_tag if @event
+    return @page.open_graph_image_tag if @page
     if @resource && @resource.respond_to?(:open_graph_image_tag)
       return @resource.open_graph_image_tag
     end

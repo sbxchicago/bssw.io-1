@@ -52,7 +52,7 @@ class MarkdownImport < GithubImport
         save if new_record?
         try(:add_topics, names, rebuild)
       elsif respond_to?(method, true)
-        send(method, names.join.downcase)
+        send(method, names.join)
       end
     end
   end
@@ -67,7 +67,7 @@ class MarkdownImport < GithubImport
   end
 
   def add_slug(val)
-    self.custom_slug = val
+    self.custom_slug = val.downcase
     save
   end
 
@@ -76,6 +76,7 @@ class MarkdownImport < GithubImport
   end
 
   def add_publish(val)
+    val = val.downcase
     if val.match('yes')
       update_attribute(:publish, true)
     else

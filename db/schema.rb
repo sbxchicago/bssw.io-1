@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_02_164609) do
+ActiveRecord::Schema.define(version: 2021_08_18_190348) do
 
   create_table "acronyms", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name"
@@ -234,6 +234,7 @@ ActiveRecord::Schema.define(version: 2021_08_02_164609) do
     t.integer "rebuild_id"
     t.string "slug"
     t.string "base_path"
+    t.string "open_graph_image_tag"
     t.index ["path"], name: "index_pages_on_path"
     t.index ["rebuild_id"], name: "index_pages_on_rebuild_id"
   end
