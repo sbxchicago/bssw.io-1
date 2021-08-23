@@ -12,27 +12,20 @@ class ApplicationController < ActionController::Base
   # With a regular render (implicit or explicit), this exception is raised instead.
   # Log it to Exception Logger, but show users a 404 page instead of error 500.
   rescue_from(ActionView::MissingTemplate) do |e|
-    request.format = :html
     not_found(e)
   end
 
   rescue_from StandardError, with: :send_error
 
   def not_found(_exception = nil)
-    respond_to do |format|
-      format.any do
-        #         if exception
-        #           logger.error("404: rescued_from: #{print_exception(exception)}
-        # ")
-        #         end
-        render(
-          template: 'errors/not_found_error',
-          formats: [:html],
-          layout: 'layouts/application',
-          status: :not_found
-        )
-      end
-    end
+    request.format = :html
+    render(
+      template: 'errors/not_found_error',
+      content_type: 'text/html',
+      formats: [:html],
+      layout: 'layouts/application',
+      status: :not_found
+    )
   end
 
   def send_error(exception)
