@@ -34,21 +34,19 @@ class RebuildsController < ApplicationController
     file_path = "#{Rails.root}/tmp/repo-#{@branch}.gz"
     GithubImport.agent.get(cont).save(file_path)
     contrib_file = nil
-    begin
+#    begin
       GithubImport.tar_extract(file_path).each do |file|
         rebuild.process_file(file)
       end
       GithubImport.tar_extract(file_path).each do |file|
-        if file.header.name.match('Contributors.md')
-          contrib_file = file.read
-        end
+        contrib_file = file.read if file.header.name.match('Contributors.md')
       end
       Author.process_authors(rebuild.id)
       Author.process_overrides(Resource.parse_html_from(contrib_file), rebuild.id)
-    rescue Exception => e
-      puts e.inspect
-      puts e.backtrace
-    end
+    # rescue StandardError => e
+    #   puts e.inspect
+    #   puts e.backtrace
+    # end
     File.delete(file_path)
   end
 
@@ -81,13 +79,13 @@ class RebuildsController < ApplicationController
   private
 
   def branch
-    if Rails.env.preview?
-      @branch = 'preview'
-    elsif Rails.env.test?
-      @branch = 'parallactic-test'
-    else
-      @branch = 'master'
-    end
+    @branch = if Rails.env.preview?
+                'preview'
+              elsif Rails.env.test?
+                'parallactic-test'
+              else
+                'master'
+              end
   end
 
   def check_rebuilds

@@ -83,14 +83,18 @@ class Fellow < MarkdownImport
       node = doc.at("strong:contains('#{name}')")
       par = node.try(:parent)
       node.try(:remove)
-      if par.respond_to?(:children)
-        par.children.each do |p|
-          p.replace("\_#{p.text}\_") if p.name == 'em'
-        end
-      end
+      fix_italics(par)
       send("#{meth}=", par.try(:content))
       par.try(:remove)
       save
+    end
+  end
+
+  def fix_italics(par)
+    return unless par.respond_to?(:children)
+
+    par.children.each do |p|
+      p.replace("\_#{p.text}\_") if p.name == 'em'
     end
   end
 end

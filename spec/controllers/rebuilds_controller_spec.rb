@@ -78,7 +78,7 @@ RSpec.describe RebuildsController, type: :controller do
       # expect(@blankline.main).to match('<span class="caption">Figure 3')
       expect(Category.displayed.first.slug).to eq 'better-planning'
       expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
-      SiteItem.all.each{|si| puts si.open_graph_image_tag unless si.open_graph_image_tag.blank?}
+      SiteItem.all.each { |si| puts si.open_graph_image_tag unless si.open_graph_image_tag.blank? }
       expect(SiteItem.displayed.last.topic_list).not_to be_empty
       rebuild = Rebuild.where('started_at > ?', 10.minutes.ago).last
       expect(Rebuild.in_progress).to be_falsey

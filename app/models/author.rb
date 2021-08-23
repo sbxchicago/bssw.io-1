@@ -88,32 +88,39 @@ class Author < ApplicationRecord
   def self.make_from_data(node, rebuild)
     authors = []
     node.css('a').each do |link|
-      names = self.names_from(link.text)
-      website = URI.parse(link['href'])
-      if website.host.blank?
-        website = nil
-      else
-        website = "https://#{website.host}#{website.path}"
-      end
-      auth = find_by(website: website, rebuild_id: rebuild)
-      unless auth
-        auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
-        auth.update(website: website, alphabetized_name: names.last)
-      end
-      link.remove
+      auth = author_from_website(link, rebuild)
       authors << auth
     end
     txt = node.text.gsub('Contributed by', '')
     txt = txt.gsub(' and ', ',').strip
     txt.split(',').each do |text|
       next if text.blank? || text.match?("\:") || text.match?("\#")
-      names = self.names_from(text)
+
+      names = names_from(text)
       auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
       auth.update(alphabetized_name: names.last)
       authors << auth
     end
 
     authors
+  end
+
+  def self.author_from_website(link, rebuild)
+    names = names_from(link.text)
+    website = URI.parse(link['href'])
+    website = if website.host.blank?
+                nil
+              else
+                "https://#{website.host}#{website.path}"
+              end
+    auth = find_by(website: website, rebuild_id: rebuild)
+    unless auth
+      auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
+      auth.update(website: website, alphabetized_name: names.last)
+    end
+    link.remove
+
+    auth
   end
 
   def update_info(hash)
@@ -125,12 +132,13 @@ class Author < ApplicationRecord
 
   def self.names_from(name)
     return [nil, nil] unless name.respond_to?(:split)
-    return ["BSSw", "Community"] if name.match?(/BSSw Community/i)
+    return %w[BSSw Community] if name.match?(/BSSw Community/i)
+
     names = name.split(' ')
-    names = names.map{|n| n.blank? ? nil : n }
-    last_name = names.last 
+    names = names.map { |n| n.blank? ? nil : n }
+    last_name = names.last
     first_name = [names - [last_name]].join(' ')
-    return [first_name, last_name]
+    [first_name, last_name]
   end
 
   def update_from_link(link)
@@ -159,23 +167,30 @@ class Author < ApplicationRecord
     comments = doc.xpath('//comment()') if doc
     comments&.each do |comment|
       next unless comment.text.match?(/Overrides/i)
-      array = comment.text.split(/\n/).collect do |val|
+
+      text.split(/\n/).collect do |val|
         next if val.match?(/Overrides/i)
-        vals = val.split(',')
-        vals = vals.map{|v| v.delete('"')}
-        if vals.first == '-'
-          names = self.names_from(vals.last)
-          author = Author.find_by(rebuild_id: rebuild, first_name: names.first, last_name: names.last)
-        else
-          author = Author.find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
-        end
-        next unless author && vals[1]
-        author.update(alphabetized_name: vals[1].strip)
-        next unless vals[2]
-        names = Author.names_from(vals[2])
-        author.update(first_name: names.first, last_name: names.last)
+
+        do_overrides(val, rebuild)
       end
     end
   end
-  
+
+  def self.do_overrides(val, rebuild)
+    vals = val.split(',')
+    vals = vals.map { |v| v.delete('"') }
+    if vals.first == '-'
+      names = names_from(vals.last)
+      author = Author.find_by(rebuild_id: rebuild, first_name: names.first, last_name: names.last)
+    else
+      author = Author.find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
+    end
+    return unless author && vals[1]
+
+    author.update(alphabetized_name: vals[1].strip)
+    return unless vals[2]
+
+    names = Author.names_from(vals[2])
+    author.update(first_name: names.first, last_name: names.last)
+  end
 end

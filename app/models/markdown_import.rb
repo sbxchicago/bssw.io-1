@@ -58,9 +58,9 @@ class MarkdownImport < GithubImport
   end
 
   def add_opengraph_image(val)
-    update_attribute(:open_graph_image_tag, MarkdownImport.modified_path(val)) 
+    update_attribute(:open_graph_image_tag, MarkdownImport.modified_path(val))
   end
-  
+
   def add_rss_update(val)
     date = Chronic.parse(val)
     update_attribute(:rss_date, date)
@@ -140,12 +140,16 @@ class MarkdownImport < GithubImport
 
   def self.update_link(path)
     route = Rails.application.routes.url_helpers
-    site_item = SiteItem.displayed.where(base_path: path).first
-    page = Page.displayed.where(base_path: path).first
-    community = Community.displayed.where(base_path: path).first
-    return route.site_item_path(site_item) if site_item.try(:id)
-    return route.page_path(page) if page.try(:id)
-    return route.community_path(community) if community.try(:id)
+    [SiteItem, Page, Community].each do |klass|
+      item = klass.displayed.where(base_path: path).first
+      return route.send("#{klass.name.underscore}_path", item) if item.try(:id)
+    end
+    # # site_item = SiteItem.displayed.where(base_path: path).first
+    # # page = Page.displayed.where(base_path: path).first
+    # # community = Community.displayed.where(base_path: path).first
+    # return route.site_item_path(site_item) if site_item.try(:id)
+    # return route.page_path(page) if page.try(:id)
+    # return route.community_path(community) if community.try(:id)
 
     path
   end

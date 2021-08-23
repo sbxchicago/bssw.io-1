@@ -2,8 +2,6 @@
 
 # view helpers
 module ApplicationHelper
-
-
   def social_title
     return @post.name if @post
     return @page.name if @page
@@ -15,19 +13,16 @@ module ApplicationHelper
     return @post.open_graph_image_tag if @post
     return @event.open_graph_image_tag if @event
     return @page.open_graph_image_tag if @page
-    if @resource && @resource.respond_to?(:open_graph_image_tag)
-      return @resource.open_graph_image_tag
-    end
+    return @resource.open_graph_image_tag if @resource.respond_to?(:open_graph_image_tag)
   end
 
-  
   def social_description
     return strip_tags(@post.snippet) if @post
     return strip_tags(@page.snippet) if @page
     return strip_tags(@event.snippet) if @event
     return strip_tags(@resource.snippet) if @resource
   end
-  
+
   def author_list(resource)
     resource.author_list.html_safe
   end

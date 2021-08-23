@@ -34,16 +34,20 @@ class Event < SiteItem
     update_dates(date_node) if date_node
     doc.at("strong:contains('Description')").try(:remove)
   end
-  
+
   def update_dates(date_node)
-    if date_node.text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
-      dates = date_node.text.split(':').last.split('- ')
-    else
-      dates = date_node.text.split(':').last.split('-')
-    end
+    dates = if date_node.text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
+              date_node.text.split(':').last.split('- ')
+            else
+              date_node.text.split(':').last.split('-')
+            end
     end_text = dates.last
     self.start_at = Chronic.parse(dates.first)
-    end_text = "#{start_at.strftime('%B')} #{end_text}" unless (Date.parse(end_text) rescue false)
+    end_text = "#{start_at.strftime('%B')} #{end_text}" unless begin
+      Date.parse(end_text)
+    rescue StandardError
+      false
+    end
     self.end_at = Chronic.parse(end_text)
     fix_end_year(end_text)
     date_node.try(:parent).try(:remove)

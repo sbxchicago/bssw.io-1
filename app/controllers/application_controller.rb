@@ -5,33 +5,41 @@ require 'rubygems/package'
 
 # base class
 class ApplicationController < ActionController::Base
-  rescue_from Exception, with: :send_error
+  rescue_from StandardError, with: :send_error
 
-  def not_found(exception = nil)
-    if exception
-      logger.error("404: rescued_from: #{print_exception(exception)}
-")
+  def not_found(_exception = nil)
+    respond_to do |format|
+      format.any do
+        #         if exception
+        #           logger.error("404: rescued_from: #{print_exception(exception)}
+        # ")
+        #         end
+        render(
+          template: 'errors/not_found_error',
+          layout: 'layouts/application',
+          status: :not_found
+        )
+      end
     end
-    render(
-      template: 'errors/not_found_error',
-      layout: 'layouts/application',
-      status: :not_found
-    )
   end
 
   def send_error(exception)
-    if exception.is_a?(ActionController::RoutingError) ||
-       exception.is_a?(ActiveRecord::RecordNotFound)
-      not_found(exception)
-    else
-      render_error(exception)
+    respond_to do |format|
+      format.any do
+        if exception.is_a?(ActionController::RoutingError) ||
+           exception.is_a?(ActiveRecord::RecordNotFound)
+          not_found(exception)
+        else
+          render_error(exception)
+        end
+      end
     end
   end
 
   def render_error(exception)
     error_string =
       "500: rescued_from:
-      #{print_exception(exception)}"
+    #{print_exception(exception)}"
     logger.error(error_string)
     render(
       template: 'errors/internal_server_error',
