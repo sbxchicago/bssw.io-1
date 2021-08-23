@@ -34,7 +34,7 @@ class RebuildsController < ApplicationController
     file_path = "#{Rails.root}/tmp/repo-#{@branch}.gz"
     GithubImport.agent.get(cont).save(file_path)
     contrib_file = nil
-#    begin
+    begin
       GithubImport.tar_extract(file_path).each do |file|
         rebuild.process_file(file)
       end
@@ -43,10 +43,10 @@ class RebuildsController < ApplicationController
       end
       Author.process_authors(rebuild.id)
       Author.process_overrides(Resource.parse_html_from(contrib_file), rebuild.id)
-    # rescue StandardError => e
-    #   puts e.inspect
-    #   puts e.backtrace
-    # end
+     rescue StandardError => e
+       puts e.inspect
+       puts e.backtrace
+     end
     File.delete(file_path)
   end
 

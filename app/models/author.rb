@@ -168,7 +168,7 @@ class Author < ApplicationRecord
     comments&.each do |comment|
       next unless comment.text.match?(/Overrides/i)
 
-      text.split(/\n/).collect do |val|
+      comment.text.split(/\n/).collect do |val|
         next if val.match?(/Overrides/i)
 
         do_overrides(val, rebuild)

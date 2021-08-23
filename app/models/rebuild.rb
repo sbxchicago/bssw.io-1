@@ -26,6 +26,7 @@ class Rebuild < ApplicationRecord
       resource = GithubImport.process_path(file.full_name, file.read, id)
       update_attribute(:files_processed, "#{files_processed}<li>#{resource.try(:path)}</li>")
     rescue StandardError => e
+      puts e.inspect
       record_errors(file_name, e)
     end
   end
