@@ -134,7 +134,8 @@ class MarkdownImport < GithubImport
     elsif image_path
       branch = Rails.env.preview? ? 'preview' : 'master'
       repo = 'betterscientificsoftware/bssw.io'
-      "https://raw.githubusercontent.com/#{repo}/#{branch}/images/#{File.basename(image_path)}?raw=true"
+      path = URI(image_path).path.split('/').select{|m| !m.empty? && (m != 'images') && (m != '.') && (m != '..')}.join('/')
+      "https://raw.githubusercontent.com/#{repo}/#{branch}/images/#{path}?raw=true"
     end
   end
 
