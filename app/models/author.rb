@@ -76,7 +76,7 @@ class Author < ApplicationRecord
     return unless website&.match('github')
     return unless affiliation.blank? || avatar_url.blank?
 
-    client = GithubImport.github
+    client = GithubImporter.github
     client.login
     begin
       update_info(client.user(website.split('/').last))

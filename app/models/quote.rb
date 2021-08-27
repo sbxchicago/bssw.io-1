@@ -7,7 +7,7 @@ class Quote < ApplicationRecord
                     }
 
   def self.import(content)
-    doc = Resource.parse_html_from(content)
+    doc = GithubImporter.parse_html_from(content)
     doc.css('li').each do |elem|
       list = elem.content.split('--')
       next if list.first.blank? || list.last.blank?

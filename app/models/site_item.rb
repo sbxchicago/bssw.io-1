@@ -12,8 +12,6 @@ class SiteItem < MarkdownImport
   validates_uniqueness_of :path, optional: true, case_sensitive: false, scope: :rebuild_id
   has_many :announcements
 
-  before_save :set_search_text
-
   extend FriendlyId
   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 
@@ -115,74 +113,6 @@ class SiteItem < MarkdownImport
     is_a?(WhatIs) || is_a?(HowTo)
   end
 
-  def self.prepare_strings(string)
-    if string.match(Regexp.new('"[^"]*"'))
-      [[string.gsub('"', '')]]
-    elsif string.match(Regexp.new("'[^']*'"))
-      [[string.gsub("'", '')]]
-    else
-      lem = Lemmatizer.new
-      string.split(' ').map do |str|
-        [str, lem.lemma(str), str.stem].uniq
-      end
-    end
-  end
-
-  def self.order_results(words, results)
-    word_array = []
-    words.flatten.uniq.each do |str_var|
-      unless str_var.blank?
-        str_var = Regexp.escape(sanitize_sql_like(str_var))
-        word_array << "name REGEXP \"#{Regexp.escape((str_var))}\" DESC"
-      end
-    end
-    results.order(
-      Arel.sql("field (type, 'WhatIs', 'HowTo', 'Resource', 'BlogPost', 'Event') ASC, #{word_array.join(',')}")
-    )
-  end
-
-  def self.perform_search(words, page, preview)
-    o_results = preview ? SiteItem.preview.displayed : SiteItem.published.displayed
-    results = order_results(
-      words, get_word_results(words, o_results)
-    )
-    Fellow.perform_search(
-      words, page
-    ) + results
-  end
-
-  def self.get_word_results(words, results)
-    word_results = nil
-    words.each do |word|
-      word.flatten.uniq.each do |str_var|
-        relation = results.where(Arel.sql(word_str(str_var)))
-        word_results = word_results ? word_results.or(relation) : relation
-      end
-      results = results.merge(word_results)
-    end
-    results
-  end
-
-  def self.word_str(str_var)
-    str_var = Regexp.escape(sanitize_sql_like(str_var))
-    "search_text REGEXP \"([\\W]*|^)#{str_var}\" or search_text REGEXP \"#{str_var}([\\W]*|$)\""
-  end
-
-  def set_search_text
-    self.search_text =
-      ActionController::Base.helpers.strip_tags(
-        "#{content} #{try(:author_list)} #{name} #{try(:description)} #{try(:location)} #{try(:organizers)}"
-      )
-    true
-  end
-
-  def update_from_content(doc, rebuild_id)
-    update_author(
-      doc.at("h4:contains('Contributed')"), rebuild_id
-    )
-    super(doc, rebuild_id)
-  end
-
   def add_topics(names, rebuild)
     names.each do |top_name|
       next if top_name.match(Regexp.new(/\[(.*)\]/))
@@ -199,16 +129,6 @@ class SiteItem < MarkdownImport
 
   def rss_date
     super || published_at
-  end
-
-  def update_author(node, rebuild)
-    return unless node
-
-    authors = Author.make_from_data(
-      node, rebuild
-    )
-    self.authors = authors
-    node.try(:remove)
   end
 
   def categories

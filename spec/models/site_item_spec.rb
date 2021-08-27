@@ -25,13 +25,4 @@ RSpec.describe SiteItem, type: :model do
     expect(SiteItem.with_category(cat)).not_to include(second_resource)
     expect(SiteItem.get('category' => cat)).to include(resource)
   end
-
-  it 'can search' do
-    @rebuild = Rebuild.create
-    RebuildStatus.all.each(&:destroy)
-    RebuildStatus.create(display_rebuild_id: @rebuild.id)
-    event = FactoryBot.create(:event, name: 'foo', content: 'foo', rebuild_id: @rebuild.id)
-    FactoryBot.create(:event, name: 'bar', rebuild_id: @rebuild.id)
-    expect(SiteItem.perform_search(SiteItem.prepare_strings('foo'), 1, nil)).to include(event)
-  end
 end

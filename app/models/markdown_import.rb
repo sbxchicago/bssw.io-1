@@ -128,14 +128,14 @@ class MarkdownImport < GithubImport
   end
 
   def self.modified_path(image_path)
-    image_path = image_path.strip
     if image_path.match?('http')
-      "#{image_path}?raw=true"
+      "#{image_path.strip}?raw=true"
     elsif image_path
       branch = Rails.env.preview? ? 'preview' : 'master'
-      repo = 'betterscientificsoftware/bssw.io'
-      path = URI(image_path).path.split('/').select{|m| !m.empty? && (m != 'images') && (m != '.') && (m != '..')}.join('/')
-      "https://raw.githubusercontent.com/#{repo}/#{branch}/images/#{path}?raw=true"
+      path = URI(image_path.strip).path.split('/').select do |m|
+        !m.empty? && !m.in?(['images', '.', '..'])
+      end.join('/')
+      "https://raw.githubusercontent.com/betterscientificsoftware/bssw.io/#{branch}/images/#{path}?raw=true"
     end
   end
 
@@ -145,13 +145,6 @@ class MarkdownImport < GithubImport
       item = klass.displayed.where(base_path: path).first
       return route.send("#{klass.name.underscore}_path", item) if item.try(:id)
     end
-    # # site_item = SiteItem.displayed.where(base_path: path).first
-    # # page = Page.displayed.where(base_path: path).first
-    # # community = Community.displayed.where(base_path: path).first
-    # return route.site_item_path(site_item) if site_item.try(:id)
-    # return route.page_path(page) if page.try(:id)
-    # return route.community_path(community) if community.try(:id)
-
     path
   end
 
@@ -164,25 +157,5 @@ class MarkdownImport < GithubImport
     }
     size = classes[name]
     "https://res.cloudinary.com/bssw/image/fetch/#{size}"
-  end
-
-  def do_dates(res)
-    res.update_attribute(:published_at,
-                         GithubImport.github.commits(
-                           Rails.application.credentials[:github][:repo],
-                           RebuildStatus.content_branch,
-                           path: "/#{path}"
-                         ).first.commit.author.date)
-  end
-
-  def update_date(doc)
-    node = doc.at("h4:contains('Publication date')")
-    node ||= doc.at("h4:contains('Publication Date')")
-    node ||= doc.at("h4:contains('publication date')")
-    return unless node
-
-    date = Chronic.parse(node.content.split(':').last)
-    self.published_at = date
-    node.try(:remove)
   end
 end

@@ -11,7 +11,7 @@ RSpec.describe Category, type: :model do
 A fooble given a blah
 \n<!---\n Category order: 2 \n--->"
 
-    cat = Resource.find_or_create_resource('Site/Topics/foo.md', 1)
+    cat = GithubImporter.find_or_create_resource('Site/Topics/foo.md', 1)
     cat.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
     expect(cat).to be_a(Category)
     expect(cat.order_num).to eq 2

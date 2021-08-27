@@ -25,7 +25,7 @@ Publish: true
 --->"
     FactoryBot.create(:category, name: 'Better Blah Blah')
 
-    res = Resource.find_or_create_resource('Blog/FooPost.md', 1)
+    res = GithubImporter.find_or_create_resource('Blog/FooPost.md', 1)
     expect(res).to be_a(BlogPost)
 
     res.parse_and_update(content, RebuildStatus.displayed_rebuild.id)

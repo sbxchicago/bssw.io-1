@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Events e.g. conferences
-class Event < SiteItem
+class Event < Searchable
   def update_from_content(doc, rebuild)
     update_details(doc)
     overview = doc.at("p:contains('Overview')")

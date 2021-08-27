@@ -18,7 +18,7 @@ class Fellow < MarkdownImport
 
   def self.perform_search(words, _page)
     results = Fellow.displayed.where(honorable_mention: [nil, false])
-    results = SiteItem.get_word_results(words, results)
+    results = Searchable.get_word_results(words, results)
     words.flatten.uniq.each do |str_var|
       str_var = Regexp.escape(sanitize_sql_like(str_var))
       results = results.order(Arel.sql("name REGEXP \"#{Regexp.escape(str_var)}\" DESC"))

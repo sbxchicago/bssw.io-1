@@ -20,10 +20,10 @@ class Rebuild < ApplicationRecord
     return if File.extname(file.full_name) != '.md'
 
     file_name = File.basename(file.full_name)
-    return if GithubImport.excluded_filenames.include?(file_name)
+    return if GithubImporter.excluded_filenames.include?(file_name)
 
     begin
-      resource = GithubImport.process_path(file.full_name, file.read, id)
+      resource = GithubImporter.process_path(file.full_name, file.read, id)
       update_attribute(:files_processed, "#{files_processed}<li>#{resource.try(:path)}</li>")
     rescue StandardError => e
       puts e.inspect

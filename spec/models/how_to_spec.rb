@@ -14,7 +14,7 @@ Aggregate: Base
 --->"
     FactoryBot.create(:category, name: 'Better Blah Blah')
 
-    res = Resource.find_or_create_resource('CuratedContent/HowToFoo.md', 1)
+    res = GithubImporter.find_or_create_resource('CuratedContent/HowToFoo.md', 1)
     expect(res).to be_a(HowTo)
     expect(res.basic?).to be true
     res.parse_and_update(content, RebuildStatus.displayed_rebuild.id)

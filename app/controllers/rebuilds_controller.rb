@@ -28,25 +28,25 @@ class RebuildsController < ApplicationController
   end
 
   def populate_from_github(rebuild)
-    cont = GithubImport.github.archive_link(Rails.application.credentials[:github][:repo],
-                                            ref: @branch)
+    cont = GithubImporter.github.archive_link(Rails.application.credentials[:github][:repo],
+                                              ref: @branch)
     RebuildStatus.in_progress_rebuild.update(content_branch: @branch)
     file_path = "#{Rails.root}/tmp/repo-#{@branch}.gz"
-    GithubImport.agent.get(cont).save(file_path)
+    GithubImporter.agent.get(cont).save(file_path)
     contrib_file = nil
     begin
-      GithubImport.tar_extract(file_path).each do |file|
+      GithubImporter.tar_extract(file_path).each do |file|
         rebuild.process_file(file)
       end
-      GithubImport.tar_extract(file_path).each do |file|
+      GithubImporter.tar_extract(file_path).each do |file|
         contrib_file = file.read if file.header.name.match('Contributors.md')
       end
       Author.process_authors(rebuild.id)
-      Author.process_overrides(Resource.parse_html_from(contrib_file), rebuild.id)
-     rescue StandardError => e
-       puts e.inspect
-       puts e.backtrace
-     end
+      Author.process_overrides(GithubImporter.parse_html_from(contrib_file), rebuild.id)
+    rescue StandardError => e
+      puts e.inspect
+      puts e.backtrace
+    end
     File.delete(file_path)
   end
 

@@ -32,8 +32,8 @@ RSpec.describe RebuildsController, type: :controller do
 
       # these are specific checks to our resource library...
       # using variables defined at top of this file
-#      expect(SiteItem.count).to be > @min_site_item_count
-#      expect(SiteItem.displayed.count).to be > @min_site_item_count
+      #      expect(SiteItem.count).to be > @min_site_item_count
+      #      expect(SiteItem.displayed.count).to be > @min_site_item_count
       expect(Community.displayed.count).to eq @community_count
 
       expect(Community.first.resources).not_to be_empty
@@ -71,7 +71,7 @@ RSpec.describe RebuildsController, type: :controller do
                a.website.try(:match?, 'maherou')
              end.first.affiliation).to eq 'Sandia National Laboratories'
       @search_expectations.each do |key, val|
-        expect(SiteItem.perform_search(SiteItem.prepare_strings(key), 1, false).size).to be > val
+        expect(Searchable.perform_search(Searchable.prepare_strings(key), 1, false).size).to be > val
       end
       # @blankline = BlogPost.displayed.where(base_path: '2021-06-ES4Blog3.md').first
       # expect(@blankline.main).to match('<span class="caption">Figure 4')

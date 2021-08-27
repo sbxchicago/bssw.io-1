@@ -31,7 +31,7 @@ class ResourcesController < ApplicationController
       @resources = scoped_resources.paginate(page: params[:page], per_page: 25)
     else
       @search_string = search_string
-      perform_search(SiteItem.prepare_strings(search_string))
+      perform_search(Searchable.prepare_strings(search_string))
     end
     render 'index'
   end
@@ -45,7 +45,7 @@ class ResourcesController < ApplicationController
 
   def perform_search(search)
     @search = search
-    @results = Resource.perform_search(search, params[:page], session[:preview])
+    @results = Searchable.perform_search(search, params[:page], session[:preview])
     @resources = @results
   end
 

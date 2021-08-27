@@ -27,7 +27,7 @@ RSS update: 01-01-18
 
     FactoryBot.create(:category, name: 'Better Blah Blah')
 
-    res = Resource.find_or_create_resource('stuff/CuratedContent/foo.md', 1)
+    res = GithubImporter.find_or_create_resource('stuff/CuratedContent/foo.md', 1)
     expect(res).to be_a(Resource)
     expect(res.path).to eq 'CuratedContent/foo.md'
     res.parse_and_update(content, RebuildStatus.displayed_rebuild.id)

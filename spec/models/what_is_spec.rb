@@ -13,7 +13,7 @@ Publish: true
 Aggregate: Base
 --->"
     FactoryBot.create(:category, name: 'Better Blah Blah')
-    what_is = Resource.find_or_create_resource('CuratedContent/WhatIsFoo.md', 1)
+    what_is = GithubImporter.find_or_create_resource('CuratedContent/WhatIsFoo.md', 1)
     expect(what_is).to be_a(WhatIs)
     expect(what_is.basic?).to be true
     what_is.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
