@@ -119,3 +119,7 @@ gem 'activerecord-import'
 gem 'store_method', github: 'fomichov/store_method'
 
 gem 'sucker_punch'
+
+gem 'rack-utf8_sanitizer'
+
+gem "handle_invalid_percent_encoding_requests"

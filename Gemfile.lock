@@ -216,6 +216,9 @@ GEM
       oauth2 (~> 1.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    handle_invalid_percent_encoding_requests (1.1.0)
+      rack-utf8_sanitizer
+      rails (>= 3.1)
     hashie (3.6.0)
     headhunter (0.1.9)
       colorize
@@ -335,6 +338,8 @@ GEM
     rack (2.2.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
+    rack-utf8_sanitizer (1.7.0)
+      rack (>= 1.0, < 3.0)
     rails (6.0.4)
       actioncable (= 6.0.4)
       actionmailbox (= 6.0.4)
@@ -566,6 +571,7 @@ DEPENDENCIES
   friendly_id (= 5.3.0)
   geocoder
   github_api
+  handle_invalid_percent_encoding_requests
   headhunter
   invisible_captcha
   jbuilder!
@@ -582,6 +588,7 @@ DEPENDENCIES
   octokit
   pry
   puma (~> 3.0)
+  rack-utf8_sanitizer
   rails (~> 6.0.0)
   rails-controller-testing
   ransack
