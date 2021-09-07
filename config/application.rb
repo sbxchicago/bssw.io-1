@@ -17,9 +17,9 @@ module Bss
     config.generators do |g|
       g.fixture_replacement :factory_bot
     end
-    # require "#{Rails.root}/app/middleware/exception_app.rb"
+    require "#{Rails.root}/app/middleware/queryrescue.rb"
 
-    # config.middleware.insert 0, ExceptionApp
+    config.middleware.insert 0, RefuseInvalidRequest
     config.middleware.insert 0, Rack::UTF8Sanitizer
 
     
