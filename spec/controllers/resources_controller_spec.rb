@@ -12,6 +12,10 @@ RSpec.describe ResourcesController, type: :controller do
     RebuildStatus.create(display_rebuild_id: @rebuild.id)
   end
 
+  it 'deals with bad queries' do
+    get 'search', params: { q: '%bm%&cp=0&hl=en-US&pq=%bm%&sourceid=chrome&ie=UTF-8' }
+  end
+
   it 'shows not found page' do
     get :show, params: { id: 'foo' }
     expect(response.body).to match 'changing'

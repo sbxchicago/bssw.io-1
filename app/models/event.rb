@@ -41,8 +41,13 @@ class Event < Searchable
             else
               date_node.text.split(':').last.split('-')
             end
-    end_text = dates.last
+
     self.start_at = Chronic.parse(dates.first)
+    get_end_date(dates.last)
+    date_node.try(:parent).try(:remove)
+  end
+
+  def get_end_date(end_text)
     end_text = "#{start_at.strftime('%B')} #{end_text}" unless begin
       Date.parse(end_text)
     rescue StandardError
@@ -50,7 +55,6 @@ class Event < Searchable
     end
     self.end_at = Chronic.parse(end_text)
     fix_end_year(end_text)
-    date_node.try(:parent).try(:remove)
   end
 
   def fix_end_year(end_text)

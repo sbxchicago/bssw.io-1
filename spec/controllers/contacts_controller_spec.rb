@@ -33,6 +33,15 @@ RSpec.describe ContactsController, type: :controller do
       end.to change(ActionMailer::Base.deliveries, :count)
     end
 
+    it "won't send without name" do
+      session[:invisible_captcha_timestamp] = Time.zone.now.iso8601
+      sleep InvisibleCaptcha.timestamp_threshold
+
+      expect do
+        post :create, params: { contact_form: { name: nil, email: 'foo@example.com' } }
+      end.not_to change(ActionMailer::Base.deliveries, :count)
+    end
+
     it 'fails with bad info' do
       sleep InvisibleCaptcha.timestamp_threshold
 

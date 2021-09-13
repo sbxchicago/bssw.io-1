@@ -34,22 +34,14 @@ class RebuildsController < ApplicationController
     file_path = "#{Rails.root}/tmp/repo-#{@branch}.gz"
     GithubImporter.agent.get(cont).save(file_path)
     contrib_file = nil
-#    begin
-      GithubImporter.tar_extract(file_path).each do |file|
-        rebuild.process_file(file)
-      end
-      GithubImporter.tar_extract(file_path).each do |file|
-        contrib_file = file.read if file.header.name.match('Contributors.md')
-      end
-      Author.process_authors(rebuild.id)
-      puts 'overrides'
-      Author.process_overrides(GithubImporter.parse_html_from(contrib_file), rebuild.id)
-      puts 'overridden'
-      puts Author.displayed.find_by(website: 'https://github.com/parinaz2015')
-    # rescue StandardError => e
-    #   puts e.inspect
-    #   puts e.backtrace
-    # end
+    GithubImporter.tar_extract(file_path).each do |file|
+      rebuild.process_file(file)
+    end
+    GithubImporter.tar_extract(file_path).each do |file|
+      contrib_file = file.read if file.header.name.match('Contributors.md')
+    end
+    Author.process_authors(rebuild.id)
+    Author.process_overrides(GithubImporter.parse_html_from(contrib_file), rebuild.id)
     File.delete(file_path)
   end
 
@@ -72,8 +64,6 @@ class RebuildsController < ApplicationController
     clear_all
     update_links_and_images(rebuild.id)
     RebuildStatus.complete(rebuild)
-    Category.displayed.each { |category| category.update(slug: nil) }
-
     rebuild.clean
     flash[:notice] = 'Import completed!'
     redirect_to controller: 'rebuilds', action: 'index', rebuilt: true
@@ -85,7 +75,7 @@ class RebuildsController < ApplicationController
     @branch = if Rails.env.preview?
                 'preview'
               elsif Rails.env.test?
-                'preview' #'parallactic-test' 
+                'preview' # 'parallactic-test'
               else
                 'master'
               end

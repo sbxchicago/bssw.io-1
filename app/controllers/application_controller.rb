@@ -39,9 +39,11 @@ class ApplicationController < ActionController::Base
   end
 
   def render_error(exception = nil)
-    error_string =
-      "500: rescued_from:
-    #{print_exception(exception)}" if exception
+    if exception
+      error_string =
+        "500: rescued_from:
+        #{print_exception(exception)}"
+    end
     logger.error(error_string) if error_string
     render(
       template: 'errors/internal_server_error',

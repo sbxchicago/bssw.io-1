@@ -39,6 +39,7 @@ class Rebuild < ApplicationRecord
   end
 
   def clean
+    Category.displayed.each { |category| category.update(slug: nil) }
     SiteItem.clean
     Fellow.displayed.each(&:set_search_text)
     SiteItem.displayed.each do |si|

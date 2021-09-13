@@ -21,7 +21,5 @@ module Bss
 
     config.middleware.insert 0, RefuseInvalidRequest
     config.middleware.insert 0, Rack::UTF8Sanitizer
-
-    
   end
 end

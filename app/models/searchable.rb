@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# search functionality for site items
 class Searchable < SiteItem
   self.table_name = 'site_items'
 

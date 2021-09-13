@@ -13,8 +13,8 @@ RSpec.describe PagesController, type: :controller do
 
   describe 'get show' do
     it 'renders the show template' do
-      page = FactoryBot.create(:page, rebuild_id: @rebuild.id)
-      get :show, params: { id: page }
+      FactoryBot.create(:page, rebuild_id: @rebuild.id, name: 'Team')
+      get :show, params: { id: 'about' }
       expect(response).to render_template :show
     end
   end

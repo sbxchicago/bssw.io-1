@@ -185,7 +185,7 @@ class Author < ApplicationRecord
     else
       author = Author.find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
     end
-#    puts author
+    #    puts author
     return unless author && vals[1]
 
     author.update(alphabetized_name: vals[1].strip)
