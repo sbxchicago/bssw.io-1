@@ -75,7 +75,7 @@ class RebuildsController < ApplicationController
     @branch = if Rails.env.preview?
                 'preview'
               elsif Rails.env.test?
-                'preview' # 'parallactic-test'
+                'parallactic-test'
               else
                 'master'
               end

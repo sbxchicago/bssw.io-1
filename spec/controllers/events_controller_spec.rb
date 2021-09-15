@@ -15,8 +15,8 @@ RSpec.describe EventsController, type: :controller do
     it 'shows future' do
       FactoryBot.create(:page, name: 'Upcoming Events', rebuild_id: @rebuild.id)
       event = FactoryBot.create(:event, publish: true)
-      event.send(:update_dates,
-                 Nokogiri::XML('<p>December 10 - January 10</p>'))
+      event.send(:update_dates, 'Dates: December 10 - January 10'
+)
 
       get :index
       expect(assigns(:upcoming_events)).not_to be_nil
@@ -24,8 +24,8 @@ RSpec.describe EventsController, type: :controller do
     it 'shows past' do
       FactoryBot.create(:page, name: 'Past Events', rebuild_id: @rebuild.id)
       event = FactoryBot.create(:event, publish: true)
-      event.send(:update_dates,
-                 Nokogiri::XML('<p>Dates: January 10 2019 - January 11 2019</p>'))
+      event.send(:update_dates, 'Dates: January 1 2019 - January 10 2019'
+                 )
       get :index, params: { past: true }
 
       expect(assigns(:past_events)).not_to be_nil
@@ -37,7 +37,7 @@ RSpec.describe EventsController, type: :controller do
       expect(Event.displayed).to include(event)
       expect(Event.displayed.with_author(author)).to include(event)
       event.send(:update_dates,
-                 Nokogiri::XML('<p>Date: January 20, 2003</p>'))
+                  'Date: January 20, 2003')
       event.save
 
       expect(event.authors).to include(author)

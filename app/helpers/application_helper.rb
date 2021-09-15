@@ -32,6 +32,12 @@ module ApplicationHelper
   end
 
   def show_dates(event)
+    event.associated_dates.each do |date|
+      "<strong>#{date.label.titleize}</strong> #{date_range(date.start_at, date.end_at)}"
+    end.join.html_safe
+  end
+
+  def date_range(start_at, end_at)
     start_date = event.start_at.strftime('%b %e, %Y')
     end_date = event.end_at
     end_date = end_date.strftime('%b %e, %Y') if end_date

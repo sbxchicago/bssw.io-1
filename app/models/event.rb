@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 # Events e.g. conferences
-class Event < Searchable
+class Event < Dateable
+
+
+  has_many :additional_dates
+  
   def update_from_content(doc, rebuild)
     update_details(doc)
     overview = doc.at("p:contains('Overview')")
@@ -10,19 +14,29 @@ class Event < Searchable
   end
 
   scope :past, lambda {
-    where(
-      'end_at < ?', Date.today
-    ).order('start_at DESC')
+    joins(:additional_dates).where(
+                   'additional_dates.end_at < ?', Date.today
+                   ).order('start_at DESC')
   }
   scope :upcoming, lambda {
-    where('end_at >= ?', Date.today).order('start_at ASC')
+    joins(:additional_dates).where('additional_dates.end_at >= ?', Date.today).order('start_at ASC')
   }
 
+  def start_at
+    additional_dates.where(label: 'Date').first.try(:start_at)  ||
+      additional_dates.first.try(:start_at) ||
+      super
+  end
+
+  def end_at
+    additional_dates.where(label: 'Date').first.try(:end_at) ||
+      additional_dates.first.try(:end_at) ||
+      super
+  end
+
+  
   private
 
-  def broken_range?
-    end_at && start_at > end_at
-  end
 
   def update_details(doc)
     %w[website location organizers].each do |method|
@@ -30,39 +44,28 @@ class Event < Searchable
       send("#{method}=", node.text.split(':').last) if node
     end
     self.website = "http:#{website}" if website
-    date_node = doc.at("li:contains('Date')")
-    update_dates(date_node) if date_node
+    #    date_nodes = doc.xpath("//li[contains(text(), 'Date')]") #+ doc.xpath("//li[contains(text(), 'date')]")
+    date_nodes = doc.css("li:contains('Date')") +  doc.css("li:contains('date:')")
+    date_nodes.each do |date_node|
+      puts date_node.text
+      update_dates(date_node.text.to_s) if date_node
+      date_node.try(:remove)
+    end
     doc.at("strong:contains('Description')").try(:remove)
   end
 
-  def update_dates(date_node)
-    dates = if date_node.text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
-              date_node.text.split(':').last.split('- ')
-            else
-              date_node.text.split(':').last.split('-')
-            end
 
-    self.start_at = Chronic.parse(dates.first)
-    get_end_date(dates.last)
-    date_node.try(:parent).try(:remove)
-  end
-
-  def get_end_date(end_text)
-    end_text = "#{start_at.strftime('%B')} #{end_text}" unless begin
-      Date.parse(end_text)
-    rescue StandardError
-      false
+  def update_dates(date_text)
+    puts date_text
+    if date_text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
+      dates = date_text.split(':').last.split('- ')
+    else
+      dates = date_text.split(':').last.split('-')
     end
-    self.end_at = Chronic.parse(end_text)
-    fix_end_year(end_text)
+    puts dates.inspect
+    date = AdditionalDate.create(label: date_text.split(':').first)
+    date.update_dates(dates)
+    additional_dates << date
   end
 
-  def fix_end_year(end_text)
-    end_year = end_text.match(/\d{4}/)
-    if broken_range? && end_year
-      self.start_at = start_at.change(year: end_year[0].to_i)
-    elsif broken_range?
-      self.start_at = end_at.change(year: end_at.year + 1)
-    end
-  end
 end
