@@ -15,6 +15,6 @@ class FeaturedPost < ApplicationRecord
   end
 
   def site_item
-    SiteItem.displayed.find_by(base_path: File.basename(path)) || SiteItem.displayed.find_by_slug(path.split('/').last)
+    SiteItem.displayed.find_by(base_path: File.basename(path.to_s)) || SiteItem.displayed.find_by_slug(path.split('/').last)
   end
 end
