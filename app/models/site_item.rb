@@ -114,13 +114,14 @@ class SiteItem < MarkdownImport
   end
 
   def add_topics(names, rebuild)
+
     names.each do |top_name|
       next if top_name.match(Regexp.new(/\[(.*)\]/))
 
       name = top_name.strip
       top = Topic.find_or_create_by(
         name: name.titleize,
-        rebuild_id: rebuild
+        rebuild_id: rebuild.id
       )
       top.slug = name.parameterize
       topics << top

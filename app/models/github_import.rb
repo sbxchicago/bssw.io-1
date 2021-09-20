@@ -8,13 +8,13 @@ class GithubImport < ApplicationRecord
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
 
-  def parse_and_update(content, rebuild_id)
+  def parse_and_update(content, rebuild)
     doc = GithubImporter.parse_html_from(content)
-    update_from_content(doc, rebuild_id)
+    update_from_content(doc, rebuild)
     self
   end
 
-  def update_from_content(doc, rebuild_id)
+  def update_from_content(doc, rebuild)
     title_chunk = GithubImporter.get_title_chunk(doc)
     res = find_from_title(title_chunk)
     if res.has_attribute?(:published_at)
@@ -22,7 +22,7 @@ class GithubImport < ApplicationRecord
       do_dates(res) unless res.is_a?(Event) || !res.published_at.blank?
     end
     update_author(doc.at("h4:contains('Contributed')"), rebuild_id)
-    res.update_taxonomy(doc, rebuild_id)
+    res.update_taxonomy(doc, rebuild)
 
     content_string = CGI.unescapeHTML(doc.css('body').to_s) + "\n<!-- file path: #{res.path} -->".html_safe
     res.update_attribute(:content, content_string)

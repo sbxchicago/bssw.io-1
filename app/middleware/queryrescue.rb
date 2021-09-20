@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# render an error page if we get a bad request
 class RefuseInvalidRequest
   def initialize(app)
     @app = app

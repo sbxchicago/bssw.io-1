@@ -13,10 +13,10 @@ Publish: true
 Aggregate: Base
 --->"
     FactoryBot.create(:category, name: 'Better Blah Blah')
-    what_is = GithubImporter.find_or_create_resource('CuratedContent/WhatIsFoo.md', 1)
+    what_is = Rebuild.create.find_or_create_resource('CuratedContent/WhatIsFoo.md')
     expect(what_is).to be_a(WhatIs)
     expect(what_is.basic?).to be true
-    what_is.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
+    what_is.parse_and_update(content, RebuildStatus.displayed_rebuild)
     expect(what_is.content).to match 'bar'
     topic = what_is.topics.last
     resource = FactoryBot.create(:resource)
