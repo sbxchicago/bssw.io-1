@@ -26,8 +26,6 @@ class Rebuild < ApplicationRecord
       resource = process_path(file.full_name, file.read)
       update_attribute(:files_processed, "#{files_processed}<li>#{resource.try(:path)}</li>")
     rescue StandardError => e
-      puts resource.inspect
-      puts e
       record_errors(file_name, e)
     end
   end
@@ -38,7 +36,7 @@ class Rebuild < ApplicationRecord
     if path.match('Quote')
       Quote.import(content)
     elsif path.match('Announcements')
-      Announcement.import(content, self)
+      Announcement.import(content, self.id)
     else
       resource = self.find_or_create_resource(path)
       resource.parse_and_update(content, self)
@@ -60,33 +58,18 @@ class Rebuild < ApplicationRecord
   end
 
   def clean
-    puts "cleaning"
+    SiteItem.clean
+    RebuildStatus.complete(self)
+    Category.displayed.each { |category| category.update(slug: nil) }
+    Fellow.displayed.each(&:set_search_text)
+    SiteItem.displayed.each do |si|
+      si.refresh_topic_list
+      si.refresh_author_list
+    end
+    Author.process_authors(self)
 
-    self.save
-    begin
-      SiteItem.clean
-      RebuildStatus.complete(self)
-    rescue Exception => e
-      puts e
-    end
-    begin
-      Category.displayed.each { |category| category.update(slug: nil) }
-      Fellow.displayed.each(&:set_search_text)
-      SiteItem.displayed.each do |si|
-        si.refresh_topic_list
-        si.refresh_author_list
-      end
-    rescue Exception => e
-      puts e
-    end
-    begin
-      Author.refresh_author_counts
-    rescue Exception => e
-      puts e
-    end
-    puts self.id
-#    clear_old
-    puts "finished cleaning"
+    Author.refresh_author_counts
+    clear_old
   end
   
   def clear_old
@@ -99,8 +82,7 @@ class Rebuild < ApplicationRecord
       everything += klass.where(rebuild_id: nil)
     end
     everything.each(&:delete)
-    puts "finished clearing"
-    end
+  end
 
   def self.file_structure # rubocop:disable Metrics/MethodLength
     {

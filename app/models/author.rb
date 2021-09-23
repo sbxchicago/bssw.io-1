@@ -29,19 +29,13 @@ class Author < ApplicationRecord
   end
 
   def self.refresh_author_counts
-    puts 'hrm authors'
-    begin
-      puts 'ya'
-      displayed.each do |auth|
+    displayed.each do |auth|
       auth.refresh_resource_count
       auth.refresh_event_count
       auth.refresh_blog_count
       auth.refresh_resource_listing
       auth.refresh_blog_listing
       auth.refresh_event_listing
-    end
-    rescue Exception => e
-      puts e
     end
   end
 
@@ -81,7 +75,6 @@ class Author < ApplicationRecord
   end
 
   def update_from_github
-    puts "updating #{website}"
     return unless website&.match('github')
     return unless affiliation.blank? || avatar_url.blank?
 

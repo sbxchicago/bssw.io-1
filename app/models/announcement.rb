@@ -2,8 +2,6 @@
 
 # Announcements display on homepage
 class Announcement < MarkdownImport
-
-
   
   self.table_name = 'announcements'
 

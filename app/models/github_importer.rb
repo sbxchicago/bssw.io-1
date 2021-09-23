@@ -50,17 +50,17 @@ class GithubImporter < ApplicationRecord
     string
   end
 
-  def self.custom_author_info(file_path)
-    puts "custom author?"
+  def self.custom_author_info(file_path, rebuild)
+    begin
     contrib_file = nil
     tar_extract(file_path).each do |file|
       contrib_file = file.read if file.header.name.match('Contributors.md')
     end
-    puts "read file..."
-#    Author.process_authors(rebuild.id)
-    puts "processed..."
-#    Author.process_overrides(parse_html_from(contrib_file), rebuild.id)
-    puts "processed overrides!"
+    Author.process_overrides(parse_html_from(contrib_file), rebuild.id)
+    rescue Exception => e
+      puts 'oops?'
+      puts e
+    end
   end
 
   def self.populate
@@ -74,10 +74,11 @@ class GithubImporter < ApplicationRecord
     tar_extract(file_path).each do |file|
       rebuild.process_file(file)
     end
-    puts "completed files"
-    custom_author_info(file_path)
-    File.delete(file_path)
+    rebuild.clean
     rebuild.update_links_and_images
+    custom_author_info(file_path, rebuild)
+    File.delete(file_path)
+
     puts "and okay..."
   end
 end
