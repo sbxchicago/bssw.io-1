@@ -29,10 +29,12 @@ class RebuildsController < ApplicationController
     rebuild = Rebuild.create(started_at: Time.now, ip: request.ip)
     RebuildStatus.start(rebuild)
     populate_from_github(rebuild)
-
+    puts "populated"
     rebuild.clean
+    puts "cleaned"
     flash[:notice] = 'Import completed!'
     redirect_to controller: 'rebuilds', action: 'index', rebuilt: true
+    puts "we did it"
   end
 
   private

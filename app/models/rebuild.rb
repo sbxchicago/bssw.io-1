@@ -23,10 +23,8 @@ class Rebuild < ApplicationRecord
     return if GithubImporter.excluded_filenames.include?(file_name)
 
     begin
-      puts file.full_name
       resource = process_path(file.full_name, file.read)
       update_attribute(:files_processed, "#{files_processed}<li>#{resource.try(:path)}</li>")
-      puts resource.class.name
     rescue StandardError => e
       puts resource.inspect
       puts e
@@ -62,20 +60,38 @@ class Rebuild < ApplicationRecord
   end
 
   def clean
-    clear_old
+    puts "cleaning"
 
-    Category.displayed.each { |category| category.update(slug: nil) }
-    SiteItem.clean
-    Fellow.displayed.each(&:set_search_text)
-    SiteItem.displayed.each do |si|
-      si.refresh_topic_list
-      si.refresh_author_list
+    self.save
+    begin
+      SiteItem.clean
+      RebuildStatus.complete(self)
+    rescue Exception => e
+      puts e
     end
-    RebuildStatus.complete(self)
+    begin
+      Category.displayed.each { |category| category.update(slug: nil) }
+      Fellow.displayed.each(&:set_search_text)
+      SiteItem.displayed.each do |si|
+        si.refresh_topic_list
+        si.refresh_author_list
+      end
+    rescue Exception => e
+      puts e
+    end
+    begin
+      Author.refresh_author_counts
+    rescue Exception => e
+      puts e
+    end
+    puts self.id
+#    clear_old
+    puts "finished cleaning"
   end
-
+  
   def clear_old
-    rebuild_ids = Rebuild.first(5).to_a.map(&:id).delete_if(&:nil?)
+    rebuild_ids = Rebuild.last(5).to_a.map(&:id).delete_if(&:nil?)
+    rebuild_ids = rebuild_ids + [self.id]
     classes = [Community, Category, Topic, Announcement, Author, Quote, SiteItem, FeaturedPost, Fellow]
     everything = Rebuild.where(['id NOT IN (?)', rebuild_ids])
     classes.each do |klass|
@@ -83,7 +99,8 @@ class Rebuild < ApplicationRecord
       everything += klass.where(rebuild_id: nil)
     end
     everything.each(&:delete)
-  end
+    puts "finished clearing"
+    end
 
   def self.file_structure # rubocop:disable Metrics/MethodLength
     {

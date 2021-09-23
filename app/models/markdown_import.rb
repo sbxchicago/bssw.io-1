@@ -4,6 +4,11 @@
 class MarkdownImport < GithubImport
   self.abstract_class = true
 
+  scope :displayed, lambda {
+    where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
+  }
+
+  
   def self.caption_regexp
     '\[(.*?)\]'
   end

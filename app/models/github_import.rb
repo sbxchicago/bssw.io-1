@@ -4,9 +4,6 @@
 class GithubImport < ApplicationRecord
   self.abstract_class = true
 
-  scope :displayed, lambda {
-    where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
-  }
 
   def parse_and_update(content, rebuild)
     doc = GithubImporter.parse_html_from(content)

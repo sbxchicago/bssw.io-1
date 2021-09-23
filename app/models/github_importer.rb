@@ -51,15 +51,20 @@ class GithubImporter < ApplicationRecord
   end
 
   def self.custom_author_info(file_path)
+    puts "custom author?"
     contrib_file = nil
     tar_extract(file_path).each do |file|
       contrib_file = file.read if file.header.name.match('Contributors.md')
     end
-    Author.process_authors(rebuild.id)
-    Author.process_overrides(parse_html_from(contrib_file), rebuild.id)
+    puts "read file..."
+#    Author.process_authors(rebuild.id)
+    puts "processed..."
+#    Author.process_overrides(parse_html_from(contrib_file), rebuild.id)
+    puts "processed overrides!"
   end
 
   def self.populate
+    puts "populating"
     cont = github.archive_link(Rails.application.credentials[:github][:repo],
                                ref: @branch)
     rebuild = RebuildStatus.in_progress_rebuild
@@ -69,8 +74,10 @@ class GithubImporter < ApplicationRecord
     tar_extract(file_path).each do |file|
       rebuild.process_file(file)
     end
+    puts "completed files"
     custom_author_info(file_path)
     File.delete(file_path)
     rebuild.update_links_and_images
+    puts "and okay..."
   end
 end

@@ -2,6 +2,9 @@
 
 # Announcements display on homepage
 class Announcement < MarkdownImport
+
+
+  
   self.table_name = 'announcements'
 
   scope :for_today, lambda {

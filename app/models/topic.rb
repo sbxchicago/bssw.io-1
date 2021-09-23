@@ -3,6 +3,12 @@
 # Filters - like tags
 class Topic < GithubImport
   #  default_scope -> { order(order_num: 'asc') }
+
+  
+  scope :displayed, lambda {
+    where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
+  }
+
   self.table_name = 'topics'
   has_and_belongs_to_many :site_items, -> { distinct }
   validates_presence_of :name

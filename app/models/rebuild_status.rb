@@ -3,11 +3,11 @@
 # store the current rebuild
 class RebuildStatus < ApplicationRecord
   def self.displayed_rebuild
-    Rebuild.find(first.display_rebuild_id)
+    Rebuild.where(id: first.display_rebuild_id).first
   end
 
   def self.in_progress_rebuild
-    Rebuild.find(first.in_progress_rebuild_id)
+    Rebuild.where(id: first.in_progress_rebuild_id).first
   end
 
   def self.content_branch
@@ -31,6 +31,5 @@ class RebuildStatus < ApplicationRecord
     first.update(display_rebuild_id: rebuild.id, in_progress_rebuild_id: nil)
     rebuild.update(files_processed: "<ul>#{rebuild.files_processed}</ul>",
                    ended_at: Time.now)
-    Author.refresh_author_counts
   end
 end

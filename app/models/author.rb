@@ -11,7 +11,7 @@ class Author < ApplicationRecord
   friendly_id :last_name, use: %i[finders slugged scoped], scope: :rebuild_id
 
   scope :displayed, lambda {
-    where("#{table_name}.rebuild_id = ?", RebuildStatus.displayed_rebuild)
+    where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
 
   def should_generate_new_friendly_id?
@@ -23,17 +23,25 @@ class Author < ApplicationRecord
   end
 
   def self.process_authors(rebuild)
+    puts 'process authors'
     where(rebuild_id: rebuild).each(&:update_from_github)
+    puts "process authors moar"
   end
 
   def self.refresh_author_counts
-    displayed.each do |auth|
+    puts 'hrm authors'
+    begin
+      puts 'ya'
+      displayed.each do |auth|
       auth.refresh_resource_count
       auth.refresh_event_count
       auth.refresh_blog_count
       auth.refresh_resource_listing
       auth.refresh_blog_listing
       auth.refresh_event_listing
+    end
+    rescue Exception => e
+      puts e
     end
   end
 
@@ -73,6 +81,7 @@ class Author < ApplicationRecord
   end
 
   def update_from_github
+    puts "updating #{website}"
     return unless website&.match('github')
     return unless affiliation.blank? || avatar_url.blank?
 
@@ -164,6 +173,7 @@ class Author < ApplicationRecord
   end
 
   def self.process_overrides(doc, rebuild)
+    puts 'overrides...'
     comments = doc.xpath('//comment()') if doc
     comments&.each do |comment|
       next unless comment.text.match?(/Overrides/i)

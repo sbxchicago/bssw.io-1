@@ -33,6 +33,8 @@ RSpec.describe RebuildsController, type: :controller do
       # these are specific checks to our resource library...
       # using variables defined at top of this file
       #      expect(SiteItem.count).to be > @min_site_item_count
+#      expect(RebuildStatus.first.display_rebuild_id).to eq Rebuild.last.id
+expect(SiteItem.last.rebuild_id).to eq RebuildStatus.first.display_rebuild_id
       expect(SiteItem.displayed.count).to be > @min_site_item_count
       expect(Community.displayed.count).to eq @community_count
 
