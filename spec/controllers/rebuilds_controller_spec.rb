@@ -33,8 +33,8 @@ RSpec.describe RebuildsController, type: :controller do
       # these are specific checks to our resource library...
       # using variables defined at top of this file
       #      expect(SiteItem.count).to be > @min_site_item_count
-#      expect(RebuildStatus.first.display_rebuild_id).to eq Rebuild.last.id
-expect(SiteItem.last.rebuild_id).to eq RebuildStatus.first.display_rebuild_id
+      #      expect(RebuildStatus.first.display_rebuild_id).to eq Rebuild.last.id
+      expect(SiteItem.last.rebuild_id).to eq RebuildStatus.first.display_rebuild_id
       expect(SiteItem.displayed.count).to be > @min_site_item_count
       expect(Community.displayed.count).to eq @community_count
 
@@ -65,6 +65,7 @@ expect(SiteItem.last.rebuild_id).to eq RebuildStatus.first.display_rebuild_id
       expect(Author.displayed.where(website: 'https://github.com/nniiicc').first.last_name).not_to eq 'Nic'
       expect(Page.find('homepage')).to be_a Page
       expect(Page.last.snippet).not_to be_empty
+      puts Author.displayed.where(website: @author_slug)
       expect(Author.displayed.where(website: @author_slug).size).to eq 1
       expect(Page.displayed.where(name: 'Contributors')).not_to be_empty
       expect(Author.displayed.where(website: @author_slug).first.resource_listing).not_to eq '0 resources'

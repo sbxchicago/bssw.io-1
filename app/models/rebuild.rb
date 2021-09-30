@@ -16,16 +16,20 @@ class Rebuild < ApplicationRecord
     !(Rebuild.where('started_at > ?', 10.minutes.ago).to_a.select { |r| r.ended_at.blank? }).empty?
   end
 
+  
   def process_file(file)
+
     return if File.extname(file.full_name) != '.md'
 
     file_name = File.basename(file.full_name)
     return if GithubImporter.excluded_filenames.include?(file_name)
 
     begin
+  #    puts "#{self.class} processing #{file.full_name}"
       resource = process_path(file.full_name, file.read)
       update_attribute(:files_processed, "#{files_processed}<li>#{resource.try(:path)}</li>")
     rescue StandardError => e
+      puts "#{self.class} encountered #{e} #{e.backtrace.select{|b| b.match('app') }}"
       record_errors(file_name, e)
     end
   end
@@ -36,9 +40,9 @@ class Rebuild < ApplicationRecord
     if path.match('Quote')
       Quote.import(content)
     elsif path.match('Announcements')
-      Announcement.import(content, self.id)
+      Announcement.import(content, id)
     else
-      resource = self.find_or_create_resource(path)
+      resource = find_or_create_resource(path)
       resource.parse_and_update(content, self)
     end
   end
@@ -51,30 +55,33 @@ class Rebuild < ApplicationRecord
   end
 
   def update_links_and_images
+    puts "#{self.class} goes through pages, site items, and communities to normalize links and images within the markdown"
     (Page.where(rebuild_id: id) +
      SiteItem.where(rebuild_id: id) +
      Community.where(rebuild_id: id)
     ).each(&:update_links_and_images)
   end
 
-  def clean
-    SiteItem.clean
+  def clean(file_path)
+    puts "#{self.class} records post-build"
     RebuildStatus.complete(self)
+    puts "#{self.class} deletes old items"
+    SiteItem.clean
     Category.displayed.each { |category| category.update(slug: nil) }
     Fellow.displayed.each(&:set_search_text)
-    SiteItem.displayed.each do |si|
-      si.refresh_topic_list
-      si.refresh_author_list
-    end
-    Author.process_authors(self)
-
-    Author.refresh_author_counts
+    AuthorUtility.process_authors(self)
+    AuthorUtility.custom_staff_info(file_path, self)
+    AuthorUtility.custom_author_info(file_path, self)
     clear_old
+    update_links_and_images
+    puts "#{self.class} deletes the tar file"
+    File.delete(file_path)
   end
-  
+
   def clear_old
+    puts "#{self.class} deletes all but the last 5 rebuilds, and all old records "
     rebuild_ids = Rebuild.last(5).to_a.map(&:id).delete_if(&:nil?)
-    rebuild_ids = rebuild_ids + [self.id]
+    rebuild_ids += [id]
     classes = [Community, Category, Topic, Announcement, Author, Quote, SiteItem, FeaturedPost, Fellow]
     everything = Rebuild.where(['id NOT IN (?)', rebuild_ids])
     classes.each do |klass|
@@ -111,10 +118,8 @@ class Rebuild < ApplicationRecord
         break
       end
     end
-    item = res.find_or_create_by(base_path: File.basename(path), rebuild_id: self.id)
+    item = res.find_or_create_by(base_path: File.basename(path), rebuild_id: id)
     item.update(path: GithubImporter.normalized_path(path))
     item
   end
-
-  
 end

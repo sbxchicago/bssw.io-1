@@ -23,6 +23,5 @@ RSpec.describe SiteItem, type: :model do
     expect(SiteItem.with_topic(top)).to include(resource)
     expect(SiteItem.with_category(cat)).to include(resource)
     expect(SiteItem.with_category(cat)).not_to include(second_resource)
-    expect(SiteItem.get('category' => cat)).to include(resource)
   end
 end

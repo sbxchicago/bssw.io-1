@@ -30,7 +30,10 @@ class Page < MarkdownImport
   def update_from_content(doc, rebuild)
     self.slug = nil
     update_featured(doc)
-    update_staff(doc, rebuild) if path.match('About')
+    if path.match('About')
+      puts "update staff from 'About' page"
+      update_staff(doc, rebuild)
+    end      
     super(doc, rebuild)
     self.slug = 'homepage' if path.match('Home')
     save

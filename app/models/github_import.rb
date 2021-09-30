@@ -4,20 +4,18 @@
 class GithubImport < ApplicationRecord
   self.abstract_class = true
 
-
   def parse_and_update(content, rebuild)
+
     doc = GithubImporter.parse_html_from(content)
     update_from_content(doc, rebuild)
     self
   end
 
   def update_from_content(doc, rebuild)
-    title_chunk = GithubImporter.get_title_chunk(doc)
+    title_chunk = MarkdownUtility.get_title_chunk(doc)
     res = find_from_title(title_chunk)
-    if res.has_attribute?(:published_at)
-      res.update_date(doc)
-      do_dates(res) unless res.is_a?(Event) || !res.published_at.blank?
-    end
+#    puts "#{self.name} creates a resource with content from #{res.path}"
+    res.dates(doc)
     update_author(doc.at("h4:contains('Contributed')"), rebuild_id)
     res.update_taxonomy(doc, rebuild)
 
@@ -43,33 +41,13 @@ class GithubImport < ApplicationRecord
     res
   end
 
-  def do_dates(res)
-    res.update_attribute(:published_at,
-                         GithubImporter.github.commits(
-                           Rails.application.credentials[:github][:repo],
-                           RebuildStatus.content_branch,
-                           path: "/#{path}"
-                         ).first.commit.author.date)
-  end
-
   def update_author(node, rebuild)
     return unless node && respond_to?('authors')
 
-    authors = Author.make_from_data(
+    auths = AuthorUtility.make_from_data(
       node, rebuild
     )
-    self.authors = authors
-    node.try(:remove)
-  end
-
-  def update_date(doc)
-    node = doc.at("h4:contains('Publication date')")
-    node ||= doc.at("h4:contains('Publication Date')")
-    node ||= doc.at("h4:contains('publication date')")
-    return unless node
-
-    date = Chronic.parse(node.content.split(':').last)
-    self.published_at = date
+    self.authors = auths
     node.try(:remove)
   end
 end

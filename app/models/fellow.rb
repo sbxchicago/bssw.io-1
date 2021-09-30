@@ -44,7 +44,7 @@ class Fellow < MarkdownImport
   end
 
   def modified_path
-    MarkdownImport.modified_path(image_path)
+    MarkdownUtility.modified_path(image_path)
   end
 
   def update_from_content(doc, _rebuild)

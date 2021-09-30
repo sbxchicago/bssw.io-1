@@ -23,6 +23,7 @@ class RebuildStatus < ApplicationRecord
   end
 
   def self.start(rebuild)
+    puts "#{self.name} records meta information about the rebuild itself, before starting"
     status = first || create
     status.update_attribute(:in_progress_rebuild_id, rebuild.id)
   end

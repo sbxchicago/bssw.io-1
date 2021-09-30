@@ -11,7 +11,7 @@ class FeaturedPost < ApplicationRecord
   end
 
   def image
-    "<img src='#{MarkdownImport.modified_path(path)}' />".html_safe
+    "<img src='#{MarkdownUtility.modified_path(path)}' />".html_safe
   end
 
   def site_item

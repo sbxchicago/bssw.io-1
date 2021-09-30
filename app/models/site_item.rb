@@ -2,10 +2,6 @@
 
 # resources, events, and blog posts
 class SiteItem < MarkdownImport
-
-
-
-  
   has_and_belongs_to_many :topics, -> { distinct } # , before_add: :inc_topic_count, before_remove: :dec_topic_count
   has_many :contributions, dependent: :destroy
   has_many :authors, through: :contributions
@@ -105,20 +101,19 @@ class SiteItem < MarkdownImport
     topics.map(&:name).join(', ')
   end
 
-  scope :get, lambda { |options|
-    result = self
-    options.each do |key, val|
-      result = result.send("with_#{key}", val) if val
-    end
-    result
-  }
+  # scope :get, lambda { |options|
+  #   result = self
+  #   options.each do |key, val|
+  #     result = result.send("with_#{key}", val) if val
+  #   end
+  #   result
+  # }
 
   def basic?
     is_a?(WhatIs) || is_a?(HowTo)
   end
 
   def add_topics(names, rebuild)
-
     names.each do |top_name|
       next if top_name.match(Regexp.new(/\[(.*)\]/))
 
@@ -143,5 +138,9 @@ class SiteItem < MarkdownImport
   def self.clean
     items = where(name: nil)
     items.each(&:delete)
+    displayed.each do |si|
+      si.refresh_topic_list
+      si.refresh_author_list
+    end
   end
 end

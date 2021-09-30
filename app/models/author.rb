@@ -22,23 +22,6 @@ class Author < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  def self.process_authors(rebuild)
-    puts 'process authors'
-    where(rebuild_id: rebuild).each(&:update_from_github)
-    puts "process authors moar"
-  end
-
-  def self.refresh_author_counts
-    displayed.each do |auth|
-      auth.refresh_resource_count
-      auth.refresh_event_count
-      auth.refresh_blog_count
-      auth.refresh_resource_listing
-      auth.refresh_blog_listing
-      auth.refresh_event_listing
-    end
-  end
-
   def single_contribution(preview: false)
     nums = [resource_count(preview: preview),
             event_count(preview: preview),
@@ -87,114 +70,29 @@ class Author < ApplicationRecord
     end
   end
 
-  def self.make_from_data(node, rebuild)
-    authors = []
-    node.css('a').each do |link|
-      auth = author_from_website(link, rebuild)
-      authors << auth
-    end
-    txt = node.text.gsub('Contributed by', '')
-    txt = txt.gsub(' and ', ',').strip
-    txt.split(',').each do |text|
-      next if text.blank? || text.match?("\:") || text.match?("\#")
-
-      names = names_from(text)
-      auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
-      auth.update(alphabetized_name: names.last)
-      authors << auth
-    end
-
-    authors
-  end
-
-  def self.author_from_website(link, rebuild)
-    names = names_from(link.text)
-    website = URI.parse(link['href'])
-    website = if website.host.blank?
-                nil
-              else
-                "https://#{website.host}#{website.path}"
-              end
-    auth = find_by(website: website, rebuild_id: rebuild)
-    unless auth
-      auth = find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
-      auth.update(website: website, alphabetized_name: names.last)
-    end
-    link.remove
-
-    auth
-  end
-
   def update_info(hash)
     update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
     update(affiliation: hash.company) if affiliation.blank?
-    names = Author.names_from(hash.name)
+    names = AuthorUtility.names_from(hash.name)
     update(first_name: names.first, last_name: names.last, alphabetized_name: names.last) unless names == [nil, nil]
   end
 
-  def self.names_from(name)
-    return [nil, nil] unless name.respond_to?(:split)
-    return %w[BSSw Community] if name.match?(/BSSw Community/i)
+  def do_overrides(vals)
+    return unless vals[1]
 
-    names = name.split(' ')
-    names = names.map { |n| n.blank? ? nil : n }
-    last_name = names.last
-    first_name = [names - [last_name]].join(' ')
-    [first_name, last_name]
-  end
-
-  def update_from_link(link)
-    parent = link.parent
-    siblings = parent.children
-    siblings.each do |kid|
-      process_kid(kid)
-    end
-    names = Author.names_from(siblings.first.text)
-    update(first_name: names.first, last_name: names.last, alphabetized_name: names.last)
-    siblings.first.try(:remove)
-    update_attribute(:affiliation,
-                     parent.children.first.text.strip)
-  end
-
-  def process_kid(kid)
-    text = kid.text
-    kid.remove if text.blank?
-    return unless text.match?('Title')
-
-    update_attribute(:title, text.gsub('Title: ', ''))
-    kid.remove
-  end
-
-  def self.process_overrides(doc, rebuild)
-    puts 'overrides...'
-    comments = doc.xpath('//comment()') if doc
-    comments&.each do |comment|
-      next unless comment.text.match?(/Overrides/i)
-
-      comment.text.split(/\n/).collect do |val|
-        next if val.match?(/Overrides/i)
-
-        do_overrides(val, rebuild)
-      end
-    end
-  end
-
-  def self.do_overrides(val, rebuild)
-    vals = val.split(',')
-    vals = vals.map { |v| v.delete('"') }
-    if vals.first == '-'
-      names = names_from(vals.last)
-      author = Author.find_by(rebuild_id: rebuild, first_name: names.first, last_name: names.last)
-    else
-      author = Author.find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
-    end
-
-    return unless author && vals[1]
-
-    author.update(alphabetized_name: vals[1].strip)
+    update(alphabetized_name: vals[1].strip)
     return unless vals[2]
 
-    names = Author.names_from(vals[2])
-    author.update(first_name: names.first, last_name: names.last)
+    names = AuthorUtility.names_from(vals[2])
+    update(first_name: names.first, last_name: names.last)
+  end
+
+  def self.find_from_vals(vals, rebuild)
+    if vals.first == '-'
+      names = AuthorUtility.names_from(vals.last)
+      find_by(rebuild_id: rebuild, first_name: names.first, last_name: names.last)
+    else
+      find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
+    end
   end
 end

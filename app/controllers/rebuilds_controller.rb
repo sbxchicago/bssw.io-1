@@ -20,21 +20,20 @@ class RebuildsController < ApplicationController
     redirect_to '/rebuilds'
   end
 
-  def populate_from_github(_rebuild)
-    GithubImporter.populate
-  end
 
   def import
     branch
     rebuild = Rebuild.create(started_at: Time.now, ip: request.ip)
     RebuildStatus.start(rebuild)
-    populate_from_github(rebuild)
-    puts "populated"
-    rebuild.clean
-    puts "cleaned"
+    begin
+      GithubImporter.populate
+    rescue Exception => e
+      puts "populate got #{e}"
+      puts "encountered #{e} #{e.backtrace.select{|b| b.match('app') }}"
+    end
     flash[:notice] = 'Import completed!'
     redirect_to controller: 'rebuilds', action: 'index', rebuilt: true
-    puts "we did it"
+    puts 'we did it'
   end
 
   private

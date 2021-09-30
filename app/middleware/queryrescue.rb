@@ -7,16 +7,9 @@ class RefuseInvalidRequest
   end
 
   def call(env)
-    query = begin
-      Rack::Utils.parse_nested_query(env['QUERY_STRING'].to_s)
-    rescue StandardError
-      :bad_query
-    end
-    if query == :bad_query
-      env['QUERY_STRING'] = nil
-      ApplicationController.action(:render_error).call(env)
-    else
-      @app.call(env)
-    end
+    Rack::Utils.parse_nested_query(env['QUERY_STRING'].to_s)
+    @app.call(env)
+  rescue StandardError
+    ApplicationController.action(:render_error).call(env)
   end
 end
