@@ -90,7 +90,8 @@ class MarkdownImport < GithubImport
   end
 
   def update_date(doc)
-    return unless self.respond_to?('published_at')
+    return unless respond_to?('published_at')
+
     node = doc.at("h4:contains('Publication date')")
     node ||= doc.at("h4:contains('Publication Date')")
     node ||= doc.at("h4:contains('publication date')")
@@ -101,15 +102,16 @@ class MarkdownImport < GithubImport
     node.try(:remove)
   end
 
-  def dates(doc)
+  def dates(doc, rebuild)
     update_date(doc)
     return if !has_attribute?(:published_at) || is_a?(Event) || !published_at.blank?
 
+    puts "using content branch #{rebuild.content_branch} to override publish date for #{path}"
     update_attribute(:published_at,
                      GithubImporter.github.commits(
                        Rails.application.credentials[:github][:repo],
-                       RebuildStatus.content_branch,
+                       rebuild.content_branch,
                        path: "/#{path}"
-                     ).first.commit.author.date)
+                     ).try(:first).try(:commit).try(:author).try(:date))
   end
 end

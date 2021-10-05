@@ -18,11 +18,7 @@ class SiteItem < MarkdownImport
   store_methods :topic_list, :topics_count, :author_list
 
   def slug_candidates
-    if custom_slug.blank? || custom_slug.nil?
-      name
-    else
-      custom_slug
-    end
+    custom_slug.blank? ? name : custom_slug
   end
 
   def should_generate_new_friendly_id?
@@ -43,7 +39,7 @@ class SiteItem < MarkdownImport
       'BSSw Community'
     else
       authors.map do |auth|
-        "<a class='author' href='/items?author=#{auth.slug}'>#{auth.first_name} #{auth.last_name}</a>".html_safe
+        auth.link.html_safe
       end.to_sentence.html_safe
     end
   end
@@ -115,15 +111,8 @@ class SiteItem < MarkdownImport
 
   def add_topics(names, rebuild)
     names.each do |top_name|
-      next if top_name.match(Regexp.new(/\[(.*)\]/))
-
-      name = top_name.strip
-      top = Topic.find_or_create_by(
-        name: name.titleize,
-        rebuild_id: rebuild.id
-      )
-      top.slug = name.parameterize
-      topics << top
+      topic = Topic.from_name(top_name, rebuild.id)
+      topics << topic if topic
     end
   end
 

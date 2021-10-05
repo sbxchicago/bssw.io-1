@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '2.7.2'
+ruby '3.0.2'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
@@ -46,7 +46,7 @@ group :development, :test do
   gem 'bullet'
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'metric_fu'
+  #  gem 'metric_fu', github: 'eamonn-webster/metric_fu'
   gem 'rails-controller-testing'
   gem 'reek'
   gem 'rspec'
@@ -72,7 +72,7 @@ gem 'capistrano-rvm'
 
 gem 'acts-as-taggable-on', '~> 4.0'
 gem 'chronic'
-gem 'friendly_id', '5.3.0'
+gem 'friendly_id' # , '5.3.0'
 
 gem 'headhunter'
 gem 'pry'
@@ -123,3 +123,4 @@ gem 'sucker_punch'
 gem 'rack-utf8_sanitizer'
 
 # gem "handle_invalid_percent_encoding_requests"
+gem 'warning'

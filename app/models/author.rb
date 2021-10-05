@@ -15,31 +15,31 @@ class Author < ApplicationRecord
   }
 
   def should_generate_new_friendly_id?
-    (new_record? || slug.nil?) && !last_name.blank?
+    (new_record? || slug.blank?) && !last_name.blank?
   end
 
   def display_name
     "#{first_name} #{last_name}"
   end
 
-  def single_contribution(preview: false)
+  def single_contribution(preview = false)
     nums = [resource_count(preview: preview),
             event_count(preview: preview),
             blog_count(preview: preview)]
     nums.sort == [0, 0, 1]
   end
 
-  def resource_count(preview: false)
+  def resource_count(preview = false)
     (preview ? SiteItem.preview : SiteItem.published).displayed.with_author(self).count -
-      blog_count(preview: preview) -
-      event_count(preview: preview)
+      blog_count(preview) -
+      event_count(preview)
   end
 
-  def blog_count(preview: false)
+  def blog_count(preview = false)
     (preview ? BlogPost.preview : BlogPost.published).displayed.with_author(self).count
   end
 
-  def event_count(preview: false)
+  def event_count(preview = false)
     (preview ? Event.preview : Event.published).displayed.with_author(self).count
   end
 
@@ -77,22 +77,35 @@ class Author < ApplicationRecord
     update(first_name: names.first, last_name: names.last, alphabetized_name: names.last) unless names == [nil, nil]
   end
 
-  def do_overrides(vals)
-    return unless vals[1]
+  def do_overrides(alpha_name, display_name)
+    return unless alpha_name
 
-    update(alphabetized_name: vals[1].strip)
-    return unless vals[2]
+    update(alphabetized_name: alpha_name)
+    return unless display_name
 
-    names = AuthorUtility.names_from(vals[2])
+    names = AuthorUtility.names_from(display_name)
     update(first_name: names.first, last_name: names.last)
   end
 
-  def self.find_from_vals(vals, rebuild)
-    if vals.first == '-'
-      names = AuthorUtility.names_from(vals.last)
+  def self.find_from_vals(website, name, rebuild)
+    if website == '-'
+      names = AuthorUtility.names_from(name)
       find_by(rebuild_id: rebuild, first_name: names.first, last_name: names.last)
     else
-      find_by(rebuild_id: rebuild, website: "https://github.com/#{vals.first}")
+      find_by(rebuild_id: rebuild, website: "https://github.com/#{website}")
     end
+  end
+
+  def link
+    "<a class='author' href='/items?author=#{slug}'>#{first_name} #{last_name}</a>"
+  end
+
+  def refresh_counts
+    refresh_resource_count
+    refresh_event_count
+    refresh_blog_count
+    refresh_resource_listing
+    refresh_blog_listing
+    refresh_event_listing
   end
 end

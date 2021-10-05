@@ -9,7 +9,7 @@ class Announcement < MarkdownImport
                     }
 
   def self.import(content, rebuild_id)
-    puts "#{self.name} imports announcements specifically"
+    puts "#{name} imports announcements specifically"
     doc = GithubImporter.parse_html_from(content)
     doc.css("p:contains('Announcement')").each do |elem|
       next if elem.next_element.blank? || elem.next_element.text.blank?

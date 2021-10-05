@@ -40,19 +40,19 @@ class GithubImporter < ApplicationRecord
     tar
   end
 
-  def self.populate
-    puts "#{self.name} downloads the content from GitHub as a zipped file"
+  def self.populate(branch)
+    puts "#{name} downloads the content (with branch #{branch}) from GitHub as a zipped file"
     cont = github.archive_link(Rails.application.credentials[:github][:repo],
-                               ref: @branch)
-    rebuild = RebuildStatus.in_progress_rebuild
-    rebuild.update(content_branch: @branch)
-    file_path = "#{Rails.root}/tmp/repo-#{@branch}.gz"
-    agent.get(cont).save(file_path)
-    puts "#{self.name} asks the rebuild to process each file"
+                               ref: branch)
 
+    file_path = "#{Rails.root}/tmp/repo-#{branch}.gz"
+    agent.get(cont).save(file_path)
+    puts "#{name} asks the rebuild to process each file"
+    rebuild = RebuildStatus.in_progress_rebuild
     tar_extract(file_path).each do |file|
       rebuild.process_file(file)
     end
+    RebuildStatus.complete(rebuild)
     rebuild.clean(file_path)
   end
 end

@@ -38,4 +38,16 @@ class Topic < GithubImport
     comment.remove
     num.to_s.to_i
   end
+
+  def self.from_name(top_name, rebuild_id)
+    return if top_name.match(Regexp.new(/\[(.*)\]/))
+
+    name = top_name.strip
+    top = find_or_create_by(
+      name: name.titleize,
+      rebuild_id: rebuild_id
+    )
+    top.slug = name.parameterize
+    top
+  end
 end

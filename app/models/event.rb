@@ -2,21 +2,14 @@
 
 # Events e.g. conferences
 class Event < Searchable
+  self.table_name = 'site_items'
+
   def update_from_content(doc, rebuild)
     update_details(doc)
     overview = doc.at("p:contains('Overview')")
     overview&.remove
     super(doc, rebuild)
   end
-
-  scope :past, lambda {
-    where(
-      'end_at < ?', Date.today
-    ).order('start_at DESC')
-  }
-  scope :upcoming, lambda {
-    where('end_at >= ?', Date.today).order('start_at ASC')
-  }
 
   private
 

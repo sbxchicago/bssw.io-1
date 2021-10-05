@@ -16,20 +16,15 @@ class Rebuild < ApplicationRecord
     !(Rebuild.where('started_at > ?', 10.minutes.ago).to_a.select { |r| r.ended_at.blank? }).empty?
   end
 
-  
   def process_file(file)
-
-    return if File.extname(file.full_name) != '.md'
-
     file_name = File.basename(file.full_name)
-    return if GithubImporter.excluded_filenames.include?(file_name)
+    return if GithubImporter.excluded_filenames.include?(file_name) || File.extname(file.full_name) != '.md'
 
     begin
-  #    puts "#{self.class} processing #{file.full_name}"
       resource = process_path(file.full_name, file.read)
       update_attribute(:files_processed, "#{files_processed}<li>#{resource.try(:path)}</li>")
     rescue StandardError => e
-      puts "#{self.class} encountered #{e} #{e.backtrace.select{|b| b.match('app') }}"
+      puts "#{self.class} encountered #{e} #{e.backtrace.select { |b| b.match('app') }}"
       record_errors(file_name, e)
     end
   end
@@ -55,7 +50,7 @@ class Rebuild < ApplicationRecord
   end
 
   def update_links_and_images
-    puts "#{self.class} goes through pages, site items, and communities to normalize links and images within the markdown"
+    puts "#{self.class} goes through pages/site items/communities to normalize links and images within the markdown"
     (Page.where(rebuild_id: id) +
      SiteItem.where(rebuild_id: id) +
      Community.where(rebuild_id: id)
@@ -64,18 +59,19 @@ class Rebuild < ApplicationRecord
 
   def clean(file_path)
     puts "#{self.class} records post-build"
-    RebuildStatus.complete(self)
-    puts "#{self.class} deletes old items"
-    SiteItem.clean
+
     Category.displayed.each { |category| category.update(slug: nil) }
-    Fellow.displayed.each(&:set_search_text)
-    AuthorUtility.process_authors(self)
-    AuthorUtility.custom_staff_info(file_path, self)
-    AuthorUtility.custom_author_info(file_path, self)
+    #    begin
+    AuthorUtility.all_custom_info(self, file_path)
+    puts "#{self.class} deletes old items"
     clear_old
     update_links_and_images
     puts "#{self.class} deletes the tar file"
     File.delete(file_path)
+    # rescue Exception => e
+    #   puts e
+    #   puts e.backtrace
+    # end
   end
 
   def clear_old

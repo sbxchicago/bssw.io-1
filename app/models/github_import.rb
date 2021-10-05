@@ -5,7 +5,6 @@ class GithubImport < ApplicationRecord
   self.abstract_class = true
 
   def parse_and_update(content, rebuild)
-
     doc = GithubImporter.parse_html_from(content)
     update_from_content(doc, rebuild)
     self
@@ -14,8 +13,8 @@ class GithubImport < ApplicationRecord
   def update_from_content(doc, rebuild)
     title_chunk = MarkdownUtility.get_title_chunk(doc)
     res = find_from_title(title_chunk)
-#    puts "#{self.name} creates a resource with content from #{res.path}"
-    res.dates(doc)
+    #    puts "#{self.name} creates a resource with content from #{res.path}"
+    res.dates(doc, rebuild)
     update_author(doc.at("h4:contains('Contributed')"), rebuild_id)
     res.update_taxonomy(doc, rebuild)
 

@@ -33,7 +33,7 @@ class Page < MarkdownImport
     if path.match('About')
       puts "update staff from 'About' page"
       update_staff(doc, rebuild)
-    end      
+    end
     super(doc, rebuild)
     self.slug = 'homepage' if path.match('Home')
     save
