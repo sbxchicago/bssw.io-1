@@ -22,25 +22,25 @@ class Author < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  def single_contribution(preview = false)
-    nums = [resource_count(preview: preview),
-            event_count(preview: preview),
-            blog_count(preview: preview)]
+  def single_contribution
+    nums = [resource_count,
+            event_count,
+            blog_count]
     nums.sort == [0, 0, 1]
   end
 
-  def resource_count(preview = false)
-    (preview ? SiteItem.preview : SiteItem.published).displayed.with_author(self).count -
-      blog_count(preview) -
-      event_count(preview)
+  def resource_count
+    (SiteItem.published).displayed.with_author(self).count -
+      blog_count -
+      event_count
   end
 
-  def blog_count(preview = false)
-    (preview ? BlogPost.preview : BlogPost.published).displayed.with_author(self).count
+  def blog_count
+    (BlogPost.published).displayed.with_author(self).count
   end
 
-  def event_count(preview = false)
-    (preview ? Event.preview : Event.published).displayed.with_author(self).count
+  def event_count
+    (Event.published).displayed.with_author(self).count
   end
 
   store_methods :resource_count, :blog_count, :event_count, :resource_listing, :blog_listing, :event_listing

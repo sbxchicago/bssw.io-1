@@ -57,9 +57,6 @@ class SiteItem < MarkdownImport
     where(publish: true)
   }
 
-  scope :preview, lambda {
-    where(preview: true).or(where(publish: true))
-  }
 
   scope :with_topic, lambda { |topic|
     joins([:topics]).where('topics.id = ?', topic) if topic.present?

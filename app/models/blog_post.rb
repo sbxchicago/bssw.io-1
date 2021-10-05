@@ -9,7 +9,7 @@ class BlogPost < Searchable
   def related_posts
     posts = []
     topics.each do |topic|
-      posts += BlogPost.where(rebuild_id: rebuild_id, publish: publish, preview: preview).with_topic(topic)
+      posts += BlogPost.displayed.published.with_topic(topic)
     end
     posts
   end

@@ -83,11 +83,7 @@ class ApplicationController < ActionController::Base
   end
 
   def scoped_resources
-    if session[:preview]
-      SiteItem.preview.displayed
-    else
-      SiteItem.published.displayed
-    end
+    SiteItem.published.displayed
   end
 
   def set_announcement

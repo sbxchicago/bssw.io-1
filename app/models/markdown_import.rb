@@ -82,7 +82,6 @@ class MarkdownImport < GithubImport
     else
       update_attribute(:publish, false)
     end
-    update_attribute(:preview, true) if val.match('preview')
   end
 
   def add_pinned(val)
