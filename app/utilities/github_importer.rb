@@ -57,9 +57,10 @@ class GithubImporter < ApplicationRecord
       rebuild.process_file(file)
     end
     RebuildStatus.complete(rebuild, file_path)
-    rescue StandardError => e
+    rescue #Exception => e
       puts "ERORROR"
-      puts e
+      puts #e
     end
+    puts 'complorted'
   end
 end
