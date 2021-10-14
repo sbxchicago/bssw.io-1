@@ -45,7 +45,7 @@ class ResourcesController < ApplicationController
 
   def perform_search(search)
     @search = search
-    @results = Searchable.perform_search(search, params[:page], session[:preview])
+    @results = Searchable.perform_search(search, params[:page])
     @resources = @results
   end
 

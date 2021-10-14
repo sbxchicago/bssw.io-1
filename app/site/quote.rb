@@ -7,7 +7,6 @@ class Quote < ApplicationRecord
                     }
 
   def self.import(content)
-    puts "#{name} parses Quote.md specifically to get quotes"
     doc = GithubImporter.parse_html_from(content)
     doc.css('li').each do |elem|
       list = elem.content.split('--')

@@ -28,6 +28,11 @@ class GithubImporter < ApplicationRecord
     Octokit::Client.new(access_token: Rails.application.credentials[:github][:token])
   end
 
+  def self.save_content(branch, file_path)
+    agent.get(github.archive_link(Rails.application.credentials[:github][:repo],
+                                  ref: branch)).save(file_path)
+  end
+
   def self.agent
     agent = Mechanize.new
     agent.pluggable_parser.default = Mechanize::Download
@@ -41,18 +46,20 @@ class GithubImporter < ApplicationRecord
   end
 
   def self.populate(branch)
-    puts "#{name} downloads the content (with branch #{branch}) from GitHub as a zipped file"
-    cont = github.archive_link(Rails.application.credentials[:github][:repo],
-                               ref: branch)
-
+    begin
     file_path = "#{Rails.root}/tmp/repo-#{branch}.gz"
-    agent.get(cont).save(file_path)
-    puts "#{name} asks the rebuild to process each file"
+    save_content(branch, file_path)
     rebuild = RebuildStatus.in_progress_rebuild
     tar_extract(file_path).each do |file|
+      next if File.extname(file.full_name) != '.md'
+      next if GithubImporter.excluded_filenames.include?(File.basename(file.full_name))
+
       rebuild.process_file(file)
     end
-    RebuildStatus.complete(rebuild)
-    rebuild.clean(file_path)
+    RebuildStatus.complete(rebuild, file_path)
+    rescue StandardError => e
+      puts "ERORROR"
+      puts e
+    end
   end
 end

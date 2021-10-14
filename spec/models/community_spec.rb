@@ -17,7 +17,7 @@ Aggregate: Base
 --->"
 
       @community = Rebuild.create.find_or_create_resource('stuff/Site/Communities/foo.md')
-      @community.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
+      @community.parse_and_update(content)
     end
 
     it 'can create itself from content' do

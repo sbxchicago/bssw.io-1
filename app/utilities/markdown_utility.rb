@@ -9,12 +9,13 @@ class MarkdownUtility < ApplicationRecord
   end
 
   def self.modified_path(image_path)
+    image_path = image_path.strip
     if image_path.match?('http')
-      "#{image_path.strip}?raw=true"
+      "#{image_path}?raw=true"
     elsif image_path
       branch = Rails.env.preview? ? 'preview' : 'master'
-      path = URI(image_path.strip).path.split('/').select do |m|
-        !m.empty? && !m.in?(['images', '.', '..'])
+      path = URI(image_path).path.split('/').select do |dir|
+        !dir.empty? && !dir.in?(['images', '.', '..'])
       end.join('/')
       "https://raw.githubusercontent.com/betterscientificsoftware/bssw.io/#{branch}/images/#{path}?raw=true"
     end
@@ -41,22 +42,25 @@ class MarkdownUtility < ApplicationRecord
   end
 
   def self.add_caption(img)
-    caption = img.parent.try(:content).try(:match, Regexp.new(caption_regexp))
+    parent = img.parent
+    caption = parent.try(:content).try(:match, Regexp.new(caption_regexp))
     return unless caption
 
     span = Nokogiri::XML::Node.new 'span', img.document
     span['class'] = 'caption'
     span.content = caption[1]
-    img.parent.children.each do |child|
+    parent.children.each do |child|
       replace_caption(child, caption, span)
     end
   end
 
   def self.replace_caption(child, caption, span)
-    return unless child.content.match?(Regexp.new(Regexp.escape(caption.to_s)))
+    regexp = Regexp.escape(caption.to_s)
+    content = child.content
+    return unless content.match?(Regexp.new(regexp))
 
     child.replace(
-      child.content.gsub(Regexp.new(Regexp.escape(caption.to_s)), span.to_xml.html_safe)
+      content.gsub(Regexp.new((regexp)), span.to_xml.html_safe)
     )
   end
 
@@ -85,5 +89,22 @@ class MarkdownUtility < ApplicationRecord
       return route.send("#{klass.name.underscore}_path", item) if item.try(:id)
     end
     path
+  end
+
+  def self.update_links(doc)
+    doc.css('a').each do |link|
+      href = link['href']
+      next unless href&.match('\.md$') && !href.match('^http')
+
+      href = href.split('/').last
+
+      link['href'] = MarkdownUtility.update_link(href)
+    end
+  end
+
+  def self.update_images(doc)
+    doc.css('img').each do |img|
+      MarkdownUtility.update_image(img, doc)
+    end
   end
 end

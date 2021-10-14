@@ -20,7 +20,7 @@ Publish: true
 
     res = @rebuild.find_or_create_resource('Site/Homepage.md')
     expect(res).to be_a(Page)
-    res.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
+    res.parse_and_update(content)
     res.reload
     expect(res.content).to match 'bar'
     expect(res.name).to match 'Foo'

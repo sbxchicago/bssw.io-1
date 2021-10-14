@@ -30,17 +30,17 @@ class Author < ApplicationRecord
   end
 
   def resource_count
-    (SiteItem.published).displayed.with_author(self).count -
+    SiteItem.published.displayed.with_author(self).count -
       blog_count -
       event_count
   end
 
   def blog_count
-    (BlogPost.published).displayed.with_author(self).count
+    BlogPost.published.displayed.with_author(self).count
   end
 
   def event_count
-    (Event.published).displayed.with_author(self).count
+    Event.published.displayed.with_author(self).count
   end
 
   store_methods :resource_count, :blog_count, :event_count, :resource_listing, :blog_listing, :event_listing
@@ -74,7 +74,8 @@ class Author < ApplicationRecord
     update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
     update(affiliation: hash.company) if affiliation.blank?
     names = AuthorUtility.names_from(hash.name)
-    update(first_name: names.first, last_name: names.last, alphabetized_name: names.last) unless names == [nil, nil]
+    last_name = names.last
+    update(first_name: names.first, last_name: last_name, alphabetized_name: last_name) unless names == [nil, nil]
   end
 
   def do_overrides(alpha_name, display_name)
@@ -104,6 +105,9 @@ class Author < ApplicationRecord
     refresh_resource_count
     refresh_event_count
     refresh_blog_count
+  end
+
+  def refresh_listings
     refresh_resource_listing
     refresh_blog_listing
     refresh_event_listing

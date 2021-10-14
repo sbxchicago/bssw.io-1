@@ -13,32 +13,16 @@ class Rebuild < ApplicationRecord
   end
 
   def self.in_progress
-    !(Rebuild.where('started_at > ?', 10.minutes.ago).to_a.select { |r| r.ended_at.blank? }).empty?
+    !(Rebuild.where('started_at > ?', 10.minutes.ago).to_a.select { |rebuild| rebuild.ended_at.blank? }).empty?
   end
 
   def process_file(file)
-    file_name = File.basename(file.full_name)
-    return if GithubImporter.excluded_filenames.include?(file_name) || File.extname(file.full_name) != '.md'
-
+    full_name = file.full_name
     begin
-      resource = process_path(file.full_name, file.read)
+      resource = process_path(full_name, file.read)
       update_attribute(:files_processed, "#{files_processed}<li>#{resource.try(:path)}</li>")
     rescue StandardError => e
-      puts "#{self.class} encountered #{e} #{e.backtrace.select { |b| b.match('app') }}"
-      record_errors(file_name, e)
-    end
-  end
-
-  def process_path(path, content)
-    return if path.match('utils/') || path.match('test/') || path.match('docs/') || content.nil?
-
-    if path.match('Quote')
-      Quote.import(content)
-    elsif path.match('Announcements')
-      Announcement.import(content, id)
-    else
-      resource = find_or_create_resource(path)
-      resource.parse_and_update(content, self)
+      record_errors(File.basename(full_name), e)
     end
   end
 
@@ -50,7 +34,6 @@ class Rebuild < ApplicationRecord
   end
 
   def update_links_and_images
-    puts "#{self.class} goes through pages/site items/communities to normalize links and images within the markdown"
     (Page.where(rebuild_id: id) +
      SiteItem.where(rebuild_id: id) +
      Community.where(rebuild_id: id)
@@ -58,24 +41,14 @@ class Rebuild < ApplicationRecord
   end
 
   def clean(file_path)
-    puts "#{self.class} records post-build"
-
     Category.displayed.each { |category| category.update(slug: nil) }
-    #    begin
-    AuthorUtility.all_custom_info(self, file_path)
-    puts "#{self.class} deletes old items"
+    AuthorUtility.all_custom_info(id, file_path)
     clear_old
     update_links_and_images
-    puts "#{self.class} deletes the tar file"
     File.delete(file_path)
-    # rescue Exception => e
-    #   puts e
-    #   puts e.backtrace
-    # end
   end
 
   def clear_old
-    puts "#{self.class} deletes all but the last 5 rebuilds, and all old records "
     rebuild_ids = Rebuild.last(5).to_a.map(&:id).delete_if(&:nil?)
     rebuild_ids += [id]
     classes = [Community, Category, Topic, Announcement, Author, Quote, SiteItem, FeaturedPost, Fellow]
@@ -104,6 +77,19 @@ class Rebuild < ApplicationRecord
       'Articles/' => Resource,
       'CuratedContent/' => Resource
     }
+  end
+
+  def process_path(path, content)
+    return if path.match('utils/') || path.match('test/') || path.match('docs/') || content.nil?
+
+    if path.match('Quote')
+      Quote.import(content)
+    elsif path.match('Announcements')
+      Announcement.import(content, id)
+    else
+      resource = find_or_create_resource(path)
+      resource.parse_and_update(content)
+    end
   end
 
   def find_or_create_resource(path)

@@ -10,47 +10,31 @@ class MarkdownImport < GithubImport
 
   def update_links_and_images
     doc = Nokogiri::HTML.parse(content, nil, 'UTF-8')
-    update_links(doc)
-    update_images(doc)
+    MarkdownUtility.update_links(doc)
+    MarkdownUtility.update_images(doc)
     html = doc.to_html.to_s.force_encoding('UTF-8')
     update_attribute(:content, html) unless content == html
   end
 
   def update_taxonomy(doc, rebuild)
     comments = doc.xpath('//comment()') if doc
-    comments&.each do |comment|
-      array = comment.text.split(/:|\n/).collect do |val|
-        val.strip || val
-      end - ['-']
-      update_associates(array, rebuild)
-      comment.content = nil
-    end
+    vals = comments.map{|comment| comment.text.split(/:|\n/) }.flatten
+    array =  vals.each do |val|
+      val.strip || val
+    end - ['-']
+    array.delete_if{|val| val.blank? }
+    update_associates(array, rebuild)
   end
 
-  def update_links(doc)
-    doc.css('a').each do |link|
-      href = link['href']
-      next unless href&.match('\.md$') && !href.match('^http')
-
-      href = href.split('/').last
-
-      link['href'] = MarkdownUtility.update_link(href)
-    end
-  end
-
-  def update_images(doc)
-    doc.css('img').each do |img|
-      MarkdownUtility.update_image(img, doc)
-    end
-  end
 
   def update_associates(array, rebuild)
     array.each_cons(2) do |string, names|
       names = names.split(',')
+      
       method = "add_#{string}".downcase.tr(' ', '_')
       if method == 'add_topics'
         save if new_record?
-        try(:add_topics, names, rebuild)
+        try(:add_topics, names)
       elsif respond_to?(method, true)
         send(method, names.join)
       end
@@ -89,7 +73,7 @@ class MarkdownImport < GithubImport
   end
 
   def update_date(doc)
-    return unless respond_to?('published_at')
+    return unless has_attribute?('published_at')
 
     node = doc.at("h4:contains('Publication date')")
     node ||= doc.at("h4:contains('Publication Date')")
@@ -105,7 +89,6 @@ class MarkdownImport < GithubImport
     update_date(doc)
     return if !has_attribute?(:published_at) || is_a?(Event) || !published_at.blank?
 
-    puts "using content branch #{rebuild.content_branch} to override publish date for #{path}"
     update_attribute(:published_at,
                      GithubImporter.github.commits(
                        Rails.application.credentials[:github][:repo],

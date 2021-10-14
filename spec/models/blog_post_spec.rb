@@ -25,10 +25,10 @@ Publish: true
 --->"
     FactoryBot.create(:category, name: 'Better Blah Blah')
 
-    res = Rebuild.first.find_or_create_resource('Blog/FooPost.md')
+    res = Rebuild.create.find_or_create_resource('Blog/FooPost.md')
     expect(res).to be_a(BlogPost)
 
-    res.parse_and_update(content, RebuildStatus.displayed_rebuild)
+    res.parse_and_update(content)
     res.reload
     expect(res.content).to match 'bar'
     expect(res.topics).not_to be_empty

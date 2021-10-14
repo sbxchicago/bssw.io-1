@@ -2,29 +2,32 @@
 
 # utility methods for processing authors
 class AuthorUtility
-  def self.all_custom_info(rebuild, file_path)
-    'sets the search text for fellows'
+  def self.all_custom_info(rebuild_id, file_path)
+
     Fellow.displayed.each(&:set_search_text)
-    process_authors(rebuild)
-    custom_staff_info(file_path, rebuild.id)
-    custom_author_info(file_path, rebuild.id)
+    process_authors(rebuild_id)
+    custom_staff_info(file_path, rebuild_id)
+    custom_author_info(file_path, rebuild_id)
   end
 
-  def self.process_authors(rebuild)
-    puts "#{self.class.name} gets author-specific info from github"
-    Author.where(rebuild_id: rebuild).each(&:update_from_github)
-    refresh_author_counts
+  def self.process_authors(rebuild_id)
+
+    Author.where(rebuild_id: rebuild_id).each(&:update_from_github)
+    refresh_authors
   end
 
-  def self.refresh_author_counts
-    Author.displayed.each(&:refresh_counts)
+  def self.refresh_authors
+    Author.displayed.each do |author|
+      author.refresh_counts
+      author.refresh_listing
+    end
   end
 
   def self.names_from(name)
     return [nil, nil] unless name.respond_to?(:split)
     return %w[BSSw Community] if name.match?(/BSSw Community/i)
 
-    names = name.split(' ').map { |name| name.blank? ? nil : name }
+    names = name.split(' ').map { |chunk| chunk.blank? ? nil : chunk }
     last_name = names.last
     first_name = [names - [last_name]].join(' ')
     [first_name, last_name]
@@ -35,8 +38,10 @@ class AuthorUtility
       next if text.match?(/Overrides/i)
 
       vals = text.split(',').map { |val| val.delete('"') }
-      author = Author.find_from_vals(vals.first, vals.last, rebuild)
-      author&.do_overrides(vals.first, vals.last)
+      alpha_name = vals.first
+      display_name = vals.last
+      author = Author.find_from_vals(alpha_name, display_name, rebuild)
+      author&.do_overrides(alpha_name, display_name)
     end
   end
 
@@ -50,7 +55,7 @@ class AuthorUtility
   end
 
   def self.custom_author_info(file_path, rebuild_id)
-    puts "#{self.class.name} looks at the Contributors.md file for overrides to authors' github info"
+
     contrib_file = nil
     GithubImporter.tar_extract(file_path).each do |file|
       contrib_file = file.read if file.header.name.match('Contributors.md')
@@ -59,7 +64,7 @@ class AuthorUtility
   end
 
   def self.custom_staff_info(file_path, rebuild_id)
-    puts "#{self.class.name} looks at the About.md file for overrides to authors' github info"
+
     contrib_file = nil
     GithubImporter.tar_extract(file_path).each do |file|
       contrib_file = file.read if file.header.name.match('About.md')
@@ -94,12 +99,14 @@ class AuthorUtility
   def self.author_from_website(link, rebuild)
     names = names_from(link.text)
     uri = URI.parse(link['href'])
-    website = uri.host.blank? ? nil : "https://#{uri.host}#{uri.path}"
+    host = uri.host
+    website = host.blank? ? nil : "https://#{host}#{uri.path}"
 
     auth = Author.find_by(website: website, rebuild_id: rebuild)
     unless auth
-      auth = Author.find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
-      auth.update(website: website, alphabetized_name: names.last)
+      last_name = names.last
+      auth = Author.find_or_create_by(rebuild_id: rebuild, last_name: last_name, first_name: names.first)
+      auth.update(website: website, alphabetized_name: last_name)
     end
     auth
   end

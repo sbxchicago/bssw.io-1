@@ -11,7 +11,7 @@ RSpec.describe Event, type: :model do
     event = Rebuild.create.find_or_create_resource('stuff/Events/foo.md')
     expect(event).to be_a(Event)
     expect(event.path).to eq 'Events/foo.md'
-    event.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
+    event.parse_and_update(content)
     event.reload
     event.update_attribute(:publish, true)
     expect(event.name).to eq 'Foo'
@@ -29,7 +29,7 @@ RSpec.describe Event, type: :model do
     \n* Location: Place \n* \n* <!--- Publish: Yes --->"
 
     event = Rebuild.create.find_or_create_resource('Events/foo.md')
-    event.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
+    event.parse_and_update(content)
     expect(event.start_at).to eq Chronic.parse('October 9 2018').to_date
   end
 
@@ -39,7 +39,7 @@ RSpec.describe Event, type: :model do
     \n* Location: Place \n* \n* <!--- Publish: Yes --->"
 
     event = Rebuild.create.find_or_create_resource('Events/foo.md')
-    event.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
+    event.parse_and_update(content)
     expect(event.start_at).to eq Chronic.parse("February 1 #{Date.today.year}").to_date
   end
 
@@ -48,7 +48,7 @@ RSpec.describe Event, type: :model do
     \n* Dates: December 1 - December 20 #{Date.today.year}
     \n* Location: Place \n* \n* <!--- Publish: Yes --->"
     event = Rebuild.create.find_or_create_resource('Events/foo.md')
-    event.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
+    event.parse_and_update(content)
     expect(event.start_at).to eq Chronic.parse("December 1 #{Date.today.year}").to_date
   end
 
@@ -58,7 +58,7 @@ RSpec.describe Event, type: :model do
      \n* Location: Place \n* \n* <!--- Publish: Yes --->"
 
     event = Rebuild.create.find_or_create_resource('Events/foo.md')
-    event.parse_and_update(content, RebuildStatus.displayed_rebuild.id)
+    event.parse_and_update(content)
     expect(event.start_at).to eq Chronic.parse("December 1 #{Date.today.year}").to_date
     expect(event.end_at).to eq Chronic.parse("January 2 #{Date.today.year + 1}").to_date
   end

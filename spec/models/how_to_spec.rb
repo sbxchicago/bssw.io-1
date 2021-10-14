@@ -17,7 +17,7 @@ Aggregate: Base
     res = Rebuild.create.find_or_create_resource('CuratedContent/HowToFoo.md')
     expect(res).to be_a(HowTo)
     expect(res.basic?).to be true
-    res.parse_and_update(content, RebuildStatus.displayed_rebuild)
+    res.parse_and_update(content)
     res.reload
     expect(res.content).to match 'bar'
     expect(res.topics).not_to be_empty

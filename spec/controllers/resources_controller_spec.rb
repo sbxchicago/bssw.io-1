@@ -29,22 +29,19 @@ RSpec.describe ResourcesController, type: :controller do
     end
 
     it 'sets the preview val' do
-      r = FactoryBot.create(:resource, publish: false, preview: true)
       @request.host = 'preview.bssw.io'
       @request.env['HTTP_AUTHORIZATION'] = "Basic #{Base64.encode64('preview-bssw:SoMyCodeWillSeeTheFuture!!')}"
       get 'index'
       expect(response).to render_template 'index'
       expect(session[:preview]).to be true
-      expect(assigns(:resources)).to include(r)
     end
   end
 
   describe 'get search' do
-    it 'searches via preview' do
-      @request.host = 'preview.bssw.io'
+    it 'searches' do
       @request.env['HTTP_AUTHORIZATION'] = "Basic #{Base64.encode64('preview-bssw:SoMyCodeWillSeeTheFuture!!')}"
-      resource = FactoryBot.create(:resource, publish: false, preview: true, type: 'Resource')
-      expect(SiteItem.preview.displayed).to include(resource)
+      resource = FactoryBot.create(:resource, publish: true, type: 'Resource')
+      expect(SiteItem.displayed).to include(resource)
       get :search, params: { search_string: resource.name }
       expect(assigns(:resources)).to include(resource)
     end
