@@ -68,6 +68,7 @@ class Page < MarkdownImport
     return unless start_node
 
     node = start_node.next_element
+    start_node.remove if start_node.text == 'BSSw Editorial Team'
     while node
 
       update_staffers(doc, node) if doc.css('h3').index(node)
@@ -82,7 +83,7 @@ class Page < MarkdownImport
     node = node.next_element
 
     while node
-      node.remove if node.text == 'BSSw Editorial Team'
+
       break if doc.css('h2').index(node) || doc.css('h3').index(node)
 
       Staff.make_from_data(node, val, rebuild_id)
