@@ -101,15 +101,15 @@ class Author < ApplicationRecord
     "<a class='author' href='/items?author=#{slug}'>#{first_name} #{last_name}</a>"
   end
 
-  def refresh_counts
-    refresh_resource_count
-    refresh_event_count
-    refresh_blog_count
-  end
+  # def refresh_counts
+  #   refresh_resource_count
+  #   refresh_event_count
+  #   refresh_blog_count
+  # end
 
-  def refresh_listings
-    refresh_resource_listing
-    refresh_blog_listing
-    refresh_event_listing
-  end
+  # def refresh_listings
+  #   refresh_resource_listing
+  #   refresh_blog_listing
+  #   refresh_event_listing
+  # end
 end
