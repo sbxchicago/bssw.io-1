@@ -28,11 +28,10 @@ RSpec.describe RebuildsController, type: :controller do
       FactoryBot.create(:site_item)
       FactoryBot.create(:author)
       post :import
-      puts(Rebuild.last.errors_encountered)
 
       # these are specific checks to our resource library...
       # using variables defined at top of this file
-      #      expect(SiteItem.count).to be > @min_site_item_count
+      expect(SiteItem.count).to be > @min_site_item_count
       #      expect(RebuildStatus.first.display_rebuild_id).to eq Rebuild.last.id
       expect(SiteItem.last.rebuild_id).to eq RebuildStatus.first.display_rebuild_id
       expect(SiteItem.displayed.count).to be > @min_site_item_count
@@ -65,9 +64,10 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Author.displayed.where(website: 'https://github.com/nniiicc').first.last_name).not_to eq 'Nic'
       expect(Page.find('homepage')).to be_a Page
       expect(Page.last.snippet).not_to be_empty
-      puts Author.displayed.where(website: @author_slug)
+
       expect(Author.displayed.where(website: @author_slug).size).to eq 1
       expect(Page.displayed.where(name: 'Contributors')).not_to be_empty
+
       expect(Author.displayed.where(website: @author_slug).first.resource_listing).not_to eq '0 resources'
 
       expect(Author.displayed.select do |a|
@@ -81,17 +81,24 @@ RSpec.describe RebuildsController, type: :controller do
       # expect(@blankline.main).to match('<span class="caption">Figure 3')
       expect(Category.displayed.first.slug).to eq 'better-planning'
       expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
-      SiteItem.all.each { |si| puts si.open_graph_image_tag unless si.open_graph_image_tag.blank? }
+
       expect(SiteItem.displayed.last.topic_list).not_to be_empty
-      rebuild = Rebuild.where('started_at > ?', 10.minutes.ago).last
-      expect(Rebuild.in_progress).to be_falsey
-      rebuild.update_attribute(:ended_at, nil)
-      expect(Rebuild.in_progress).to be_truthy
 
-      expect do
-        post :import
-      end.not_to change(Rebuild, :count)
+      # expect do
+      #   post :import
+      # end.not_to change(Rebuild, :count)
 
+      expect(response).to redirect_to('/rebuilds?rebuilt=true')
+    end
+
+    it 'can check rebuilds' do
+      name = Rails.application.credentials[:import][:name]
+      pw = Rails.application.credentials[:import][:password]
+      @request.env['HTTP_AUTHORIZATION'] = "Basic #{Base64.encode64("#{name}:#{pw}")}"
+
+      build = Rebuild.create(started_at: 1.minute.ago, ended_at: nil)
+      RebuildStatus.first.update_attribute(:in_progress_rebuild_id, build.id)
+      post :import
       expect(response).to redirect_to('/rebuilds')
     end
   end

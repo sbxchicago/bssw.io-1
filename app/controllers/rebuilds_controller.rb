@@ -27,7 +27,6 @@ class RebuildsController < ApplicationController
     GithubImporter.populate(@branch)
     flash[:notice] = 'Import completed!'
     redirect_to controller: 'rebuilds', action: 'index', rebuilt: true
-
   end
 
   private
@@ -36,7 +35,7 @@ class RebuildsController < ApplicationController
     @branch = if Rails.env.preview?
                 'preview'
               elsif Rails.env.test?
-                'preview' # 'parallactic-test'
+                'master'
               else
                 'master'
               end

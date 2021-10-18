@@ -3,25 +3,23 @@
 # utility methods for processing authors
 class AuthorUtility
   def self.all_custom_info(rebuild_id, file_path)
-
     Fellow.displayed.each(&:set_search_text)
-    process_authors(rebuild_id)
+    Author.where(rebuild_id: rebuild_id).each(&:update_from_github)
     custom_staff_info(file_path, rebuild_id)
     custom_author_info(file_path, rebuild_id)
   end
 
-  def self.process_authors(rebuild_id)
+  # def self.process_authors(rebuild_id)
+  # #   refresh_authors(rebuild_id)
+  # end
 
-    Author.where(rebuild_id: rebuild_id).each(&:update_from_github)
-    refresh_authors
-  end
-
-  def self.refresh_authors
-    Author.displayed.each do |author|
-      author.refresh_counts
-      author.refresh_listing
-    end
-  end
+#   def self.refresh_authors(rebuild_id)
+#      puts "refreshing authors for #{rebuild_id}"
+#      Author.all.each do |author|
+#   #   #   author.refresh_counts
+# #        author.refresh_listings
+#       end
+#    end
 
   def self.names_from(name)
     return [nil, nil] unless name.respond_to?(:split)
@@ -55,7 +53,6 @@ class AuthorUtility
   end
 
   def self.custom_author_info(file_path, rebuild_id)
-
     contrib_file = nil
     GithubImporter.tar_extract(file_path).each do |file|
       contrib_file = file.read if file.header.name.match('Contributors.md')
@@ -64,7 +61,6 @@ class AuthorUtility
   end
 
   def self.custom_staff_info(file_path, rebuild_id)
-
     contrib_file = nil
     GithubImporter.tar_extract(file_path).each do |file|
       contrib_file = file.read if file.header.name.match('About.md')

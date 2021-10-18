@@ -1,3 +1,4 @@
+
 # frozen_string_literal: true
 
 # utility methods for the import
@@ -46,21 +47,20 @@ class GithubImporter < ApplicationRecord
   end
 
   def self.populate(branch)
-    begin
+#    begin
     file_path = "#{Rails.root}/tmp/repo-#{branch}.gz"
     save_content(branch, file_path)
     rebuild = RebuildStatus.in_progress_rebuild
     tar_extract(file_path).each do |file|
       next if File.extname(file.full_name) != '.md'
       next if GithubImporter.excluded_filenames.include?(File.basename(file.full_name))
-
       rebuild.process_file(file)
     end
+
     RebuildStatus.complete(rebuild, file_path)
-    rescue #Exception => e
-      puts "ERORROR"
-      puts #e
-    end
-    puts 'complorted'
+#    rescue Exception => e
+#      puts e
+#      puts "ERRORR"
+#    end
   end
 end

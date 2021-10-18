@@ -92,7 +92,6 @@ class Page < MarkdownImport
   end
 
   def update_featured(doc)
-
     node = doc.at("//comment()[contains(.,'Slide1')]")
     return unless node
 

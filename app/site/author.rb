@@ -43,7 +43,7 @@ class Author < ApplicationRecord
     Event.published.displayed.with_author(self).count
   end
 
-  store_methods :resource_count, :blog_count, :event_count, :resource_listing, :blog_listing, :event_listing
+#  store_methods :resource_count, :blog_count, :event_count, :resource_listing, :blog_listing, :event_listing
 
   def resource_listing
     "#{resource_count} #{'resource'.pluralize(resource_count)}"

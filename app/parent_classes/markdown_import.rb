@@ -18,19 +18,18 @@ class MarkdownImport < GithubImport
 
   def update_taxonomy(doc, rebuild)
     comments = doc.xpath('//comment()') if doc
-    vals = comments.map{|comment| comment.text.split(/:|\n/) }.flatten
-    array =  vals.each do |val|
+    vals = comments.map { |comment| comment.text.split(/:|\n/) }.flatten
+    array = vals.each do |val|
       val.strip || val
     end - ['-']
-    array.delete_if{|val| val.blank? }
+    array.delete_if(&:blank?)
     update_associates(array, rebuild)
   end
 
-
-  def update_associates(array, rebuild)
+  def update_associates(array, _rebuild)
     array.each_cons(2) do |string, names|
       names = names.split(',')
-      
+
       method = "add_#{string}".downcase.tr(' ', '_')
       if method == 'add_topics'
         save if new_record?
