@@ -6,7 +6,7 @@ class Event < Searchable
   include Dateable
 
   self.table_name = 'site_items'
-  has_many :additional_dates
+
   
   def update_from_content(doc, rebuild)
     update_details(doc)

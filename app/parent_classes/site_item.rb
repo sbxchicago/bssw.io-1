@@ -8,7 +8,8 @@ class SiteItem < MarkdownImport
   has_and_belongs_to_many :communities, through: :features, class_name: 'Resource'
 
   has_many :features
-
+  has_many :additional_dates
+  
   validates_uniqueness_of :path, optional: true, case_sensitive: false, scope: :rebuild_id
   has_many :announcements
 
