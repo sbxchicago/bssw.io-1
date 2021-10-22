@@ -28,7 +28,7 @@ RSpec.describe Event, type: :model do
   it 'can create itself from content' do
     content = "# Foo \n bar
         \n* Dates: December 3, #{Date.today.year} - January 5
-        \n* Submission date: November 1, #{Date.today.year}
+        \n* Submission Date: November 1, #{Date.today.year}
         \n* Poster Dates: November 2 2021 - November 3 2021
         \n* Location: Place \n* \n* <!--- Publish: Yes --->"
     event = Rebuild.new.find_or_create_resource('stuff/Events/foo.md')
