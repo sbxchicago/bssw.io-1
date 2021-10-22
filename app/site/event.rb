@@ -6,7 +6,7 @@ class Event < Searchable
   include Dateable
 
   self.table_name = 'site_items'
-
+  has_many :additional_dates
   
   def update_from_content(doc, rebuild)
     update_details(doc)
@@ -14,6 +14,11 @@ class Event < Searchable
     overview&.remove
     super(doc, rebuild)
   end
+  scope :upcoming, lambda {
+left_outer_joins(:additional_dates).where('site_items.end_at >= ?', Date.today).or(left_outer_joins(:additional_dates).where('additional_dates.end_at >= ?', Date.today)) }
+
+  scope :past, lambda {
+left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).or(left_outer_joins(:additional_dates).where('additional_dates.end_at < ?', Date.today)) }
 
 
 

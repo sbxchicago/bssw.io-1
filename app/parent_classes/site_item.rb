@@ -8,7 +8,7 @@ class SiteItem < MarkdownImport
   has_and_belongs_to_many :communities, through: :features, class_name: 'Resource'
 
   has_many :features
-  has_many :additional_dates
+
   
   validates_uniqueness_of :path, optional: true, case_sensitive: false, scope: :rebuild_id
   has_many :announcements
@@ -46,11 +46,6 @@ class SiteItem < MarkdownImport
   end
 
   
-  scope :upcoming, lambda {
-left_outer_joins(:additional_dates).where('site_items.end_at >= ?', Date.today).or(left_outer_joins(:additional_dates).where('additional_dates.end_at >= ?', Date.today)) }
-
-  scope :past, lambda {
-left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).or(left_outer_joins(:additional_dates).where('additional_dates.end_at < ?', Date.today)) }
 
   
   scope :published, lambda {
