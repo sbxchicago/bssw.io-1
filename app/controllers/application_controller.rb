@@ -39,12 +39,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_error(exception = nil)
-    if exception
-      error_string =
-        "500: rescued_from:
-        #{print_exception(exception)}"
-    end
-    logger.error(error_string) if error_string
+    logger.error("500: rescued_from: #{print_exception(exception)}") if exception
     render(
       template: 'errors/internal_server_error',
       layout: 'layouts/application',
@@ -88,11 +83,7 @@ class ApplicationController < ActionController::Base
   end
 
   def scoped_resources
-    if session[:preview]
-      SiteItem.preview.displayed
-    else
-      SiteItem.published.displayed
-    end
+    SiteItem.published.displayed
   end
 
   def set_announcement

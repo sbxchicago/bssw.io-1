@@ -10,10 +10,7 @@ RSpec.describe FeaturedPost, type: :model do
   end
   it 'might have a site item' do
     item = FactoryBot.create(:site_item, rebuild_id: RebuildStatus.first.display_rebuild_id, base_path: 'Item.md')
-    puts item.inspect
-    puts item.base_path
     fp = FactoryBot.create(:featured_post, path: item.base_path.to_s)
-    puts fp.inspect
     expect(fp.site_item.id).to eq item.id
   end
 end

@@ -11,12 +11,10 @@ class FeaturedPost < ApplicationRecord
   end
 
   def image
-    "<img src='#{MarkdownImport.modified_path(path)}' />".html_safe
+    "<img src='#{MarkdownUtility.modified_path(path)}' />".html_safe
   end
 
   def site_item
-    puts path
-    puts File.basename(path)
-    SiteItem.displayed.find_by(base_path: File.basename(path)) || SiteItem.displayed.find_by_slug(path.split('/').last)
+    SiteItem.displayed.find_by(base_path: File.basename(path.to_s)) || SiteItem.displayed.find_by_slug(path.to_s.split('/').last)
   end
 end

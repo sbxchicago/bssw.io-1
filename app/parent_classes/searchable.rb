@@ -31,8 +31,8 @@ class Searchable < SiteItem
     )
   end
 
-  def self.perform_search(words, page, preview)
-    o_results = preview ? SiteItem.preview.displayed : SiteItem.published.displayed
+  def self.perform_search(words, page)
+    o_results = SiteItem.published.displayed
     results = order_results(
       words, get_word_results(words, o_results)
     )

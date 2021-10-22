@@ -3,6 +3,11 @@
 # Filters - like tags
 class Topic < GithubImport
   #  default_scope -> { order(order_num: 'asc') }
+
+  scope :displayed, lambda {
+    where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
+  }
+
   self.table_name = 'topics'
   has_and_belongs_to_many :site_items, -> { distinct }
   validates_presence_of :name
@@ -32,5 +37,17 @@ class Topic < GithubImport
     num = comment.text.match(/(\d+)/)
     comment.remove
     num.to_s.to_i
+  end
+
+  def self.from_name(top_name, rebuild_id)
+    return if top_name.match(Regexp.new(/\[(.*)\]/))
+
+    name = top_name.strip
+    top = find_or_create_by(
+      name: name.titleize,
+      rebuild_id: rebuild_id
+    )
+    top.slug = name.parameterize
+    top
   end
 end

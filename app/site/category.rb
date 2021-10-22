@@ -11,6 +11,10 @@ class Category < MarkdownImport
   extend FriendlyId
   friendly_id :name, use: %i[finders slugged scoped], scope: :rebuild_id
 
+  def should_generate_new_friendly_id?
+    true
+  end
+
   def update_from_content(doc, rebuild_id)
     save
     update(get_details(doc).merge(order_num: get_order(doc)))

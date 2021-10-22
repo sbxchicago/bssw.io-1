@@ -20,51 +20,11 @@ class RebuildsController < ApplicationController
     redirect_to '/rebuilds'
   end
 
-  def update_links_and_images(build_id)
-    (Page.where(rebuild_id: build_id) +
-     SiteItem.where(rebuild_id: build_id) +
-     Community.where(rebuild_id: build_id)
-    ).each(&:update_links_and_images)
-  end
-
-  def populate_from_github(rebuild)
-    cont = GithubImporter.github.archive_link(Rails.application.credentials[:github][:repo],
-                                              ref: @branch)
-    RebuildStatus.in_progress_rebuild.update(content_branch: @branch)
-    file_path = "#{Rails.root}/tmp/repo-#{@branch}.gz"
-    GithubImporter.agent.get(cont).save(file_path)
-    contrib_file = nil
-    GithubImporter.tar_extract(file_path).each do |file|
-      rebuild.process_file(file)
-    end
-    GithubImporter.tar_extract(file_path).each do |file|
-      contrib_file = file.read if file.header.name.match('Contributors.md')
-    end
-    Author.process_authors(rebuild.id)
-    Author.process_overrides(GithubImporter.parse_html_from(contrib_file), rebuild.id)
-    File.delete(file_path)
-  end
-
-  def clear_all
-    rebuild_ids = Rebuild.first(5).to_a.map(&:id).delete_if(&:nil?)
-    classes = [Community, Category, Topic, Announcement, Author, Quote, SiteItem, FeaturedPost, Fellow]
-    everything = Rebuild.where(['id NOT IN (?)', rebuild_ids])
-    classes.each do |klass|
-      everything += klass.where(['rebuild_id NOT IN (?)', rebuild_ids])
-      everything += klass.where(rebuild_id: nil)
-    end
-    everything.each(&:delete)
-  end
-
   def import
     branch
     rebuild = Rebuild.create(started_at: Time.now, ip: request.ip)
-    RebuildStatus.start(rebuild)
-    populate_from_github(rebuild)
-    clear_all
-    update_links_and_images(rebuild.id)
-    RebuildStatus.complete(rebuild)
-    rebuild.clean
+    RebuildStatus.start(rebuild, @branch)
+    GithubImporter.populate(@branch)
     flash[:notice] = 'Import completed!'
     redirect_to controller: 'rebuilds', action: 'index', rebuilt: true
   end
@@ -75,7 +35,7 @@ class RebuildsController < ApplicationController
     @branch = if Rails.env.preview?
                 'preview'
               elsif Rails.env.test?
-                'parallactic-test'
+                'preview'
               else
                 'master'
               end

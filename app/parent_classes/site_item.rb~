@@ -18,11 +18,7 @@ class SiteItem < MarkdownImport
   store_methods :topic_list, :topics_count, :author_list
 
   def slug_candidates
-    if custom_slug.blank? || custom_slug.nil?
-      name
-    else
-      custom_slug
-    end
+    custom_slug.blank? ? name : custom_slug
   end
 
   def should_generate_new_friendly_id?
@@ -43,7 +39,7 @@ class SiteItem < MarkdownImport
       'BSSw Community'
     else
       authors.map do |auth|
-        "<a class='author' href='/items?author=#{auth.slug}'>#{auth.first_name} #{auth.last_name}</a>".html_safe
+        auth.link.html_safe
       end.to_sentence.html_safe
     end
   end
@@ -59,10 +55,6 @@ class SiteItem < MarkdownImport
 
   scope :published, lambda {
     where(publish: true)
-  }
-
-  scope :preview, lambda {
-    where(preview: true).or(where(publish: true))
   }
 
   scope :with_topic, lambda { |topic|
@@ -101,13 +93,13 @@ class SiteItem < MarkdownImport
     topics.map(&:name).join(', ')
   end
 
-  scope :get, lambda { |options|
-    result = self
-    options.each do |key, val|
-      result = result.send("with_#{key}", val) if val
-    end
-    result
-  }
+  # scope :get, lambda { |options|
+  #   result = self
+  #   options.each do |key, val|
+  #     result = result.send("with_#{key}", val) if val
+  #   end
+  #   result
+  # }
 
   def basic?
     is_a?(WhatIs) || is_a?(HowTo)
@@ -115,15 +107,8 @@ class SiteItem < MarkdownImport
 
   def add_topics(names, rebuild)
     names.each do |top_name|
-      next if top_name.match(Regexp.new(/\[(.*)\]/))
-
-      name = top_name.strip
-      top = Topic.find_or_create_by(
-        name: name.titleize,
-        rebuild_id: rebuild
-      )
-      top.slug = name.parameterize
-      topics << top
+      topic = Topic.from_name(top_name, rebuild.id)
+      topics << topic if topic
     end
   end
 
@@ -138,5 +123,9 @@ class SiteItem < MarkdownImport
   def self.clean
     items = where(name: nil)
     items.each(&:delete)
+    displayed.each do |si|
+      si.refresh_topic_list
+      si.refresh_author_list
+    end
   end
 end
