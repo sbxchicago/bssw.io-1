@@ -20,6 +20,14 @@ left_outer_joins(:additional_dates).where('site_items.end_at >= ?', Date.today).
   scope :past, lambda {
 left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).or(left_outer_joins(:additional_dates).where('additional_dates.end_at < ?', Date.today)) }
 
+     def next_date
+     array = [["Dates", self.start_at, self.end_at]] + self.additional_dates.map{|d| [d.label, d.start_at, d.end_at]}
+     array.delete_if {|tuple| tuple.last && tuple.last < Date.today }
+     array = array.sort_by { |tup| tup[1] || tup[2] }
+     array.first
+   end
+  
+
 
 
   private
@@ -39,13 +47,6 @@ left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).o
     doc.at("strong:contains('Description')").try(:remove)
   end
 
-  
-   def next_date
-     array = [["Dates", self.start_at, self.end_at]] + self.additional_dates.map{|d| [d.label, d.start_at, d.end_at]}
-     array.delete_if {|tuple| tuple.last && tuple.last < Date.today }
-     array = array.sort_by { |tup| tup[1] || tup[2] }
-     array.first
-   end
   
   def update_dates(date_nodes)
     date_nodes.each do |date_node|
