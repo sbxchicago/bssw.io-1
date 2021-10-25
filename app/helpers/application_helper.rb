@@ -44,11 +44,11 @@ module ApplicationHelper
 
   
   def date_range(start_at, end_at)
-    start_date = event.start_at.strftime('%b %e, %Y')
-    end_date = event.end_at
+    start_date = start_at.strftime('%b %e, %Y')
+    end_date = end_at
     end_date = end_date.strftime('%b %e, %Y') if end_date
 
-    if event.start_at == event.end_at || !end_date
+    if start_at == end_at || !end_date
       start_date.html_safe
     else
       "#{start_date}&ndash;#{end_date}".html_safe
