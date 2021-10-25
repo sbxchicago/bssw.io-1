@@ -32,7 +32,7 @@ module ApplicationHelper
   end
 
   def show_dates(event)
-    ("<strong>Dates:</strong> #{date_range(event.start_at, event.end_at)}" +
+    (["<strong>Dates:</strong> #{date_range(event.start_at, event.end_at)}"]  +
     event.additional_dates.each do |date|
       "<strong>#{date.label.titleize}</strong> #{date_range(date.start_at, date.end_at)}"
     end).join.html_safe
