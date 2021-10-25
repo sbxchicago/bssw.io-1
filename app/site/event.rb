@@ -15,10 +15,10 @@ class Event < Searchable
     super(doc, rebuild)
   end
   scope :upcoming, lambda {
-left_outer_joins(:additional_dates).where('site_items.end_at >= ?', Date.today).or(left_outer_joins(:additional_dates).where('additional_dates.end_at >= ?', Date.today)) }
+left_outer_joins(:additional_dates).where('site_items.end_at >= ?', Date.today).or(left_outer_joins(:additional_dates).where('additional_dates.end_at >= ?', Date.today)).distinct }
 
   scope :past, lambda {
-left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).or(left_outer_joins(:additional_dates).where('additional_dates.end_at < ?', Date.today)) }
+left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).or(left_outer_joins(:additional_dates).where('additional_dates.end_at < ?', Date.today)).distinct }
 
      def next_date
      array = [["Dates", self.start_at, self.end_at]] + self.additional_dates.map{|d| [d.label, d.start_at, d.end_at]}
