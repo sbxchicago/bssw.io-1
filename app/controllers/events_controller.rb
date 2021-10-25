@@ -21,7 +21,7 @@ class EventsController < ApplicationController
 
   def filter_events
     author = params[:author]
-    events = scoped_resources.events
+    events = Event.displayed.published
     if author
       @events = events.with_author(Author.displayed.find(author))
     else
