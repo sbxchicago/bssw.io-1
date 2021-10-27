@@ -26,14 +26,8 @@ left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).o
      array = array.sort_by { |tup| tup[1] || tup[2] }
      array.first
    end
-  
-
-
 
   private
-  
-
-
 
   def update_details(doc)
     %w[website location organizers].each do |method|
@@ -50,28 +44,25 @@ left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).o
   
   def update_dates(date_nodes)
     date_nodes.each do |date_node|
-      text = date_node.text
-      dates = if text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
-                text.split(':').last.split('- ')
+      text = date_node.text.split(':')
+      date_text = text.last
+      label_text = text.first
+      dates = if date_text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
+                date_text.split('- ')
               else
-                text.split(':').last.split('-')
+                date_text.split('-')
               end
 
-      if text.match(/^Date/)
+      if label_text.match(/^Date/)
         self.start_at = Chronic.parse(dates.first).try(:to_date)
         get_end_date(dates.last)
       else
-        label = text.split(':').first
-        date = AdditionalDate.create(
-          label: label,
-          event: self,
-          start_at: Chronic.parse(dates.first).try(:to_date),
-        )
-        date.get_end_date(dates.last)
-        date.save
+        AdditionalDate.make_date(label_text, dates, self)
       end
     date_node.try(:remove)
     end
   end
+
+
 
 end

@@ -21,9 +21,8 @@ class Rebuild < ApplicationRecord
     begin
       resource = process_path(full_name, file.read)
       update_attribute(:files_processed, "#{files_processed}<li>#{resource.try(:path)}</li>")
-    rescue Exception => e
-      puts "error #{e}"
-      record_errors(File.basename(full_name), e)
+    rescue Exception => exception
+      record_errors(File.basename(full_name), exception)
     end
   end
 
