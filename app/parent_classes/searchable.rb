@@ -32,13 +32,13 @@ class Searchable < SiteItem
   end
 
   def self.perform_search(words, page)
-    o_results = SiteItem.published.displayed
+    o_results = SiteItem.published.displayed.includes(:authors)
     results = order_results(
       words, get_word_results(words, o_results)
     )
-    Fellow.perform_search(
-      words, page
-    ) + results
+    Fellow.perform_search(words) +
+      Author.perform_search(words) +
+      results
   end
 
   def self.get_word_results(words, results)

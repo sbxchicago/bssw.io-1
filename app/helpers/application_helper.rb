@@ -2,6 +2,25 @@
 
 # view helpers
 module ApplicationHelper
+
+
+  def listings(author)
+    [(author.resource_listing if author.resource_listing != "0 resources"),
+     (author.blog_listing if author.blog_listing != "0 blog posts"),
+    (author.event_listing if author.event_listing != "0 events")].delete_if{|list| list.nil?}.join(', ')
+  end
+  
+  def search_result_url(result)
+    if result.is_a?(SiteItem) 
+      site_item_url(result)
+    elsif result.is_a?(Author)
+      site_items_url(author: result.slug)
+    elsif result.is_a?(Fellow)
+      fellow_url(result)
+    end
+  end
+
+  
   def social_title
     return @post.name if @post
     return @page.name if @page

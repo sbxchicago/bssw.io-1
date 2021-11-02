@@ -14,12 +14,34 @@ class Author < ApplicationRecord
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
 
+
+
+  def self.perform_search(words)
+    results = self.displayed
+    results = Searchable.get_word_results(words, results)
+    words.flatten.uniq.each do |str_var|
+      str_var = Regexp.escape(sanitize_sql_like(str_var))
+      results = results.order(Arel.sql("name REGEXP \"#{Regexp.escape(str_var)}\" DESC"))
+    end
+    results
+  end
+
+  def set_search_text
+    self.search_text = ActionController::Base.helpers.strip_tags("#{display_name} #{affiliation}")
+    save
+  end
+
+
   def should_generate_new_friendly_id?
     (new_record? || slug.blank?) && !last_name.blank?
   end
 
   def display_name
     "#{first_name} #{last_name}"
+  end
+
+  def name
+    display_name
   end
 
   def single_contribution

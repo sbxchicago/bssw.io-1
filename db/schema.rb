@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_14_171941) do
+ActiveRecord::Schema.define(version: 2021_11_01_152103) do
 
   create_table "acronyms", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 2021_09_14_171941) do
     t.string "blog_listing"
     t.string "section"
     t.string "alphabetized_name"
+    t.text "search_text"
     t.index ["rebuild_id"], name: "index_authors_on_rebuild_id"
   end
 

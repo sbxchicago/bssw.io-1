@@ -16,7 +16,7 @@ class Fellow < MarkdownImport
 
   friendly_id :name, use: %i[finders slugged scoped], scope: %i[rebuild_id honorable_mention]
 
-  def self.perform_search(words, _page)
+  def self.perform_search(words)
     results = Fellow.displayed.where(honorable_mention: [nil, false])
     results = Searchable.get_word_results(words, results)
     words.flatten.uniq.each do |str_var|
