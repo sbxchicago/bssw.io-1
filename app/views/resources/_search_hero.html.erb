@@ -7,7 +7,7 @@
 			<% if @results %>
 			    <p>
 				<% if @search %>
-				    Results found for "<%= @search_string %>" (<%= @resources.count %>)
+				    Results found for <i><%= @search_string %></i> (<%= @resources.count %>)
 				    
 				<% else %>
 				    All Resources (<%= @resources.total %>)
@@ -30,7 +30,9 @@
 			    </div>
 			</div>
 		    </form>
+
 		</div>
 	    </div>
+<div class='search_instruction'>Use quotes to search phrases.</div>
 	</div>
     </div>
