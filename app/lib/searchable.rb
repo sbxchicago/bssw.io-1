@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 # search functionality for site items
-class Searchable < SiteItem
-  self.table_name = 'site_items'
+module Searchable
 
-  before_save :set_search_text
+#  before_save :set_search_text
+
   def self.prepare_strings(string)
     if string.match(Regexp.new('"[^"]*"'))
       [[string.gsub('"', '')]]
@@ -22,7 +22,7 @@ class Searchable < SiteItem
     word_array = []
     words.flatten.uniq.each do |str_var|
       unless str_var.blank?
-        str_var = Regexp.escape(sanitize_sql_like(str_var))
+        str_var = Regexp.escape(ApplicationRecord.sanitize_sql_like(str_var))
         word_array << "name REGEXP \"#{Regexp.escape((str_var))}\" DESC"
       end
     end
@@ -54,15 +54,9 @@ class Searchable < SiteItem
   end
 
   def self.word_str(str_var)
-    str_var = Regexp.escape(sanitize_sql_like(str_var))
+    str_var = Regexp.escape(ApplicationRecord.sanitize_sql_like(str_var))
     "search_text REGEXP \"([\\W]*|^)#{str_var}\" or search_text REGEXP \"#{str_var}([\\W]*|$)\""
   end
 
-  def set_search_text
-    self.search_text =
-      ActionController::Base.helpers.strip_tags(
-        "#{content} #{try(:author_list)} #{name} #{try(:description)} #{try(:location)} #{try(:organizers)}"
-      )
-    true
-  end
+  
 end

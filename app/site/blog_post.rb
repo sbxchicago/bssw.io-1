@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 # a blog post
-class BlogPost < Searchable
-  self.table_name = 'site_items'
+class BlogPost < SiteItem
+
+
 
   default_scope -> { order(published_at: 'desc') }
 

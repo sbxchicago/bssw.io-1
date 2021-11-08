@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Events e.g. conferences
-class Event < Searchable
+class Event < SiteItem
 
   include Dateable
 
@@ -62,6 +62,7 @@ left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).o
     date_node.try(:remove)
     end
   end
+
 
 
 

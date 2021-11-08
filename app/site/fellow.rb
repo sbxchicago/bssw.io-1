@@ -2,6 +2,7 @@
 
 # bios etc for fellows
 class Fellow < MarkdownImport
+
   scope :displayed, lambda {
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
@@ -17,7 +18,7 @@ class Fellow < MarkdownImport
   friendly_id :name, use: %i[finders slugged scoped], scope: %i[rebuild_id honorable_mention]
 
   def self.perform_search(words)
-    results = Fellow.displayed.where(honorable_mention: [nil, false])
+    results = Fellow.displayed
     results = Searchable.get_word_results(words, results)
     words.flatten.uniq.each do |str_var|
       str_var = Regexp.escape(sanitize_sql_like(str_var))
@@ -31,8 +32,7 @@ class Fellow < MarkdownImport
   end
 
   def set_search_text
-    self.search_text = ActionController::Base.helpers.strip_tags("#{name} #{short_bio} #{long_bio}")
-    save
+    self.update(search_text: ActionController::Base.helpers.strip_tags("#{name} #{short_bio} #{long_bio}"))
   end
 
   def last_name

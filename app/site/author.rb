@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 # contributor of a resource
-class Author < ApplicationRecord
+class Author < MarkdownImport
+
+
+  include Searchable
+  
+  self.table_name = 'authors'
+  
   include ActionView::Helpers::TextHelper
 
   has_many :contributions, autosave: false

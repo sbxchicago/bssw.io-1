@@ -2,13 +2,19 @@
 
 # resources, events, and blog posts
 class SiteItem < MarkdownImport
-  has_and_belongs_to_many :topics, -> { distinct } # , before_add: :inc_topic_count, before_remove: :dec_topic_count
+
+  extend Searchable
+
+#  before_save :set_search_text
+  
+  self.table_name = 'site_items'
+  
+  has_and_belongs_to_many :topics, -> { distinct }
   has_many :contributions, dependent: :destroy
   has_many :authors, through: :contributions
   has_and_belongs_to_many :communities, through: :features, class_name: 'Resource'
 
   has_many :features
-
   
   validates_uniqueness_of :path, optional: true, case_sensitive: false, scope: :rebuild_id
   has_many :announcements
@@ -125,4 +131,12 @@ class SiteItem < MarkdownImport
       si.refresh_author_list
     end
   end
+
+  def set_search_text
+    text =       ActionController::Base.helpers.strip_tags(
+        " #{content} #{try(:author_list)} #{name} #{try(:description)} #{try(:location)} #{try(:organizers)} ")
+    self.update(search_text: text)
+  end
+
+  
 end
