@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_01_152103) do
+ActiveRecord::Schema.define(version: 2021_11_09_145658) do
 
   create_table "acronyms", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name"
@@ -278,6 +278,7 @@ ActiveRecord::Schema.define(version: 2021_11_01_152103) do
     t.text "files_processed"
     t.text "errors_encountered"
     t.string "content_branch"
+    t.string "commit_hash"
   end
 
   create_table "resources", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|

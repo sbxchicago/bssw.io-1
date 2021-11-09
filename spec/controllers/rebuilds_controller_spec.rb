@@ -74,10 +74,7 @@ RSpec.describe RebuildsController, type: :controller do
                a.website.try(:match?, 'maherou')
              end.first.affiliation).to eq 'Sandia National Laboratories'
       @search_expectations.each do |key, val|
-      puts key.inspect
-      puts SiteItem.displayed.count
-      puts Searchable.perform_search(Searchable.prepare_strings(key), 1).inspect
-        expect(Searchable.perform_search(Searchable.prepare_strings(key), 1).size).to be > val
+                                    expect(Searchable.perform_search(Searchable.prepare_strings(key), 1).size).to be > val
       end
       # @blankline = BlogPost.displayed.where(base_path: '2021-06-ES4Blog3.md').first
       # expect(@blankline.main).to match('<span class="caption">Figure 4')
