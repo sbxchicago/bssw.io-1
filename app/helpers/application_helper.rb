@@ -45,7 +45,7 @@ module ApplicationHelper
 
   def date_range(start_at, end_at)
     start_date = start_at.strftime('%b %e, %Y')
-    return start_date.html_safe if start_at == end_at || !end_date
+    return start_date.html_safe if start_at == end_at || !end_at
 
     start_date = start_at.strftime('%b %e') if start_at.year == end_at.year
     end_date = if end_at.month == start_at.month
