@@ -27,7 +27,7 @@ class Event < Searchable
 
   def next_date
     array = [['Dates', self.start_at, self.end_at]] + additional_dates.map { |d| [d.label, d.start_at, d.end_at] }
-#    array.delete_if { |tuple| tuple.last && tuple.last < Date.today }
+    array.delete_if { |tuple| tuple[1].nil? }
     array = array.sort_by { |tup| tup[1] || tup[2] }
     array.first
   end
