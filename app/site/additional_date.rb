@@ -1,16 +1,20 @@
+# frozen_string_literal: true
+
 class AdditionalDate < ApplicationRecord
   belongs_to :event
+  has_many :additional_date_values
 
-  include Dateable 
+  include Dateable
 
   def self.make_date(label_text, dates, event)
-    date = self.create(
+    date = create(
       label: label_text,
-      event: event,
-      start_at: Chronic.parse(dates.first).try(:to_date),
+      event: event
     )
-    date.get_end_date(dates.last)
-    date.save
+    puts dates
+    dates.split(';').each do |datetime|
+      puts datetime
+      date.additional_date_values << AdditionalDateValue.create(date: Chronic.parse(datetime).try(:to_date))
+    end
   end
-  
 end

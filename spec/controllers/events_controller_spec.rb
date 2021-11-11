@@ -30,7 +30,7 @@ RSpec.describe EventsController, type: :controller do
 
       expect(assigns(:past_events)).not_to be_nil
     end
-    
+
     it 'gets by author' do
       author = FactoryBot.create(:author, rebuild_id: @rebuild.id)
       author.save
@@ -39,7 +39,6 @@ RSpec.describe EventsController, type: :controller do
       expect(Event.displayed.with_author(author)).to include(event)
       doc = Nokogiri::XML('<ul><li>Dates: January 10 - January 10</li></ul>')
       event.send(:update_dates, doc.css("li:contains('Dates:')"))
-
 
       event.save
 

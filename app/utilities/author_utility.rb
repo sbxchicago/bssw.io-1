@@ -13,13 +13,13 @@ class AuthorUtility
   # #   refresh_authors(rebuild_id)
   # end
 
-#   def self.refresh_authors(rebuild_id)
-#      puts "refreshing authors for #{rebuild_id}"
-#      Author.all.each do |author|
-#   #   #   author.refresh_counts
-# #        author.refresh_listings
-#       end
-#    end
+  #   def self.refresh_authors(rebuild_id)
+  #      puts "refreshing authors for #{rebuild_id}"
+  #      Author.all.each do |author|
+  #   #   #   author.refresh_counts
+  # #        author.refresh_listings
+  #       end
+  #    end
 
   def self.names_from(name)
     return [nil, nil] unless name.respond_to?(:split)

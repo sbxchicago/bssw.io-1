@@ -32,28 +32,28 @@ module ApplicationHelper
   end
 
   def show_dates(event)
-    ([ "<strong>Dates</strong> #{date_range(event.start_at, event.end_at)}".html_safe ] +   
-    
-      event.additional_dates.map{ |date| 
-      "<strong>#{date.label.titleize}</strong> #{date_range(date.start_at, date.end_at)}"}
-   ).join('<br />').html_safe
+    (["<strong>Dates</strong> #{date_range(event.start_at, event.end_at)}".html_safe] +
+      event.additional_dates.map do |date|
+        "<strong>#{date.label.titleize}</strong> #{date_range(date.start_at, date.end_at)}"
+      end
+    ).join('<br />').html_safe
   end
 
   def show_date(event)
     "<strong>#{event.next_date.first.titleize}</strong> #{date_range(event.next_date[1], event.next_date[2])}".html_safe
   end
 
-  
   def date_range(start_at, end_at)
     start_date = start_at.strftime('%b %e, %Y')
-    end_date = end_at
-    end_date = end_date.strftime('%b %e, %Y') if end_date
+    return start_date.html_safe if start_at == end_at || !end_date
 
-    if start_at == end_at || !end_date
-      start_date.html_safe
-    else
-      "#{start_date}&ndash;#{end_date}".html_safe
-    end
+    start_date = start_at.strftime('%b %e') if start_at.year == end_at.year
+    end_date = if end_at.month == start_at.month
+                 end_at.strftime('%e, %Y')
+               else
+                 end_at.strftime('%b %e, %Y')
+               end
+    "#{start_date}&ndash;#{end_date}".html_safe
   end
 
   def show_page(path, next_page)

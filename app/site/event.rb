@@ -2,12 +2,11 @@
 
 # Events e.g. conferences
 class Event < Searchable
-
   include Dateable
 
   self.table_name = 'site_items'
   has_many :additional_dates
-  
+
   def update_from_content(doc, rebuild)
     update_details(doc)
     overview = doc.at("p:contains('Overview')")
@@ -15,17 +14,23 @@ class Event < Searchable
     super(doc, rebuild)
   end
   scope :upcoming, lambda {
-left_outer_joins(:additional_dates).where('site_items.end_at >= ?', Date.today).or(left_outer_joins(:additional_dates).where('additional_dates.end_at >= ?', Date.today)).distinct }
+    left_outer_joins(:additional_dates).where('site_items.end_at >= ?', Date.today).or(
+      left_outer_joins(:additional_dates).where('additional_dates.end_at >= ?', Date.today)
+    ).distinct
+  }
 
   scope :past, lambda {
-left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).or(left_outer_joins(:additional_dates).where('additional_dates.end_at < ?', Date.today)).distinct }
+    left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).or(
+      left_outer_joins(:additional_dates).where('additional_dates.end_at < ?', Date.today)
+    ).distinct
+  }
 
-     def next_date
-     array = [["Dates", self.start_at, self.end_at]] + self.additional_dates.map{|d| [d.label, d.start_at, d.end_at]}
-     array.delete_if {|tuple| tuple.last && tuple.last < Date.today }
-     array = array.sort_by { |tup| tup[1] || tup[2] }
-     array.first
-   end
+  def next_date
+    array = [['Dates', start_at, end_at]] + additional_dates.map { |d| [d.label, d.start_at, d.end_at] }
+    array.delete_if { |tuple| tuple.last && tuple.last < Date.today }
+    array = array.sort_by { |tup| tup[1] || tup[2] }
+    array.first
+  end
 
   private
 
@@ -35,16 +40,16 @@ left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).o
       send("#{method}=", node.text.split(':').last) if node
     end
     self.website = "http:#{website}" if website
-    date_nodes = doc.css("li:contains('Date')")  
+    date_nodes = doc.css("li:contains('Date')") + doc.css("li:contains('date')")
     update_dates(date_nodes) if date_nodes
 
     doc.at("strong:contains('Description')").try(:remove)
   end
 
-  
   def update_dates(date_nodes)
     date_nodes.each do |date_node|
       text = date_node.text.split(':')
+
       date_text = text.last
       label_text = text.first
       dates = if date_text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
@@ -57,12 +62,10 @@ left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).o
         self.start_at = Chronic.parse(dates.first).try(:to_date)
         get_end_date(dates.last)
       else
-        AdditionalDate.make_date(label_text, dates, self)
+        puts text
+        AdditionalDate.make_date(label_text, date_text, self)
       end
-    date_node.try(:remove)
+      date_node.try(:remove)
     end
   end
-
-
-
 end

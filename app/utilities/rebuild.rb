@@ -21,8 +21,8 @@ class Rebuild < ApplicationRecord
     begin
       resource = process_path(full_name, file.read)
       update_attribute(:files_processed, "#{files_processed}<li>#{resource.try(:path)}</li>")
-    rescue Exception => exception
-      record_errors(File.basename(full_name), exception)
+    rescue Exception => e
+      record_errors(File.basename(full_name), e)
     end
   end
 
@@ -49,7 +49,6 @@ class Rebuild < ApplicationRecord
   end
 
   def clear_old
-
     rebuild_ids = Rebuild.last(5).to_a.map(&:id).delete_if(&:nil?)
     rebuild_ids += [id]
     classes = [Community, Category, Topic, Announcement, Author, Quote, SiteItem, FeaturedPost, Fellow]

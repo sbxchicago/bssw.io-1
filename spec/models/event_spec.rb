@@ -24,20 +24,20 @@ RSpec.describe Event, type: :model do
     expect(Event.upcoming).to include(event)
   end
 
-
   it 'can create itself from content' do
     content = "# Foo \n bar
         \n* Dates: December 3, #{Date.today.year} - January 5
         \n* Submission Date: November 1, #{Date.today.year}
         \n* Poster Dates: November 2 2021 - November 3 2021
+        \n* Party dates: June 3 2022; July 4 2022
         \n* Location: Place \n* \n* <!--- Publish: Yes --->"
     event = Rebuild.new.find_or_create_resource('stuff/Events/foo.md')
     event.parse_and_update(content)
     event.reload
     expect(event.additional_dates).not_to be_empty
+    expect(event.additional_dates.map(&:additional_date_values).flatten.map(&:date).flatten).to include(Chronic.parse('July 4 2022').to_date)
   end
 
-  
   it 'can parse written dates' do
     content = "# Foo \n bar
     \n* Dates: 10-9-18 - 1-25-19

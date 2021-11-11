@@ -9,7 +9,6 @@ class SiteItem < MarkdownImport
 
   has_many :features
 
-  
   validates_uniqueness_of :path, optional: true, case_sensitive: false, scope: :rebuild_id
   has_many :announcements
 
@@ -45,9 +44,6 @@ class SiteItem < MarkdownImport
     end
   end
 
-  
-
-  
   scope :published, lambda {
     where(publish: true)
   }
