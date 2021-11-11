@@ -40,7 +40,7 @@ module ApplicationHelper
   end
 
   def show_date(event)
-    "<strong>#{event.next_date.first.titleize}</strong> #{date_range(event.next_date[1], event.next_date[2])}".html_safe
+    "<strong>#{event.next_date.first.titleize}</strong> #{date_range(event.next_date[1], event.next_date[2])}".html_safe if event.next_date
   end
 
   def date_range(start_at, end_at)
