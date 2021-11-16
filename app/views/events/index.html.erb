@@ -16,13 +16,13 @@
 
 		    <div class="pagination pagination-top">
 	    1-<%=
-	      if @events.current_page*@events.per_page > @events.total_entries
-		  @events.total_entries
+	      if @dates.current_page*@dates.per_page > @dates.total_entries
+		  @dates.total_entries
 	      else 
-		  @events.current_page*@events.per_page 
+		  @dates.current_page*@dates.per_page 
 	      end
-	      %> of <%= @events.total_entries %> Items  
-	    <% if @events.next_page %>
+	      %> of <%= @dates.total_entries %> Items  
+	    <% if @dates.next_page %>
 		| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
 	    <% end %>
 		    </div>
@@ -49,7 +49,7 @@
     </div>
 <% end %>
 <div id='events'>
-    <%= render 'events', :events => @events %>
+    <%= render 'events', :dates => @dates %>
     <div class="row"></div>
 </div>
 
@@ -57,9 +57,9 @@
     <div class="container more-top">
 	<div class="row">
 	    <div class="col-xl-12">
-		<% if @events.next_page %>
+		<% if @dates.next_page %>
 		    <span id="more">
-			<%= render 'show_more',  :events => @events  %>
+			<%= render 'show_more',  :events => @dates  %>
 		    </span>
 		<% end %>
 		<a class="to-top" href="#top">To Top</a>

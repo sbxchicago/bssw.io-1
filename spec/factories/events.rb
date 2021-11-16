@@ -4,8 +4,16 @@ FactoryBot.define do
   factory :event do
     name { (0...8).map { rand(65..90).chr }.join }
     path { (0...8).map { rand(65..90).chr }.join }
-    start_at { 3.weeks.ago }
-    end_at { 1.week.from_now }
+    additional_dates { [
+        FactoryBot.build(:additional_date,
+               label: 'Start Date',
+               additional_date_values: [ FactoryBot.build(:additional_date_value, date: 3.weeks.ago )] ),
+        FactoryBot.build(:additional_date,
+                         label: 'End Date',
+                         additional_date_values: [ FactoryBot.build(:additional_date_value, date: 3.weeks.from_now)]
+                        )
+                       ]
+    } 
     location { 'MyString' }
     aggregate { 'base' }
     website { 'MyString' }

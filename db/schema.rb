@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_10_184842) do
+ActiveRecord::Schema.define(version: 2021_11_15_154657) do
 
   create_table "acronyms", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name"
@@ -27,9 +27,6 @@ ActiveRecord::Schema.define(version: 2021_11_10_184842) do
 
   create_table "additional_dates", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "label"
-    t.string "text"
-    t.datetime "start_at"
-    t.datetime "end_at"
     t.integer "event_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -75,7 +72,6 @@ ActiveRecord::Schema.define(version: 2021_11_10_184842) do
     t.string "blog_listing"
     t.string "section"
     t.string "alphabetized_name"
-    t.text "search_text"
     t.index ["rebuild_id"], name: "index_authors_on_rebuild_id"
   end
 
@@ -285,7 +281,6 @@ ActiveRecord::Schema.define(version: 2021_11_10_184842) do
     t.text "files_processed"
     t.text "errors_encountered"
     t.string "content_branch"
-    t.string "commit_hash"
   end
 
   create_table "resources", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
@@ -336,8 +331,6 @@ ActiveRecord::Schema.define(version: 2021_11_10_184842) do
     t.string "location"
     t.string "website"
     t.string "organizers"
-    t.date "end_at"
-    t.date "start_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "version_no"

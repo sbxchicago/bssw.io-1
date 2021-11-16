@@ -1,16 +1,16 @@
 
-<% events.each do |event| %>
+<% dates.each do |date| %>
 
 <div class="event-blog-row">
   <div class="container">
-    <a href="events/<%= event.slug %>">
+    <a href="events/<%= date.event.slug %>">
       <div class="row">
         <div class="col-xl-8 order-xl-last col-lg-8 order-lg-last col-md-12 col-sm-12 col-12">
-          <h3><%= event.name %></h3>
+          <h3><%= date.event.name %></h3>
         </div>
         <div class="col-xl-4 order-xl-first col-lg-4 order-lg-first col-md-12 col-sm-12 col-12">
-          <p class="small-caps date"><%= show_date(event) %></p>
-          <p class="small-caps location"><strong>Location&nbsp;</strong> <span><%= event.location %></span></p>
+          <p class="small-caps date"><%= show_date(date) %></p>
+          <p class="small-caps location"><strong>Location&nbsp;</strong> <span><%= date.event.location %></span></p>
         </div>
 
       </div>

@@ -4,6 +4,22 @@
 class Event < Searchable
   include Dateable
 
+  def start_date
+    additional_dates.where(label: 'Start Date').first
+  end
+
+  def start_at
+    start_date.try(:additional_date_values).try(:first).try(:date)
+  end
+
+  def end_date
+    additional_dates.where(label: 'End Date').first
+  end
+
+  def end_at
+    end_date.try(:additional_date_values).try(:first).try(:date)
+  end
+
   self.table_name = 'site_items'
   has_many :additional_dates
 
@@ -13,20 +29,22 @@ class Event < Searchable
     overview&.remove
     super(doc, rebuild)
   end
+
   scope :upcoming, lambda {
-    left_outer_joins(:additional_dates).where('site_items.end_at >= ?', Date.today).or(
-      left_outer_joins(:additional_dates).where('additional_dates.end_at >= ?', Date.today)
-    ).distinct
+    left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date >= ?', Date.today).distinct
   }
 
   scope :past, lambda {
-    left_outer_joins(:additional_dates).where('site_items.end_at < ?', Date.today).or(
-      left_outer_joins(:additional_dates).where('additional_dates.end_at < ?', Date.today)
-    ).distinct
+((left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date < ?', Date.today))).distinct
   }
 
+
+  def special_additional_dates
+    additional_dates.delete_if{|date| date.label == 'Start Date' || date.label == 'End Date'}
+  end
+  
   def next_date
-    array = [['Dates', self.start_at, self.end_at]] + additional_dates.map { |d| [d.label, d.start_at, d.end_at] }
+    array = [['Dates', start_at, end_at]] + additional_dates.map { |d| [d.label, d.additional_dates.map(&:dates) ] }
     array.delete_if { |tuple| tuple[1].nil? }
     array = array.sort_by { |tup| tup[1] || tup[2] }
     array.first
@@ -49,7 +67,6 @@ class Event < Searchable
   def update_dates(date_nodes)
     date_nodes.each do |date_node|
       text = date_node.text.split(':')
-
       date_text = text.last
       label_text = text.first
       dates = if date_text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
@@ -58,14 +75,14 @@ class Event < Searchable
                 date_text.split('-')
               end
 
-      if label_text.match(/^Date/)
-        self.start_at = Chronic.parse(dates.first).try(:to_date)
-        get_end_date(dates.last)
+      if dates.size > 1
+        AdditionalDate.make_date('Start Date', dates.first, self)
+        AdditionalDate.make_date('End Date', dates.last, self)
       else
-        puts text
         AdditionalDate.make_date(label_text, date_text, self)
       end
       date_node.try(:remove)
     end
+    fix_end_year(start_date, end_date)
   end
 end

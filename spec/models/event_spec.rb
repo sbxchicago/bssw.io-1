@@ -55,7 +55,7 @@ RSpec.describe Event, type: :model do
 
     event = Rebuild.new.find_or_create_resource('Events/foo.md')
     event.parse_and_update(content)
-    expect(event.start_at).to eq Chronic.parse("February 1 #{Date.today.year}").to_date
+    expect(event.start_at.to_date).to eq Chronic.parse("February 1 #{Date.today.year}").to_date
   end
 
   it 'can parse dates from later this year' do
@@ -64,7 +64,7 @@ RSpec.describe Event, type: :model do
     \n* Location: Place \n* \n* <!--- Publish: Yes --->"
     event = Rebuild.new.find_or_create_resource('Events/foo.md')
     event.parse_and_update(content)
-    expect(event.start_at).to eq Chronic.parse("December 1 #{Date.today.year}").to_date
+    expect(event.start_at.to_date).to eq Chronic.parse("December 1 #{Date.today.year}").to_date
   end
 
   it 'can parse dates across years' do

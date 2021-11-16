@@ -33,18 +33,26 @@ module ApplicationHelper
 
   def show_dates(event)
     (["<strong>Dates</strong> #{date_range(event.start_at, event.end_at)}".html_safe] +
-      event.additional_dates.map do |date|
+      event.special_additional_dates.map do |date|
         "<strong>#{date.label.titleize}</strong> #{date_range(date.start_at, date.end_at)}"
       end
     ).join('<br />').html_safe
   end
 
-  def show_date(event)
-    "<strong>#{event.next_date.first.titleize}</strong> #{date_range(event.next_date[1], event.next_date[2])}".html_safe if event.next_date
+  def show_date(date_value)
+    date = date_value.additional_date
+    if date.label == 'Start Date'
+    "<strong>Dates</strong> #{date_range(date.event.start_at,
+                                                                       date.event.end_at)}".html_safe
+    else
+      "<strong>#{date.label.titleize}</strong> #{date_range(date_value.date, nil)}".html_safe
+
+    end
   end
 
   def date_range(start_at, end_at)
     return unless start_at
+
     start_date = start_at.strftime('%b %e, %Y')
     return start_date.html_safe if start_at == end_at || !end_at
 

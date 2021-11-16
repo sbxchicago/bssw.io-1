@@ -5,11 +5,14 @@ class EventsController < ApplicationController
   def index
     page = params[:page]
     filter_events
-    @events = if params[:view] == 'all'
-                @events.paginate(page: 1, per_page: @events.size)
-              else
-                @events.paginate(page: page, per_page: 25)
-              end
+    @dates = AdditionalDateValue.from_events(@events) 
+
+    @dates = if params[:view] == 'all'
+               @dates.paginate(page: 1, per_page: @dates.size)
+             else
+               @dates.paginate(page: page, per_page: 25)
+             end
+
   end
 
   def show

@@ -66,9 +66,28 @@ RSpec.describe EventsController, type: :controller do
       expect(assigns(:resource)).not_to be_nil
     end
     it 'shows an event with a different date range' do
-      event = FactoryBot.create(:event, start_at: 1.week.from_now, end_at: 2.weeks.from_now, rebuild_id: @rebuild.id)
+      event = FactoryBot.create(:event,
+                                additional_dates: [
+                                  FactoryBot.build(:additional_date,
+                                                   label: 'Start Date',
+                                                   additional_date_values:
+                                                     [ FactoryBot.build(:additional_date_value, date: 3.weeks.ago)
+                                                     ]
+                                                   
+                                                   
+                                                  ),
+
+                                  FactoryBot.build(:additional_date,
+                                                   label: 'End Date',
+                                                   additional_date_values:
+                                                     [ FactoryBot.build(:additional_date_value, date: 1.week.from_now)
+                                                     ]
+                                                  )
+                                ], 
+                                rebuild_id: @rebuild.id)
       get :show, params: { id: event }
       expect(assigns(:event)).not_to be_nil
     end
   end
 end
+
