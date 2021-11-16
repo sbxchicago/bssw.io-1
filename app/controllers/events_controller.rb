@@ -5,8 +5,9 @@ class EventsController < ApplicationController
   def index
     page = params[:page]
     filter_events
-    @dates = AdditionalDateValue.from_events(@events).order('date asc')
-    @dates = @dates.order('date desc') if params[:past]
+    @dates = AdditionalDateValue.from_events(@events)
+    @dates = @dates.order('date asc') if @upcoming_events
+    @dates = @dates.order('date desc') if @past_events
     @dates = if params[:view] == 'all'
                @dates.paginate(page: 1, per_page: @dates.size)
              else
