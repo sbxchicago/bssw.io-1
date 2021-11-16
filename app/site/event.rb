@@ -31,23 +31,15 @@ class Event < Searchable
   end
 
   scope :upcoming, lambda {
-    left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date >= ?', Date.today).distinct
-  }
+                     left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date >= ?', Date.today)
+                   }
 
   scope :past, lambda {
-((left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date < ?', Date.today))).distinct
-  }
-
+                 left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date < ?', Date.today)
+               }
 
   def special_additional_dates
-    additional_dates.delete_if{|date| date.label == 'Start Date' || date.label == 'End Date'}
-  end
-  
-  def next_date
-    array = [['Dates', start_at, end_at]] + additional_dates.map { |d| [d.label, d.additional_dates.map(&:dates) ] }
-    array.delete_if { |tuple| tuple[1].nil? }
-    array = array.sort_by { |tup| tup[1] || tup[2] }
-    array.first
+    additional_dates.where('label != ?', 'Start Date').where('label != ?', 'End Date')
   end
 
   private
@@ -58,7 +50,7 @@ class Event < Searchable
       send("#{method}=", node.text.split(':').last) if node
     end
     self.website = "http:#{website}" if website
-    date_nodes = doc.css("li:contains('Date')") + doc.css("li:contains('date')")
+    date_nodes = doc.css("li:contains('Date')") + doc.css("li:contains(' date')")
     update_dates(date_nodes) if date_nodes
 
     doc.at("strong:contains('Description')").try(:remove)

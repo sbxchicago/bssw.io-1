@@ -42,8 +42,8 @@ module ApplicationHelper
   def show_date(date_value)
     date = date_value.additional_date
     if date.label == 'Start Date'
-    "<strong>Dates</strong> #{date_range(date.event.start_at,
-                                                                       date.event.end_at)}".html_safe
+      "<strong>Dates</strong> #{date_range(date.event.start_at,
+                                           date.event.end_at)}".html_safe
     else
       "<strong>#{date.label.titleize}</strong> #{date_range(date_value.date, nil)}".html_safe
 

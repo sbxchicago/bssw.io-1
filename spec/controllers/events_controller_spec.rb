@@ -60,7 +60,6 @@ RSpec.describe EventsController, type: :controller do
   describe 'get show' do
     it 'shows an event' do
       event = FactoryBot.create(:event, rebuild_id: @rebuild.id)
-      #      event.subresources << FactoryBot.create(:resource, rebuild_id: @rebuild.id)
       get :show, params: { id: event }
       expect(assigns(:event)).not_to be_nil
       expect(assigns(:resource)).not_to be_nil
@@ -70,24 +69,16 @@ RSpec.describe EventsController, type: :controller do
                                 additional_dates: [
                                   FactoryBot.build(:additional_date,
                                                    label: 'Start Date',
-                                                   additional_date_values:
-                                                     [ FactoryBot.build(:additional_date_value, date: 3.weeks.ago)
-                                                     ]
-                                                   
-                                                   
-                                                  ),
-
+                                                   additional_date_values: [FactoryBot.build(:additional_date_value,
+                                                                                             date: 3.weeks.ago)]),
                                   FactoryBot.build(:additional_date,
                                                    label: 'End Date',
                                                    additional_date_values:
-                                                     [ FactoryBot.build(:additional_date_value, date: 1.week.from_now)
-                                                     ]
-                                                  )
-                                ], 
+                                                     [FactoryBot.build(:additional_date_value, date: 1.week.from_now)])
+                                ],
                                 rebuild_id: @rebuild.id)
       get :show, params: { id: event }
       expect(assigns(:event)).not_to be_nil
     end
   end
 end
-

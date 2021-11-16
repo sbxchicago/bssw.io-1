@@ -2,7 +2,7 @@
 
 # resources, events, and blog posts
 class SiteItem < MarkdownImport
-  has_and_belongs_to_many :topics, -> { distinct } # , before_add: :inc_topic_count, before_remove: :dec_topic_count
+  has_and_belongs_to_many :topics, -> { distinct }
   has_many :contributions, dependent: :destroy
   has_many :authors, through: :contributions
   has_and_belongs_to_many :communities, through: :features, class_name: 'Resource'
