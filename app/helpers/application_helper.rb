@@ -34,7 +34,7 @@ module ApplicationHelper
   def show_dates(event)
     (["<strong>Dates</strong> #{date_range(event.start_at, event.end_at)}".html_safe] +
       event.special_additional_dates.map do |date|
-        "<strong>#{date.label.titleize}</strong> " + date.additional_date_values.map{|adv| date_range(adv.date, nil)}.join
+        "<strong>#{date.label.titleize}</strong> " + date.additional_date_values.map{|adv| date_range(adv.date, nil)}.join(';')
       end
     ).join('<br />').html_safe
   end
