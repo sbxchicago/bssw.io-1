@@ -11,7 +11,7 @@ class BlogPost < Searchable
     topics.each do |topic|
       posts += BlogPost.displayed.published.with_topic(topic)
     end
-    posts
+    posts.uniq.first(5)
   end
 
   def update_from_content(doc, rebuild)
