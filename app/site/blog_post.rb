@@ -7,11 +7,7 @@ class BlogPost < Searchable
   default_scope -> { order(published_at: 'desc') }
 
   def related_posts
-    posts = []
-    topics.each do |topic|
-      posts += BlogPost.displayed.published.with_topic(topic)
-    end
-    posts
+    BlogPost.displayed.published.with_topics(topics).order('published_at desc').distinct.where.not({id: self.id}).first(5)
   end
 
   def update_from_content(doc, rebuild)

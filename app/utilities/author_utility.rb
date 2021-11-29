@@ -36,9 +36,11 @@ class AuthorUtility
       next if text.match?(/Overrides/i)
 
       vals = text.split(',').map { |val| val.delete('"') }
-      alpha_name = vals.first
+      next if vals.map{|v| v.blank? }.all?
+      alpha_name = vals[1].try(:strip) 
       display_name = vals.last
-      author = Author.find_from_vals(alpha_name, display_name, rebuild)
+      puts "alpha #{alpha_name}, display #{display_name}, vals #{vals}, text #{text}"
+      author = Author.find_from_vals(vals.first, display_name, rebuild)
       author&.do_overrides(alpha_name, display_name)
     end
   end
