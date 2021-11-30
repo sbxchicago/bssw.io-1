@@ -36,7 +36,7 @@ module ApplicationHelper
       event.special_additional_dates.map do |date|
         "<strong>#{date.label.titleize}</strong> " + date.additional_date_values.map do |adv|
                                                        date_range(adv.date, nil)
-                                                     end.join(';')
+                                                     end.join('; ')
       end
     ).join('<br />').html_safe
   end
