@@ -60,6 +60,7 @@ class Event < Searchable
     date_nodes.each do |date_node|
       text = date_node.text.split(':')
       date_text = text.last
+
       label_text = text.first
       dates = if date_text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
                 date_text.split('- ')

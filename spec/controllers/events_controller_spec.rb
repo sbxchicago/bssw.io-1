@@ -70,9 +70,16 @@ RSpec.describe EventsController, type: :controller do
                                   FactoryBot.build(:additional_date,
                                                    label: 'Start Date',
                                                    additional_date_values: [FactoryBot.build(:additional_date_value,
-                                                                                             date: 3.weeks.ago)]),
+                                                                                             date: Date.today.change(
+                                                                                               month: 6, day: 1
+                                                                                             ))]),
                                   FactoryBot.build(:additional_date,
                                                    label: 'End Date',
+                                                   additional_date_values:
+                                                     [FactoryBot.build(:additional_date_value,
+                                                                       date: Date.today.change(month: 6, day: 10))]),
+                                  FactoryBot.build(:additional_date,
+                                                   label: 'Other Date',
                                                    additional_date_values:
                                                      [FactoryBot.build(:additional_date_value, date: 1.week.from_now)])
                                 ],

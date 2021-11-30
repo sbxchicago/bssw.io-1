@@ -56,7 +56,6 @@ class SiteItem < MarkdownImport
     joins([:topics]).where(topics: { id: topics.map(&:id) })
   }
 
-  
   scope :with_category, lambda { |category|
     joins([:topics]).joins([:siteitems_topics]).where('topics.category_id = ?', category)
   }

@@ -69,12 +69,13 @@ RSpec.describe Event, type: :model do
 
   it 'can parse dates across years' do
     content = "# Foo \n bar
-    \n* Dates: December 1 #{Date.today.year} - January 2
+    \n* Dates: #{Date.today.strftime('%B')} 1 #{Date.today.year + 1} - January 2
      \n* Location: Place \n* \n* <!--- Publish: Yes --->"
 
     event = Rebuild.new.find_or_create_resource('Events/foo.md')
     event.parse_and_update(content)
-    expect(event.start_at).to eq Chronic.parse("December 1 #{Date.today.year}").to_date
+
+    expect(event.start_at).to eq Chronic.parse("#{Date.today.strftime('%B')} 1 #{Date.today.year}").to_date
     expect(event.end_at).to eq Chronic.parse("January 2 #{Date.today.year + 1}").to_date
   end
 end
