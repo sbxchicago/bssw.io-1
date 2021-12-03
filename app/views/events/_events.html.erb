@@ -1,22 +1,22 @@
 
 <% dates.each do |date| %>
 
-<div class="event-blog-row">
-  <div class="container">
-    <a href="events/<%= date.event.slug %>">
-      <div class="row">
-        <div class="col-xl-8 order-xl-last col-lg-8 order-lg-last col-md-12 col-sm-12 col-12">
-          <h3><%= date.event.name %></h3>
-        </div>
-        <div class="col-xl-4 order-xl-first col-lg-4 order-lg-first col-md-12 col-sm-12 col-12">
-          <p class="small-caps date"><%= show_date(date) %></p>
-          <p class="small-caps location"><strong>Location&nbsp;</strong> <span><%= date.event.location %></span></p>
-        </div>
+    <div class="event-blog-row">
+	<div class="container">
+	    <a href="events/<%= date.event.slug %>">
+		<div class="row">
+		    <div class="col-xl-8 order-xl-last col-lg-8 order-lg-last col-md-12 col-sm-12 col-12">
+			<h3><%= date.event.name %></h3>
+		    </div>
+		    <div class="col-xl-4 order-xl-first col-lg-4 order-lg-first col-md-12 col-sm-12 col-12">
+			<h3><%= date.label %></h3>
+			<p class="small-caps date"><%= show_date(date) %></p>
+		    </div>
 
-      </div>
-    </a>
-  </div>
-</div>
+		</div>
+	    </a>
+	</div>
+    </div>
 
 <% end %>
 
