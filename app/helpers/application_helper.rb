@@ -52,6 +52,11 @@ module ApplicationHelper
     end
   end
 
+  def show_label(date_value)
+    date = date_value.additional_date
+    date.label unless date.label == 'Start Date'
+  end
+
   def date_range(start_at, end_at)
     return unless start_at
 
