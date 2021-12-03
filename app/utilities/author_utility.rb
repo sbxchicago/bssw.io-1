@@ -9,18 +9,6 @@ class AuthorUtility
     custom_author_info(file_path, rebuild_id)
   end
 
-  # def self.process_authors(rebuild_id)
-  # #   refresh_authors(rebuild_id)
-  # end
-
-#   def self.refresh_authors(rebuild_id)
-#      puts "refreshing authors for #{rebuild_id}"
-#      Author.all.each do |author|
-#   #   #   author.refresh_counts
-# #        author.refresh_listings
-#       end
-#    end
-
   def self.names_from(name)
     return [nil, nil] unless name.respond_to?(:split)
     return %w[BSSw Community] if name.match?(/BSSw Community/i)
@@ -39,7 +27,7 @@ class AuthorUtility
       next if vals.map{|v| v.blank? }.all?
       alpha_name = vals[1].try(:strip) 
       display_name = vals.last
-      puts "alpha #{alpha_name}, display #{display_name}, vals #{vals}, text #{text}"
+
       author = Author.find_from_vals(vals.first, display_name, rebuild)
       author&.do_overrides(alpha_name, display_name)
     end
