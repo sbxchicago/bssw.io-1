@@ -29,8 +29,7 @@ class MarkdownImport < GithubImport
   def update_associates(array, _rebuild)
     array.each_cons(2) do |string, names|
       names = names.split(',')
-
-      method = "add_#{string}".downcase.tr(' ', '_')
+      method = "add_#{string.strip}".downcase.tr(' ', '_')
       if method == 'add_topics'
         save if new_record?
         try(:add_topics, names)
@@ -59,6 +58,9 @@ class MarkdownImport < GithubImport
   end
 
   def add_publish(val)
+    puts "publish: #{val.inspect} #{base_path}" if base_path == 'PullRequestSizeConsiderations.md'
+    puts "publish: #{val.inspect} #{base_path}" if base_path == 'CodingConventions.md'
+
     val = val.downcase
     if val.match('yes')
       update_attribute(:publish, true)
