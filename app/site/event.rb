@@ -71,7 +71,7 @@ class Event < Searchable
       if dates.size > 1
         AdditionalDate.make_date('Start Date', dates.first, self)
         AdditionalDate.make_date('End Date', dates.last, self)
-      elsif label_text == 'Date'
+      elsif label_text.strip == 'Date'
         AdditionalDate.make_date('Start Date', dates.first, self)
       else
         AdditionalDate.make_date(label_text, date_text, self)
