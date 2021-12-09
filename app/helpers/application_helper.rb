@@ -35,9 +35,9 @@ module ApplicationHelper
     additionals = event.special_additional_dates.map{|date| 
       "<strong>#{date.label.titleize}</strong> " + date.additional_date_values.map{ |adv|
           date_range(adv.date, nil)
-      }    }.join('; ')
+      } }.join('; ')
     end
-    (["<strong>Dates</strong> #{date_range(event.start_at, event.end_at)}".html_safe] unless event.start_at.blank? + additionals
+    (["<strong>Dates</strong> #{date_range(event.start_at, event.end_at)}".html_safe unless event.start_at.blank?]  + additionals
     ).join('<br />').html_safe
   end
 
