@@ -36,7 +36,7 @@ module ApplicationHelper
       "<strong>#{date.label.titleize}</strong> " + # date.additional_date_values.map{ |adv|
       #    date_range(adv.date, nil)
         # }
-        "foo"
+        date.additional_date_values.map{|adv| "foo"}
     }.join('; ')
 
 #     ([event.start_at.blank? ? "" : "<strong>Dates</strong> #{date_range(event.start_at, event.end_at)}".html_safe]
