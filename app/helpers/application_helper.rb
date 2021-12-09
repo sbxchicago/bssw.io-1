@@ -37,7 +37,7 @@ module ApplicationHelper
           date_range(adv.date, nil)
       } }.join('; ')
     end
-    (["<strong>Dates</strong> #{date_range(event.start_at, event.end_at)}".html_safe unless event.start_at.blank?]  + additionals
+    ([event.start_at.blank? ? "" : "<strong>Dates</strong> #{date_range(event.start_at, event.end_at)}".html_safe ]  + additionals
     ).join('<br />').html_safe
   end
 
