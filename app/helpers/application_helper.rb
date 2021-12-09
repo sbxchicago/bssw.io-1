@@ -40,7 +40,7 @@ module ApplicationHelper
     } #.join('<br />').html_safe
 
      ([event.start_at.blank? ? "" : "<strong>Dates</strong> #{date_range(event.start_at, event.end_at)}".html_safe] + additionals
-     ).delete_if?{|d| d.blank? }.join('<br />').html_safe
+     ).delete_if{|d| d.blank? }.join('<br />').html_safe
   end
 
   def show_date(date_value)
