@@ -32,10 +32,10 @@ module ApplicationHelper
   end
 
   def show_dates(event)
-    # additionals = event.special_additional_dates.map{|date| 
-    #   "<strong>#{date.label.titleize}</strong> " + date.additional_date_values.map{ |adv|
-    #     date_range(adv.date, nil)
-    #   } }.join('; ')
+    additionals = event.special_additional_dates.map{|date| 
+      "<strong>#{date.label.titleize}</strong> " + date.additional_date_values.map{ |adv|
+        date_range(adv.date, nil)
+      } }.join('; ')
 
 #     ([event.start_at.blank? ? "" : "<strong>Dates</strong> #{date_range(event.start_at, event.end_at)}".html_safe]
 # #     + additionals
