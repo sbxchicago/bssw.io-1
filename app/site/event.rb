@@ -2,6 +2,7 @@
 
 # Events e.g. conferences
 class Event < Searchable
+
   include Dateable
 
   def start_date
@@ -22,14 +23,13 @@ class Event < Searchable
 
   self.table_name = 'site_items'
   has_many :additional_dates
-
+  
   def update_from_content(doc, rebuild)
     update_details(doc)
     overview = doc.at("p:contains('Overview')")
     overview&.remove
     super(doc, rebuild)
   end
-
   scope :upcoming, lambda {
                      left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date >= ?', Date.today)
                    }
@@ -56,11 +56,11 @@ class Event < Searchable
     doc.at("strong:contains('Description')").try(:remove)
   end
 
+  
   def update_dates(date_nodes)
     date_nodes.each do |date_node|
       text = date_node.text.split(':')
       date_text = text.last
-
       label_text = text.first
       dates = if date_text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
                 date_text.split('- ')
@@ -80,4 +80,7 @@ class Event < Searchable
     end
     fix_end_year(start_date, end_date)
   end
+
+
+
 end

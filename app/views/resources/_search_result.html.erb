@@ -4,7 +4,7 @@
 	<div class="row">
 	    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 
-		<a href="<%= result.is_a?(SiteItem) ? site_item_url(result) : fellow_url(result) %>">
+		<a href="<%= search_result_url(result) %>"> 
 
 		    <div class="row">
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -17,13 +17,19 @@
 		    <div class="row">
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 			    <p class="search-results-content">
-				<% [:author_list_without_links, :location, :organizers].each do |facet| %>
+				<% [:author_list_without_links, :location, :organizers, :affiliation].each do |facet| %>
 				    <% if result.respond_to?(facet) %>
 					<p class='small-caps'>
 					    <%=  highlight((result.try(facet)), @search.flatten) %>
 					</p>
 				    <% end %>
+
+<% end %>
+<% if result.is_a?(Author) %>
+<p class='small-caps'><%= result.resource_listing %></p>
 				<% end %>
+
+
 
 
 				<% if result.respond_to?('content') || result.respond_to?('long_bio')%>
@@ -63,7 +69,9 @@
 				    Blog Post
 				<% elsif result.is_a?(Fellow) %>
 				    Fellow
-				<% else %>
+				<% elsif result.is_a?(Author) %>
+Author
+<% elsif result.is_a?(SiteItem) %>
 				    Resource
 				<% end %>
 			    </p>

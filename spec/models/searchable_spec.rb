@@ -8,8 +8,8 @@ RSpec.describe Searchable, type: :model do
     RebuildStatus.all.each(&:destroy)
     RebuildStatus.create(display_rebuild_id: @rebuild.id)
     event = FactoryBot.create(:event, name: 'foo', content: 'foo', rebuild_id: @rebuild.id)
-
     FactoryBot.create(:event, name: 'bar', rebuild_id: @rebuild.id)
+    Event.all.each(&:set_search_text)
     expect(Searchable.perform_search(Searchable.prepare_strings('foo'), 1)).to include(event)
   end
 end

@@ -37,13 +37,8 @@
 			
 			<p>
 			    <strong>Contribution<% unless @author.single_contribution %>s<% end %>:</strong>
-			    <% if @author.resource_listing != "0 resources" %>
-				<%= @author.resource_listing %><% if (@author.blog_listing != "0 blog posts" || @author.event_listing != "0 events") %>,<% end %>
-			    <% end %>
-			    
-			    <% if @author.blog_listing != "0 blog posts" %>
-				<%= @author.blog_listing %><% if @author.event_listing != "0 events" %>, <% end %>				    <% end %><%= @author.event_listing unless @author.event_listing == '0 events' %>
-			    
+<%= listings(@author) %>
+
 			    
 			</p>
 			

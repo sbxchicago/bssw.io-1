@@ -2,6 +2,13 @@
 
 # resources, events, and blog posts
 class SiteItem < MarkdownImport
+
+  extend Searchable
+
+#  before_save :set_search_text
+  
+  self.table_name = 'site_items'
+  
   has_and_belongs_to_many :topics, -> { distinct }
   has_many :contributions, dependent: :destroy
   has_many :authors, through: :contributions
@@ -9,6 +16,7 @@ class SiteItem < MarkdownImport
 
   has_many :features
 
+  
   validates_uniqueness_of :path, optional: true, case_sensitive: false, scope: :rebuild_id
   has_many :announcements
 
@@ -44,16 +52,15 @@ class SiteItem < MarkdownImport
     end
   end
 
+  
+
+  
   scope :published, lambda {
     where(publish: true)
   }
 
   scope :with_topic, lambda { |topic|
     joins([:topics]).where('topics.id = ?', topic) if topic.present?
-  }
-
-  scope :with_topics, lambda { |topics|
-    joins([:topics]).where(topics: { id: topics.map(&:id) })
   }
 
   scope :with_category, lambda { |category|

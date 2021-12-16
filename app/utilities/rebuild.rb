@@ -45,6 +45,9 @@ class Rebuild < ApplicationRecord
     AuthorUtility.all_custom_info(id, file_path)
     clear_old
     update_links_and_images
+    Author.all.each(&:set_search_text)
+    Fellow.all.each(&:set_search_text)
+    SiteItem.all.each(&:set_search_text)
     File.delete(file_path)
   end
 
