@@ -3,7 +3,7 @@
 # resources, events, and blog posts
 class SiteItem < MarkdownImport
 
-  extend Searchable
+  include Searchable
 
 #  before_save :set_search_text
   
@@ -61,6 +61,10 @@ class SiteItem < MarkdownImport
 
   scope :with_topic, lambda { |topic|
     joins([:topics]).where('topics.id = ?', topic) if topic.present?
+  }
+
+  scope :with_topics, lambda { |topics|
+    joins([:topics]).where(topics: { id: topics.map(&:id) })
   }
 
   scope :with_category, lambda { |category|
@@ -132,4 +136,11 @@ class SiteItem < MarkdownImport
       si.refresh_author_list
     end
   end
+
+    def set_search_text
+    text =       ActionController::Base.helpers.strip_tags(
+        " #{content} #{try(:author_list)} #{name} #{try(:description)} #{try(:location)} #{try(:organizers)} ")
+    self.update(search_text: text)
+  end
+
 end

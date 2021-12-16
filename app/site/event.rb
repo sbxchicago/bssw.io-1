@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 # Events e.g. conferences
-class Event < Searchable
+class Event < SiteItem
 
   include Dateable
+
 
   def start_date
     additional_dates.where(label: 'Start Date').first
