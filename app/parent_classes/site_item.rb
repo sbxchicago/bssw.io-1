@@ -131,7 +131,9 @@ class SiteItem < MarkdownImport
   def self.clean
     items = where(name: nil)
     items.each(&:delete)
+    Fellow.displayed.each(&:set_search_text)
     displayed.each do |si|
+      si.set_search_text
       si.refresh_topic_list
       si.refresh_author_list
     end
