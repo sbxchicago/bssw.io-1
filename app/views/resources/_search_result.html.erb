@@ -26,10 +26,12 @@
 
 <% end %>
 <% if result.is_a?(Author) %>
-<p class='small-caps'><%= result.resource_listing %></p>
+<p class='small-caps'>		    <strong>Contribution<% unless @author.single_contribution %>s<% end %>:</strong>
+<%= listings(@author) %>
+</p>
 				<% end %>
 
-
+<p class='search-results-content'>
 
 
 				<% if result.respond_to?('content') || result.respond_to?('long_bio')%>
