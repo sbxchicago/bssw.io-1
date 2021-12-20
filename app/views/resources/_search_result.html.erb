@@ -26,8 +26,8 @@
 
 <% end %>
 <% if result.is_a?(Author) %>
-<p class='small-caps'>		    <strong>Contribution<% unless @author.single_contribution %>s<% end %>:</strong>
-<%= listings(@author) %>
+<p class='small-caps'>		    <strong>Contribution<% unless result.single_contribution %>s<% end %>:</strong>
+<%= listings(result) %>
 </p>
 				<% end %>
 
