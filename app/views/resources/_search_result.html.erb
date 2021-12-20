@@ -19,14 +19,14 @@
 			    <p class="search-results-content">
 				<% [:author_list_without_links, :location, :organizers, :affiliation].each do |facet| %>
 				    <% if result.respond_to?(facet) %>
-					<p class='small-caps'>
+					<p class='small-caps'><strong><%= facet %></strong>
 					    <%=  highlight((result.try(facet)), @search.flatten) %>
 					</p>
 				    <% end %>
 
 <% end %>
 <% if result.is_a?(Author) %>
-<p class='small-caps'>		    <strong>Contribution<% unless result.single_contribution %>s<% end %>:</strong>
+<p class='small-caps'>		    <strong>Contribution<% unless result.single_contribution %>s<% end %></strong>
 <%= listings(result) %>
 </p>
 				<% end %>
