@@ -22,8 +22,8 @@
 <% end %>
 
 				<% [:location, :organizers, :affiliation].each do |facet| %>
-				    <% if result.respond_to?(facet) && !(result.send(facet).blank?) %>
-					<p class='small-caps'><strong><%= result.send(facet) %></strong>
+				    <% if result.respond_to?(facet) && !(result.try(facet).blank?) %>
+					<p class='small-caps'><strong><%= facet %></strong>
 					    <%=  highlight((result.try(facet)), @search.flatten) %>
 					</p>
 				    <% end %>
