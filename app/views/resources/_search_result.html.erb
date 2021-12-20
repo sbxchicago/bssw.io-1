@@ -17,8 +17,9 @@
 		    <div class="row">
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 			    <p class="search-results-content">
-
+<% if result.is_a?(SiteItem) %>
 <p class='small-caps'><%= author_list_without_links(result) %></p>
+<% end %>
 
 				<% [:location, :organizers, :affiliation].each do |facet| %>
 				    <% if result.respond_to?(facet) && !(result.send(facet).blank?) %>
