@@ -17,9 +17,12 @@
 		    <div class="row">
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 			    <p class="search-results-content">
-				<% [:author_list_without_links, :location, :organizers, :affiliation].each do |facet| %>
-				    <% if result.respond_to?(facet) %>
-					<p class='small-caps'><strong><%= facet %></strong>
+<% if result.respond_to?(:author_list_without_links) %>
+<p class='small-caps'><%= author_list_without_links %></p>
+<% end %>
+				<% [:location, :organizers, :affiliation].each do |facet| %>
+				    <% if result.respond_to?(facet) && !(result.send(facet).blank?) %>
+					<p class='small-caps'><strong><%= result.send(facet) %></strong>
 					    <%=  highlight((result.try(facet)), @search.flatten) %>
 					</p>
 				    <% end %>
