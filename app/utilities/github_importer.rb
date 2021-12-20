@@ -28,9 +28,10 @@ class GithubImporter < ApplicationRecord
     Octokit::Client.new(access_token: Rails.application.credentials[:github][:token])
   end
 
-  def self.save_content(branch, file_path)
+  def self.save_content(branch, file_path, rebuild)
+    rebuild.update(commit_hash:  github.commit(Rails.application.credentials[:github][:repo], branch)['sha'])
     agent.get(github.archive_link(Rails.application.credentials[:github][:repo],
-                                  ref: branch)).save(file_path)
+                                                             ref: branch)).save(file_path)
   end
 
   def self.agent
@@ -48,8 +49,10 @@ class GithubImporter < ApplicationRecord
   def self.populate(branch)
     #    begin
     file_path = "#{Rails.root}/tmp/repo-#{branch}.gz"
-    save_content(branch, file_path)
     rebuild = RebuildStatus.in_progress_rebuild
+    save_content(branch, file_path, rebuild)
+
+
     tar_extract(file_path).each do |file|
       next if File.extname(file.full_name) != '.md'
       next if GithubImporter.excluded_filenames.include?(File.basename(file.full_name))

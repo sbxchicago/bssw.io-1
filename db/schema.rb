@@ -27,6 +27,9 @@ ActiveRecord::Schema.define(version: 2021_11_15_154657) do
 
   create_table "additional_dates", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "label"
+    t.string "text"
+    t.datetime "start_at"
+    t.datetime "end_at"
     t.integer "event_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -332,6 +335,8 @@ ActiveRecord::Schema.define(version: 2021_11_15_154657) do
     t.string "location"
     t.string "website"
     t.string "organizers"
+    t.date "end_at"
+    t.date "start_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "version_no"
