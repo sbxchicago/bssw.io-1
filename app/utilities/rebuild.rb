@@ -34,9 +34,9 @@ class Rebuild < ApplicationRecord
   end
 
   def update_links_and_images
-    (Page.where(rebuild_id: id) +
-     SiteItem.where(rebuild_id: id) +
-     Community.where(rebuild_id: id)
+    (Page.all +
+     SiteItem.all +
+     Community.all
     ).each(&:update_links_and_images)
   end
 
