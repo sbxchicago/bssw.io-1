@@ -84,7 +84,7 @@ module ApplicationHelper
 
     start_date = start_at.strftime('%b %e') if start_at.year == end_at.year
     end_date = if end_at.month == start_at.month
-                 end_at.strftime('%-d, %Y')
+                 end_at.strftime('%d, %Y').gsub('/^ /', '')
                else
                  end_at.strftime('%b %e, %Y')
                end
