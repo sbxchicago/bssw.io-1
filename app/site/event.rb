@@ -32,12 +32,12 @@ class Event < SiteItem
     super(doc, rebuild)
   end
   scope :upcoming, lambda {
-                     left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date >= ?', Date.today)
-                   }
+    left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date >= ?', Date.today)
+  }
 
   scope :past, lambda {
-                 left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date < ?', Date.today)
-               }
+    left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date < ?', Date.today)
+  }
 
   def special_additional_dates
     additional_dates.where('label != ?', 'Start Date').where('label != ?', 'End Date')
@@ -68,8 +68,25 @@ class Event < SiteItem
               else
                 date_text.split('-')
               end
-
       if dates.size > 1
+              end_year = dates.last.match(/\d{4}/)
+      if !(dates.first.match(/\d{4}/))
+        dates = ["#{dates.first} #{end_year}", dates.last]
+      end
+      months = Date::MONTHNAMES.slice(1..-1).map(&:to_s).map{|m| m[0,3]}
+      our_month = nil
+      end_month = false
+      months.each do |month|
+        if dates.first.match(month)
+          our_month = month
+        end
+        if dates.last.match(month)
+          end_month = true
+        end
+      end
+      if our_month && !(end_month)
+        dates = [dates.first, "#{our_month} #{dates.last}"]
+      end
         AdditionalDate.make_date('Start Date', dates.first, self)
         AdditionalDate.make_date('End Date', dates.last, self)
       elsif label_text.strip == 'Date'

@@ -84,7 +84,8 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
 
       expect(SiteItem.displayed.last.topic_list).not_to be_empty
-
+      expect(Event.where(base_path: '2021-10-wosss21.md').first.start_at.to_date).to eq Date.parse('October 6 2021').to_date
+      expect(Event.where(base_path: '2021-10-wosss21.md').first.end_at.to_date).to eq Date.parse('October 8 2021').to_date
       # expect do
       #   post :import
       # end.not_to change(Rebuild, :count)
