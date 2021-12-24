@@ -14,7 +14,10 @@ class GithubImporter < ApplicationRecord
                                        tables: true,
                                        lax_spacing: true,
                                        strikethrough: true,
-                                       no_intra_emphasis: true)
+                                       fenced_code_blocks: true,
+                                       no_intra_emphasis: true,
+                                       tables: true
+                                      )
     Nokogiri::HTML(markdown.render(updated_content), nil, 'UTF-8')
   end
 
