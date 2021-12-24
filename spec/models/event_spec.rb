@@ -20,7 +20,7 @@ RSpec.describe Event, type: :model do
     expect(event.start_at).to be < event.end_at
     expect(event.end_at).to be > Date.today
     expect(event.location).to match 'Place'
-#    expect(Event.past).not_to include(event)
+    #    expect(Event.past).not_to include(event)
     expect(Event.upcoming).to include(event)
   end
 

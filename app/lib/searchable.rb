@@ -2,8 +2,7 @@
 
 # search functionality for site items
 module Searchable
-
-#  before_save :set_search_text
+  #  before_save :set_search_text
 
   def self.prepare_strings(string)
     if string.match(Regexp.new('"[^"]*"'))
@@ -31,7 +30,7 @@ module Searchable
     )
   end
 
-  def self.perform_search(words, page)
+  def self.perform_search(words, _page)
     o_results = SiteItem.published.displayed.includes(:authors)
     results = order_results(
       words, get_word_results(words, o_results)
@@ -57,6 +56,4 @@ module Searchable
     str_var = Regexp.escape(ApplicationRecord.sanitize_sql_like(str_var))
     "search_text REGEXP \"([\\W]*|^)#{str_var}\" or search_text REGEXP \"#{str_var}([\\W]*|$)\""
   end
-
-  
 end

@@ -58,9 +58,6 @@ class MarkdownImport < GithubImport
   end
 
   def add_publish(val)
-    puts "publish: #{val.inspect} #{base_path}" if base_path == 'PullRequestSizeConsiderations.md'
-    puts "publish: #{val.inspect} #{base_path}" if base_path == 'CodingConventions.md'
-
     val = val.downcase
     if val.match('yes')
       update_attribute(:publish, true)

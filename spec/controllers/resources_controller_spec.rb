@@ -53,21 +53,22 @@ RSpec.describe ResourcesController, type: :controller do
     end
 
     it 'finds authors and fellows' do
-       @request.env['HTTP_AUTHORIZATION'] = "Basic {Base64.encode64('preview-bssw:SoMyCodeWillSeeTheFuture!!')}"
-       resource = FactoryBot.create(:resource, publish: true, type: 'Resource', name: 'Blorgon')
-       author = FactoryBot.create(:author, first_name: 'Joe', last_name: 'Blow', rebuild_id: RebuildStatus.displayed_rebuild.id)
-       fellow = FactoryBot.create(:fellow, name: 'Joe Blow', rebuild_id: RebuildStatus.displayed_rebuild.id)
-       SiteItem.all.each(&:set_search_text)
-       Author.all.each(&:set_search_text)
-       Fellow.all.each(&:set_search_text)
+      @request.env['HTTP_AUTHORIZATION'] = "Basic {Base64.encode64('preview-bssw:SoMyCodeWillSeeTheFuture!!')}"
+      resource = FactoryBot.create(:resource, publish: true, type: 'Resource', name: 'Blorgon')
+      author = FactoryBot.create(:author, first_name: 'Joe', last_name: 'Blow',
+                                          rebuild_id: RebuildStatus.displayed_rebuild.id)
+      fellow = FactoryBot.create(:fellow, name: 'Joe Blow', rebuild_id: RebuildStatus.displayed_rebuild.id)
+      SiteItem.all.each(&:set_search_text)
+      Author.all.each(&:set_search_text)
+      Fellow.all.each(&:set_search_text)
 
-       expect(Author.perform_search([["Joe"]])).to include(author)
-       get :search, params: { search_string: 'Joe' }
-       expect(assigns(:resources)).to include(author)
-       expect(assigns(:resources)).to include(fellow)
-       expect(assigns(:resources)).not_to include(resource)
-    end      
-    
+      expect(Author.perform_search([['Joe']])).to include(author)
+      get :search, params: { search_string: 'Joe' }
+      expect(assigns(:resources)).to include(author)
+      expect(assigns(:resources)).to include(fellow)
+      expect(assigns(:resources)).not_to include(resource)
+    end
+
     it 'renders template' do
       get :search
       expect(response).to render_template :index

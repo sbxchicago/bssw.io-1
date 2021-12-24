@@ -2,25 +2,23 @@
 
 # view helpers
 module ApplicationHelper
-
-
   def listings(author)
-    [(author.resource_listing if author.resource_listing != "0 resources"),
-     (author.blog_listing if author.blog_listing != "0 blog posts"),
-    (author.event_listing if author.event_listing != "0 events")].delete_if{|list| list.nil?}.join(', ')
+    [(author.resource_listing if author.resource_listing != '0 resources'),
+     (author.blog_listing if author.blog_listing != '0 blog posts'),
+     (author.event_listing if author.event_listing != '0 events')].delete_if(&:nil?).join(', ')
   end
-  
+
   def search_result_url(result)
-    if result.is_a?(SiteItem) 
+    case result
+    when SiteItem
       site_item_url(result)
-    elsif result.is_a?(Author)
+    when Author
       site_items_url(author: result.slug)
-    elsif result.is_a?(Fellow)
+    when Fellow
       fellow_url(result)
     end
   end
 
-  
   def social_title
     return @post.name if @post
     return @page.name if @page
@@ -51,29 +49,39 @@ module ApplicationHelper
   end
 
   def show_dates(event)
-    additionals = event.special_additional_dates.map{|date| 
-      "<strong>#{date.label.titleize}</strong> " + 
-        date.additional_date_values.map{|adv| date_range(adv.date, nil) }.join("; ")
-    }
+    additionals = event.special_additional_dates.map do |date|
+      "<strong>#{date.label.titleize}</strong> " +
+        date.additional_date_values.map { |adv| date_range(adv.date, nil) }.join('; ')
+    end
 
-    ([event.start_at.blank? ? "" : (event.end_at.blank? ? "<strong>Date</strong>" : "<strong>Dates</strong>")  + "#{date_range(event.start_at, event.end_at)}".html_safe] + additionals
-     ).delete_if{|d| d.blank? }.join('<br />').html_safe
+    ([if event.start_at.blank?
+        ''
+      else
+        (event.end_at.blank? ? '<strong>Date</strong>' : '<strong>Dates</strong>') + date_range(
+          event.start_at, event.end_at
+        ).to_s.html_safe
+      end] + additionals
+    ).delete_if(&:blank?).join('<br />').html_safe
   end
 
   def show_date(date_value)
     date = date_value.additional_date
     if date.label == 'Start Date'
-      "#{date_range(date.event.start_at,
-                                           date.event.end_at)}".html_safe
+      date_range(date.event.start_at,
+                 date.event.end_at).to_s.html_safe
     else
-      "#{date_range(date_value.date, nil)}".html_safe
+      date_range(date_value.date, nil).to_s.html_safe
 
     end
   end
 
   def show_label(date_value)
     date = date_value.additional_date
-    date.label == 'Start Date' ? (date_value.event.end_at.blank? ? "Event Date" : "Event Dates")  : date.label
+    if date.label == 'Start Date'
+      date_value.event.end_at.blank? ? 'Event Date' : 'Event Dates'
+    else
+      date.label
+    end
   end
 
   def date_range(start_at, end_at)
@@ -98,5 +106,4 @@ module ApplicationHelper
       (path + "?&page=#{next_page}").html_safe
     end
   end
-
 end

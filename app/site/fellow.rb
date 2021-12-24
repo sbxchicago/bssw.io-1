@@ -2,7 +2,6 @@
 
 # bios etc for fellows
 class Fellow < MarkdownImport
-
   scope :displayed, lambda {
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
@@ -32,7 +31,7 @@ class Fellow < MarkdownImport
   end
 
   def set_search_text
-    self.update(search_text: ActionController::Base.helpers.strip_tags("#{name} #{short_bio} #{long_bio}"))
+    update(search_text: ActionController::Base.helpers.strip_tags("#{name} #{short_bio} #{long_bio}"))
   end
 
   def last_name
