@@ -2,13 +2,12 @@
 
 # resources, events, and blog posts
 class SiteItem < MarkdownImport
-
   include Searchable
 
-#  before_save :set_search_text
-  
+  #  before_save :set_search_text
+
   self.table_name = 'site_items'
-  
+
   has_and_belongs_to_many :topics, -> { distinct }
   has_many :contributions, dependent: :destroy
   has_many :authors, through: :contributions
@@ -16,7 +15,6 @@ class SiteItem < MarkdownImport
 
   has_many :features
 
-  
   validates_uniqueness_of :path, optional: true, case_sensitive: false, scope: :rebuild_id
   has_many :announcements
 
@@ -52,9 +50,6 @@ class SiteItem < MarkdownImport
     end
   end
 
-  
-
-  
   scope :published, lambda {
     where(publish: true)
   }
@@ -139,10 +134,10 @@ class SiteItem < MarkdownImport
     end
   end
 
-    def set_search_text
-    text =       ActionController::Base.helpers.strip_tags(
-        " #{content} #{try(:author_list)} #{name} #{try(:description)} #{try(:location)} #{try(:organizers)} ")
-    self.update(search_text: text)
+  def set_search_text
+    text = ActionController::Base.helpers.strip_tags(
+      " #{content} #{try(:author_list)} #{name} #{try(:description)} #{try(:location)} #{try(:organizers)} "
+    )
+    update(search_text: text)
   end
-
 end

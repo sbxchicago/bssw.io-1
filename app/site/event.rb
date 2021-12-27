@@ -2,9 +2,7 @@
 
 # Events e.g. conferences
 class Event < SiteItem
-
   include Dateable
-
 
   def start_date
     additional_dates.where(label: 'Start Date').first
@@ -24,7 +22,7 @@ class Event < SiteItem
 
   self.table_name = 'site_items'
   has_many :additional_dates
-  
+
   def update_from_content(doc, rebuild)
     update_details(doc)
     overview = doc.at("p:contains('Overview')")
@@ -57,7 +55,6 @@ class Event < SiteItem
     doc.at("strong:contains('Description')").try(:remove)
   end
 
-  
   def update_dates(date_nodes)
     date_nodes.each do |date_node|
       text = date_node.text.split(':')
@@ -69,24 +66,16 @@ class Event < SiteItem
                 date_text.split('-')
               end
       if dates.size > 1
-              end_year = dates.last.match(/\d{4}/)
-      if !(dates.first.match(/\d{4}/))
-        dates = ["#{dates.first} #{end_year}", dates.last]
-      end
-      months = Date::MONTHNAMES.slice(1..-1).map(&:to_s).map{|m| m[0,3]}
-      our_month = nil
-      end_month = false
-      months.each do |month|
-        if dates.first.match(month)
-          our_month = month
+        end_year = dates.last.match(/\d{4}/)
+        dates = ["#{dates.first} #{end_year}", dates.last] unless dates.first.match(/\d{4}/)
+        months = Date::MONTHNAMES.slice(1..-1).map(&:to_s).map { |m| m[0, 3] }
+        our_month = nil
+        end_month = false
+        months.each do |month|
+          our_month = month if dates.first.match(month)
+          end_month = true if dates.last.match(month)
         end
-        if dates.last.match(month)
-          end_month = true
-        end
-      end
-      if our_month && !(end_month)
-        dates = [dates.first, "#{our_month} #{dates.last}"]
-      end
+        dates = [dates.first, "#{our_month} #{dates.last}"] if our_month && !end_month
         AdditionalDate.make_date('Start Date', dates.first, self)
         AdditionalDate.make_date('End Date', dates.last, self)
       elsif label_text.strip == 'Date'
@@ -98,7 +87,4 @@ class Event < SiteItem
     end
     fix_end_year(start_date, end_date)
   end
-
-
-
 end

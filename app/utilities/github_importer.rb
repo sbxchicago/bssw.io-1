@@ -13,8 +13,11 @@ class GithubImporter < ApplicationRecord
                                        autolink: true,
                                        tables: true,
                                        lax_spacing: true,
-                                       disable_indented_code_blocks: true,
-                                       fenced_code_blocks: true)
+                                       strikethrough: true,
+                                       fenced_code_blocks: true,
+                                       no_intra_emphasis: true,
+                                       tables: true
+                                      )
     Nokogiri::HTML(markdown.render(updated_content), nil, 'UTF-8')
   end
 
@@ -29,9 +32,9 @@ class GithubImporter < ApplicationRecord
   end
 
   def self.save_content(branch, file_path, rebuild)
-    rebuild.update(commit_hash:  github.commit(Rails.application.credentials[:github][:repo], branch)['sha'])
+    rebuild.update(commit_hash: github.commit(Rails.application.credentials[:github][:repo], branch)['sha'])
     agent.get(github.archive_link(Rails.application.credentials[:github][:repo],
-                                                             ref: branch)).save(file_path)
+                                  ref: branch)).save(file_path)
   end
 
   def self.agent
@@ -47,11 +50,9 @@ class GithubImporter < ApplicationRecord
   end
 
   def self.populate(branch)
-    #    begin
     file_path = "#{Rails.root}/tmp/repo-#{branch}.gz"
     rebuild = RebuildStatus.in_progress_rebuild
     save_content(branch, file_path, rebuild)
-
 
     tar_extract(file_path).each do |file|
       next if File.extname(file.full_name) != '.md'
@@ -61,9 +62,5 @@ class GithubImporter < ApplicationRecord
     end
 
     RebuildStatus.complete(rebuild, file_path)
-    #    rescue Exception => e
-    #      puts e
-    #      puts "ERRORR"
-    #    end
   end
 end
