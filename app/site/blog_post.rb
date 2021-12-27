@@ -8,7 +8,17 @@ class BlogPost < SiteItem
   default_scope -> { order(published_at: 'desc') }
 
   def related_posts
-    BlogPost.displayed.published.with_topics(topics).order('published_at desc').distinct.where.not({ id: id }).first(5)
+    posts = []
+    5.times do
+    if posts.count < 5
+      topics.each do |topic|
+        ids = posts.map(&:id) + [id]
+        post = BlogPost.displayed.published.with_topic(topic).where("site_items.id NOT in (?)", ids).first
+        posts << post unless post.nil?
+      end
+    end
+    end
+    posts.first(5)
   end
 
   def update_from_content(doc, rebuild)
