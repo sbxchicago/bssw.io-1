@@ -16,8 +16,7 @@ class GithubImporter < ApplicationRecord
                                        strikethrough: true,
                                        fenced_code_blocks: true,
                                        no_intra_emphasis: true,
-                                       tables: true
-                                      )
+                                       tables: true)
     Nokogiri::HTML(markdown.render(updated_content), nil, 'UTF-8')
   end
 
