@@ -64,13 +64,14 @@ class AuthorUtility
 
   def self.make_from_data(node, rebuild)
     authors = []
-    node.css('a').each do |link|
-      authors << author_from_website(link, rebuild)
-      link.remove
-    end
-    txt = node.text.gsub('Contributed by', '').gsub(' and ', ',').strip
+    txt = node.to_html.gsub('Contributed by', '').gsub(' and ', ',').strip
     txt.split(',').each do |text|
-      authors << author_from_text(text, rebuild)
+      node_data = Nokogiri::HTML.parse(text)
+      if node_data.css('a').empty?
+        authors << author_from_text(node_data.text, rebuild)
+      else
+        authors << author_from_website(node_data.css('a').first, rebuild)
+    end
     end
     authors.delete_if(&:nil?)
   end
