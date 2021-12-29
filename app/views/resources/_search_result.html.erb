@@ -17,70 +17,66 @@
 		    <div class="row">
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 			    <p class="search-results-content">
-<% if result.is_a?(SiteItem) %>
-<p class='small-caps'><%= author_list_without_links(result) %></p>
-<% end %>
+				<% if result.is_a?(SiteItem) %>
+				    <p class='small-caps'><%= author_list_without_links(result) %></p>
+				<% end %>
 
-				<% [:location, :organizers, :affiliation].each do |facet| %>
+				<% [:location, :organizers].each do |facet| %>
 				    <% if result.respond_to?(facet) && !(result.try(facet).blank?) %>
 					<p class='small-caps'><strong><%= facet %></strong>
 					    <%=  highlight((result.try(facet)), @search.flatten) %>
 					</p>
 				    <% end %>
 
-<% end %>
-<% if result.is_a?(Author) %>
-<p class='small-caps'>		    <strong>Contribution<% unless result.single_contribution %>s<% end %></strong>
-<%= listings(result) %>
-</p>
 				<% end %>
 
-<p class='search-results-content'>
+
+				<p class='search-results-content'>
 
 
-				<% if result.respond_to?('content') || result.respond_to?('long_bio')%>
-				    <% strings = [] 
-				    @search.each do |str| 
+				    <% if result.respond_to?('content') || result.respond_to?('long_bio')%>
+					<% strings = [] 
+					@search.each do |str| 
 
-				    str.each do |s|
-				    strings.delete_if{|str| str && str.match(s)}
-					new_strings = []
-					if result.respond_to?('content')
-					    new_strings << (excerpt ActionController::Base.helpers.strip_tags(result.content), s)
-					else
-					    new_strings << (excerpt ActionController::Base.helpers.strip_tags(result.long_bio), s)
+					str.each do |s|
+					strings.delete_if{|str| str && str.match(s)}
+					    new_strings = []
+					    if result.respond_to?('content')
+						new_strings << (excerpt ActionController::Base.helpers.strip_tags(result.content), s)
+					    else
+						new_strings << (excerpt ActionController::Base.helpers.strip_tags(result.long_bio), s)
 
-				    end
-				    %>
-				    <% new_strings.delete_if{|str| str && !(str.match(/\b#{s}|#{s}\b/i)) } %>
+					    end
+					%>
+					<% new_strings.delete_if{|str| str && !(str.match(/\b#{s}|#{s}\b/i)) } %>
 
-				    <%
+					<%
 
-				    strings = strings + new_strings
-				    end 
-				    end
-				    %>
+					strings = strings + new_strings
+					end 
+					end
+					%>
 
 
-				    <% strings.flatten.uniq.each do |str| %>
-					<%= highlight(str, @search.flatten) %>
+					<% strings.flatten.uniq.each do |str| %>
+					    <%= highlight(str, @search.flatten) %>
+					<% end %>
 				    <% end %>
-				<% end %>
-			    </p>
-			    <p class="topics small-caps">
-				<strong>Type of Item</strong>
-				<% if result.is_a?(Event)  %>
-				    Event
-				<% elsif result.is_a?(BlogPost) %>
-				    Blog Post
-				<% elsif result.is_a?(Fellow) %>
-				    Fellow
-				<% elsif result.is_a?(Author) %>
-Author
-<% elsif result.is_a?(SiteItem) %>
-				    Resource
-				<% end %>
-			    </p>
+				</p>
+				<p class="topics small-caps">
+				    <strong>Type of Item</strong>
+				    <% if result.is_a?(Event)  %>
+					Event
+				    <% elsif result.is_a?(BlogPost) %>
+					Blog Post
+				    <% elsif result.is_a?(Fellow) %>
+					Fellow
+				    <% elsif result.is_a?(Author) %>
+					Author
+				    <% elsif result.is_a?(SiteItem) %>
+					Resource
+				    <% end %>
+				</p>
 			</div>
 		    </div>
 

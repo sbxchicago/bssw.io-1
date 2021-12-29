@@ -14,11 +14,11 @@ Rails.application.routes.draw do
             controller: 'resources', path: 'items' do
     collection do
       get 'search'
-      #      get 'restart_search'
-      get 'authors'
     end
   end
 
+  match '/items/contributors', to: 'resources#authors', via: :get
+  get '/items/authors', to: redirect('/items/contributors')
   match '/contact', to: 'contacts#new', via: :get
   match '/contribute',
         to: 'pages#show',
@@ -45,6 +45,7 @@ Rails.application.routes.draw do
       post 'make_displayed'
     end
   end
+
 
   match '/psip', to: 'resources#show',
                  defaults: {
