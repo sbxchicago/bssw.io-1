@@ -13,19 +13,24 @@ class Staff < Author
 
   def process_kid(kid)
     text = kid.text
-    kid.remove if text.blank?
-    return unless text.match?('Title')
-
+    kid.remove if text.blank? || kid.name == 'br'
+    return unless kid && text.match?('Title') 
     update_attribute(:title, text.gsub('Title: ', ''))
-    kid.remove
+    kid.try(:remove)
+    puts "removed, updated"
+    return true
   end
 
   def update_from_link(siblings)
+
     siblings.each do |kid|
-      process_kid(kid)
+      result = process_kid(kid)
+      siblings.delete(kid) if result
     end
+    puts siblings.inspect
     names = AuthorUtility.names_from(siblings.first.text)
     update(first_name: names.first, last_name: names.last, alphabetized_name: names.last)
+
     update_attribute(:affiliation,
                      siblings[2].text.strip)
   end
