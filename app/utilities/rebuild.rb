@@ -45,7 +45,13 @@ class Rebuild < ApplicationRecord
     AuthorUtility.all_custom_info(id, file_path)
     clear_old
     update_links_and_images
-    Author.all.each(&:set_search_text)
+    Author.all.each{ |auth|
+      if SiteItem.published.displayed.with_author(auth).empty?
+        auth.delete
+      else
+        auth.set_search_text
+      end
+    }
     Fellow.all.each(&:set_search_text)
     SiteItem.all.each(&:set_search_text)
     File.delete(file_path)
@@ -60,6 +66,7 @@ class Rebuild < ApplicationRecord
       everything += klass.where(['rebuild_id NOT IN (?)', rebuild_ids])
       everything += klass.where(rebuild_id: nil)
     end
+
     everything.each(&:delete)
   end
 

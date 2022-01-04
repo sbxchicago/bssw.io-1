@@ -54,7 +54,7 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Fellow.first.long_bio).not_to be_blank
 
       expect(BlogPost.find_by_slug(@blog_post_slug)).to be_a BlogPost
-      puts BlogPost.find_by_slug(@blog_post_slug).related_posts.inspect
+
       expect(BlogPost.find_by_slug(@blog_post_slug).related_posts.size).to eq 5
       expect(Quote.all).not_to be_empty
       expect(Announcement.all).not_to be_empty
