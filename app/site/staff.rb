@@ -14,14 +14,11 @@ class Staff < Author
   def process_kid(kid)
     text = kid.text
     kid.remove if text.blank? || kid.name == 'br'
-    if kid && text.match?('Title') 
-      update_attribute(:title, text.gsub('Title: ', ''))
-    end
+    update_attribute(:title, text.gsub('Title: ', '')) if kid && text.match?('Title')
     kid.try(:remove)
   end
 
   def update_from_link(siblings)
-
     siblings.each do |kid|
       process_kid(kid)
     end

@@ -46,7 +46,6 @@ Rails.application.routes.draw do
     end
   end
 
-
   match '/psip', to: 'resources#show',
                  defaults: {
                    id: 'productivity-and-sustainability-improvement-planning-psip'

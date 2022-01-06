@@ -67,11 +67,11 @@ class AuthorUtility
     txt = node.to_html.gsub('Contributed by', '').gsub(' and ', ',').strip
     txt.split(',').each do |text|
       node_data = Nokogiri::HTML.parse(text)
-      if node_data.css('a').empty?
-        authors << author_from_text(node_data.text, rebuild)
-      else
-        authors << author_from_website(node_data.css('a').first, rebuild)
-    end
+      authors << if node_data.css('a').empty?
+                   author_from_text(node_data.text, rebuild)
+                 else
+                   author_from_website(node_data.css('a').first, rebuild)
+                 end
     end
     authors.delete_if(&:nil?)
   end

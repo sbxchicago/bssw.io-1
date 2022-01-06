@@ -7,13 +7,13 @@ class BlogPost < SiteItem
   def related_posts
     posts = []
     5.times do
-    if posts.count < 5
+      next unless posts.count < 5
+
       topics.each do |topic|
         ids = posts.map(&:id) + [id]
-        post = BlogPost.displayed.published.with_topic(topic).where("site_items.id NOT in (?)", ids).first
+        post = BlogPost.displayed.published.with_topic(topic).where('site_items.id NOT in (?)', ids).first
         posts << post unless post.nil?
       end
-    end
     end
     posts.first(5)
   end
