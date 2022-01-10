@@ -16,9 +16,6 @@
 	<% if author.title %>
 	    <p><%= author.title %></p>
 	<% end %>
-	    <% if @page && @page.name == 'About' %>
-<p><strong><%= author.affiliation %></p>
-<% end %>
 
 	<p>
 	    <% unless @page && @page.name == 'About' %>
@@ -26,6 +23,13 @@
 	    <% end %>
 	</p>
 
+	<% if author.affiliation %>
+	    <p><strong>Affiliation(s):</strong> <%= author.affiliation %></p>
+	<% end %>
+
+	<% if author.website %>
+	    <p class="offsite"><%= link_to "Github", author.website %> </p>
+	<% end %>
 
 
     </div>
