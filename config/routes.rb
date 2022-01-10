@@ -9,6 +9,10 @@ Rails.application.routes.draw do
   get '/resources/:id', to: redirect('/items/%{id}/')
   get '/resources.rss', to: redirect('/items.rss')
 
+
+  match '/items/contributors', to: 'resources#authors', via: :get
+  get '/items/authors', to: redirect('/items/contributors')
+  
   resources :site_items,
             only: %i[index show],
             controller: 'resources', path: 'items' do
@@ -17,8 +21,6 @@ Rails.application.routes.draw do
     end
   end
 
-  match '/items/contributors', to: 'resources#authors', via: :get
-  get '/items/authors', to: redirect('/items/contributors')
   match '/contact', to: 'contacts#new', via: :get
   match '/contribute',
         to: 'pages#show',
