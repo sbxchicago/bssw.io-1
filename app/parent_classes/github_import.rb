@@ -14,13 +14,13 @@ class GithubImport < ApplicationRecord
 
   def update_from_content(doc, rebuild)
     title_chunk = MarkdownUtility.get_title_chunk(doc)
-    res = find_from_title(title_chunk)
-    res.dates(doc, rebuild)
+    update(name: title_chunk)
+    dates(doc, rebuild)
     update_author(doc.at("h4:contains('Contributed')"), rebuild_id)
-    res.update_taxonomy(doc, rebuild)
+    update_taxonomy(doc, rebuild)
 
-    content_string = doc.css('body').to_s + "\n<!-- file path: #{res.path} -->".html_safe
-    res.update_attribute(:content, content_string)
+    content_string = doc.css('body').to_s + "\n<!-- file path: #{path} -->".html_safe
+    update_attribute(:content, content_string)
   end
 
   def snippet
@@ -34,12 +34,12 @@ class GithubImport < ApplicationRecord
     pars.to_s.html_safe
   end
 
-  def find_from_title(string)
-    res = self.class.find_by(name: string, rebuild_id: rebuild_id) || self
-    res.name = string
-    res.save
-    res
-  end
+  # def find_from_title(string, path)
+  #   res = self.class.find_by(name: string, rebuild_id: rebuild_id, path: path) || self
+  #   res.name = string
+  #   res.save
+  #   res
+  # end
 
   def update_author(node, rebuild)
     return unless node && respond_to?('authors')

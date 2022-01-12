@@ -27,6 +27,7 @@ class MarkdownImport < GithubImport
   end
 
   def update_associates(array, _rebuild)
+
     array.each_cons(2) do |string, names|
       names = names.split(',')
       method = "add_#{string.strip}".downcase.tr(' ', '_')
@@ -37,6 +38,7 @@ class MarkdownImport < GithubImport
         send(method, names.join)
       end
     end
+
   end
 
   def add_opengraph_image(val)

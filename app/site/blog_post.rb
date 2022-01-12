@@ -4,6 +4,10 @@
 class BlogPost < SiteItem
   default_scope -> { order(published_at: 'desc') }
 
+
+
+  
+  
   def related_posts
     posts = []
     5.times do
