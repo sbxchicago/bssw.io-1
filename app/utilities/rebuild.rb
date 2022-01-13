@@ -54,7 +54,7 @@ class Rebuild < ApplicationRecord
     end
     Fellow.all.each(&:set_search_text)
     SiteItem.all.each(&:set_search_text)
-#    File.delete(file_path)
+    File.delete(file_path)
   end
 
   def clear_old
