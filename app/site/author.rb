@@ -53,20 +53,20 @@ class Author < MarkdownImport
   end
 
   def resource_count
-    SiteItem.published.displayed.with_author(self).count -
+    SiteItem.published.displayed.with_author(self).size -
       blog_count -
       event_count
   end
 
   def blog_count
-    BlogPost.published.displayed.with_author(self).count
+    BlogPost.published.displayed.with_author(self).size
   end
 
   def event_count
-    Event.published.displayed.with_author(self).count
+    Event.published.displayed.with_author(self).size
   end
 
-  #  store_methods :resource_count, :blog_count, :event_count, :resource_listing, :blog_listing, :event_listing
+  store_methods :resource_count, :blog_count, :event_count, :resource_listing, :blog_listing, :event_listing
 
   def resource_listing
     "#{resource_count} #{'resource'.pluralize(resource_count)}"

@@ -50,6 +50,9 @@ class Rebuild < ApplicationRecord
         auth.delete
       else
         auth.set_search_text
+        auth.blog_listing
+        auth.resource_listing
+        auth.event_listing
       end
     end
     Fellow.all.each(&:set_search_text)
