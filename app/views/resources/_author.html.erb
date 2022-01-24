@@ -16,7 +16,7 @@
 <p>
 	<% if author.title && @page %>
 	    <strong><%= author.title %></strong><br />
-<% elsif section %>
+<% elsif defined?(section) %>
 <strong><%= section %></strong><br />
 	<% end %>
 
