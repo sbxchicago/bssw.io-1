@@ -13,17 +13,17 @@
 	<h3>
 	    <%= link_to "#{author.first_name} #{author.last_name}", site_items_path(:author => author.slug) %>
 	</h3>
-
+<p>
 	<% if author.title && @page %>
-	    <p><strong><%= author.title %></strong></p>
-<% else %>
-<p><strong><%= staff %></strong></p>
+	    <strong><%= author.title %></strong><br />
+<% elsif section %>
+<strong><%= section %></strong><br />
 	<% end %>
 
 	<% if author.affiliation %>
-<p>	    <%= author.affiliation %></p>
+	    <%= author.affiliation %>
 	<% end %>
 
-
+</p>
     </div>
 </div>
