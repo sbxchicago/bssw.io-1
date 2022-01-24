@@ -17,7 +17,7 @@
 	<% if author.title && @page %>
 	    <strong><%= author.title %></strong><br />
 <% elsif defined?(section) %>
-<strong><%= section %></strong><br />
+<strong><%= section.pluralize(1) %></strong><br />
 	<% end %>
 
 	<% if author.affiliation %>
