@@ -15,11 +15,13 @@
 	</h3>
 
 	<% if author.title && @page %>
-	    <p><%= author.title %></p>
+	    <p><strong><%= author.title %></strong></p>
+<% else %>
+<p><strong><%= staff %></strong></p>
 	<% end %>
 
 	<% if author.affiliation %>
-	    <%= author.affiliation %></p>
+<p>	    <%= author.affiliation %></p>
 	<% end %>
 
 
