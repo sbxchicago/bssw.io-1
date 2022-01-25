@@ -30,17 +30,18 @@
 		<div class="fellows-info">
 		    <div class="fellows-info-inner">
 			
-			<% if @author.website %>
-			    <p class="offsite mt-0"><%= link_to 'GitHub', @author.website  %></p>
-			<% end %>
-			
-			
-			<p>
+<p>
+<% unless @author.affiliation.blank? %>
+<strong>Affiliation(s):</strong> <%= @author.affiliation %><br />
+<% end %>			
 			    <strong>Contribution<% unless @author.single_contribution %>s<% end %>:</strong>
 <%= listings(@author) %>
 
 			    
 			</p>
+			<% if @author.website %>
+			    <p class="offsite mt-0"><%= link_to 'GitHub', @author.website  %></p>
+			<% end %>
 			
 			
 		    </div>
