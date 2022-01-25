@@ -15,12 +15,12 @@
 	</h3>
 <p>
 	<% if author.title && @page %>
-	    <strong><%= author.title %></strong><br />
-<% elsif defined?(section) %>
-<strong><%= section.singularize %></strong><br />
+	    <strong><%= author.title %></strong><br /><br />
+<% elsif defined?(section) && @page %>
+<strong><%= section.singularize %></strong><br /><br />
 	<% end %>
-<br />
-	<% if author.affiliation %>
+
+	<% if author.affiliation && @page %>
 	    <%= author.affiliation %><br />
 	<% end %>
 
