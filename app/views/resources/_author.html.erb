@@ -14,13 +14,13 @@
 	    <%= link_to "#{author.first_name} #{author.last_name}", site_items_path(:author => author.slug) %>
 	</h3>
 <p>
-	<% if author.title && @page && @page.title == 'Team' %>
+	<% if author.title && @page && @page.try(:title) == 'Team' %>
 	    <strong><%= author.title %></strong><br /><br />
-<% elsif defined?(section) && @page && @page.title == 'Team' %>
+<% elsif defined?(section) && @page && @page.try(:title) == 'Team' %>
 <strong><%= section.singularize %></strong><br /><br />
 	<% end %>
 
-	<% if author.affiliation && @page && @page.title == 'Team' %>
+	<% if author.affiliation && @page && @page.try(:title) == 'Team' %>
 	    <%= author.affiliation %><br />
 	<% end %>
 
