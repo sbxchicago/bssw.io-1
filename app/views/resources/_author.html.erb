@@ -15,15 +15,15 @@
 	</h3>
 <p>
 	<% if author.title && @page && @page.try(:name) == 'Team' %>
-	    <strong><%= author.title %></strong><br />
+	    <strong><%= author.title %></strong>
 <% elsif defined?(section) && @page && @page.try(:name) == 'Team' %>
-<strong><%= section.singularize %></strong><br />
+<strong><%= section.singularize %></strong>
 	<% end %>
-
-	<% if author.affiliation && @page && @page.try(:name) == 'Team' %>
-<br />	    <%= author.affiliation %><br />
-	<% end %>
-
 </p>
+	<% if author.affiliation && @page && @page.try(:name) == 'Team' %>
+<p class='affiliation'><%= author.affiliation %></p>
+	<% end %>
+
+
     </div>
 </div>
