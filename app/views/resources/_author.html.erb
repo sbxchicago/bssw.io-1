@@ -15,9 +15,9 @@
 	</h3>
 <p>
 	<% if author.title && @page && @page.try(:name) == 'Team' %>
-	    <strong><%= author.title %></strong><br /><br />
+	    <strong><%= author.title %></strong><br />
 <% elsif defined?(section) && @page && @page.try(:name) == 'Team' %>
-<strong><%= section.singularize %></strong><br /><br />
+<strong><%= section.singularize %></strong><br />
 	<% end %>
 
 	<% if author.affiliation && @page && @page.try(:name) == 'Team' %>
