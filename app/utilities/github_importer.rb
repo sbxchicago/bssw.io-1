@@ -15,8 +15,7 @@ class GithubImporter < ApplicationRecord
                                        lax_spacing: true,
                                        strikethrough: true,
                                        fenced_code_blocks: true,
-                                       no_intra_emphasis: true,
-                                       tables: true)
+                                       no_intra_emphasis: true)
     Nokogiri::HTML(markdown.render(updated_content), nil, 'UTF-8')
   end
 
@@ -31,7 +30,7 @@ class GithubImporter < ApplicationRecord
   end
 
   def self.save_content(branch, rebuild)
-    puts "saving content"
+    puts 'saving content'
     rebuild.update(commit_hash: github.commit(Rails.application.credentials[:github][:repo], branch)['sha'])
     puts branch
     puts rebuild.commit_hash
@@ -61,6 +60,7 @@ class GithubImporter < ApplicationRecord
     tar_extract(file_path).each do |file|
       next if File.extname(file.full_name) != '.md'
       next if GithubImporter.excluded_filenames.include?(File.basename(file.full_name))
+
       rebuild.process_file(file)
     end
 

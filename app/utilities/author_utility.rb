@@ -92,11 +92,11 @@ class AuthorUtility
     website = host.blank? ? nil : "https://#{host}#{uri.path}"
 
     auth = Author.find_by(website: website, rebuild_id: rebuild)
-    unless auth
-      last_name = names.last
-      auth = Author.find_or_create_by(rebuild_id: rebuild, last_name: last_name, first_name: names.first)
-      auth.update(website: website, alphabetized_name: last_name)
-    end
+    return auth if auth
+
+    last_name = names.last
+    auth = Author.find_or_create_by(rebuild_id: rebuild, last_name: last_name, first_name: names.first)
+    auth.update(website: website, alphabetized_name: last_name)
     auth
   end
 end

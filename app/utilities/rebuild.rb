@@ -34,9 +34,7 @@ class Rebuild < ApplicationRecord
   end
 
   def update_links_and_images
-    (Page.all +
-     SiteItem.all +
-     Community.all
+    (Page.all + SiteItem.all + Community.all
     ).each(&:update_links_and_images)
   end
 
@@ -45,16 +43,7 @@ class Rebuild < ApplicationRecord
     AuthorUtility.all_custom_info(id, file_path)
     clear_old
     update_links_and_images
-    Author.all.each do |auth|
-      if SiteItem.published.displayed.with_author(auth).empty?
-        auth.delete
-      else
-        auth.set_search_text
-        auth.blog_listing
-        auth.resource_listing
-        auth.event_listing
-      end
-    end
+    Author.all.each(&:cleanup)
     Fellow.all.each(&:set_search_text)
     SiteItem.all.each(&:set_search_text)
     File.delete(file_path)

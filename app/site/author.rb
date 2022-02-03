@@ -123,4 +123,15 @@ class Author < MarkdownImport
   def link
     "<a class='author' href='/items?author=#{slug}'>#{first_name} #{last_name}</a>"
   end
+
+  def cleanup
+    if SiteItem.published.displayed.with_author(self).empty?
+      delete
+    else
+      set_search_text
+      blog_listing
+      resource_listing
+      event_listing
+    end
+  end
 end
