@@ -362,6 +362,11 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.2.5)
+    rouge (3.28.0)
+    rouge-rails (0.2.1)
+      actionview
+      railties
+      rouge
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
       rspec-expectations (~> 3.10.0)
@@ -547,6 +552,7 @@ DEPENDENCIES
   ransack
   redcarpet
   reek
+  rouge-rails
   rspec
   rspec-rails
   rubocop
