@@ -9,7 +9,7 @@ class GithubImporter < ApplicationRecord
   end
 
   def self.parse_html_from(updated_content)
-    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML,
+    markdown = Redcarpet::Markdown.new(RougeRenderer.new,
                                        autolink: true,
                                        tables: true,
                                        lax_spacing: true,
