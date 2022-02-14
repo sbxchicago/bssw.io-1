@@ -9,7 +9,7 @@ class AdditionalDateValue < ApplicationRecord
   }
 
   def self.get_from_events(events, past)
-    values = from_events(events).to_a
+    values = from_events(events)
     date_groups = values.group_by{|d| [ d.additional_date.event_id, d.additional_date.label ]}
     date_groups.each{ |dg|
       next if dg.last.size == 1
@@ -20,8 +20,9 @@ class AdditionalDateValue < ApplicationRecord
         new_dates = dg.last.select{|d| d.date >= Date.today }.sort_by(&:date)
         dates = dg.last.to_a - [new_dates.first]
       end
-      values.delete_if{|v| v.in?(dates)}
+      values = values.where("additional_date_values.id not in (?)", dates.map(&:id))
     }
+    puts values.map{|v| v.date}
     return values
   end
 
