@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# handle multiple dates for events
 class AdditionalDate < ApplicationRecord
   belongs_to :event
   has_many :additional_date_values

@@ -57,16 +57,16 @@ module ApplicationHelper
 
   def formatted_standard_dates(event)
     [if event.start_at.blank?
-        ''
-      else
-        (event.end_at.blank? ? '<strong>Date</strong>' : '<strong>Dates</strong>') + date_range(
-          event.start_at, event.end_at
-        ).to_s.html_safe
-      end]
+       ''
+     else
+       (event.end_at.blank? ? '<strong>Date</strong>' : '<strong>Dates</strong>') + date_range(
+         event.start_at, event.end_at
+       ).to_s.html_safe
+     end]
   end
-  
+
   def show_dates(event)
-    (formatted_standard_dates(event) + formatted_additionals(event) 
+    (formatted_standard_dates(event) + formatted_additionals(event)
     ).delete_if(&:blank?).join('<br />').html_safe
   end
 

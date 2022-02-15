@@ -24,7 +24,8 @@ RSpec.describe RebuildsController, type: :controller do
     it 'does some imports' do
       name = Rails.application.credentials[:import][:name]
       pw = Rails.application.credentials[:import][:password]
-      @request.env['HTTP_AUTHORIZATION'] = "Basic #{Base64.encode64("#{name}:#{pw}")}"
+      @request.env['HTTP_AUTHORIZATION'] =
+        "Basic #{Base64.encode64("#{name}:#{pw}")}"
       FactoryBot.create(:site_item)
       FactoryBot.create(:author)
       post :import
@@ -73,7 +74,9 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Author.displayed.where(website: @author_slug).first.resource_listing).not_to eq '0 resources'
 
       expect(Author.displayed.select do |a|
-               a.website.try(:match?, 'maherou')
+               a.website.try(
+                 :match?, 'maherou'
+               )
              end.first.affiliation).to eq 'Sandia National Laboratories'
       @search_expectations.each do |key, val|
         expect(Searchable.perform_search(Searchable.prepare_strings(key),
@@ -87,8 +90,12 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
 
       expect(SiteItem.displayed.last.topic_list).not_to be_empty
-      expect(Event.where(base_path: '2021-10-wosss21.md').first.start_at.to_date).to eq Date.parse('October 6 2021').to_date
-      expect(Event.where(base_path: '2021-10-wosss21.md').first.end_at.to_date).to eq Date.parse('October 8 2021').to_date
+      expect(Event.where(
+        base_path: '2021-10-wosss21.md'
+      ).first.start_at.to_date).to eq Date.parse('October 6 2021').to_date
+      expect(Event.where(
+        base_path: '2021-10-wosss21.md'
+      ).first.end_at.to_date).to eq Date.parse('October 8 2021').to_date
       # expect do
       #   post :import
       # end.not_to change(Rebuild, :count)
@@ -99,10 +106,15 @@ RSpec.describe RebuildsController, type: :controller do
     it 'can check rebuilds' do
       name = Rails.application.credentials[:import][:name]
       pw = Rails.application.credentials[:import][:password]
-      @request.env['HTTP_AUTHORIZATION'] = "Basic #{Base64.encode64("#{name}:#{pw}")}"
+      @request.env['HTTP_AUTHORIZATION'] =
+        "Basic #{Base64.encode64("#{name}:#{pw}")}"
 
-      build = Rebuild.create(started_at: 1.minute.ago, ended_at: nil)
-      RebuildStatus.first.update_attribute(:in_progress_rebuild_id, build.id)
+      build = Rebuild.create(
+        started_at: 1.minute.ago, ended_at: nil
+      )
+      RebuildStatus.first.update_attribute(
+        :in_progress_rebuild_id, build.id
+      )
       post :import
       expect(response).to redirect_to('/rebuilds')
     end
@@ -110,8 +122,10 @@ RSpec.describe RebuildsController, type: :controller do
 
   describe 'index' do
     it 'gets index' do
-      credentials = ActionController::HttpAuthentication::Basic.encode_credentials 'bssw', 'rebuildlog'
-      request.env['HTTP_AUTHORIZATION'] = credentials
+      credentials = ActionController::HttpAuthentication::Basic.encode_credentials 'bssw',
+                                                                                   'rebuildlog'
+      request.env['HTTP_AUTHORIZATION'] =
+        credentials
       get :index
       expect(response).to have_http_status(:success)
     end
@@ -122,13 +136,17 @@ RSpec.describe RebuildsController, type: :controller do
       3.times { Rebuild.create }
       rs = RebuildStatus.first
       rs ||= RebuildStatus.find_or_create_by(display_rebuild_id: Rebuild.first.id)
-      credentials = ActionController::HttpAuthentication::Basic.encode_credentials 'bssw', 'rebuildlog'
-      request.env['HTTP_AUTHORIZATION'] = credentials
+      credentials = ActionController::HttpAuthentication::Basic.encode_credentials 'bssw',
+                                                                                   'rebuildlog'
+      request.env['HTTP_AUTHORIZATION'] =
+        credentials
       expect(Rebuild.first.id).not_to eq rs.display_rebuild_id
       expect do
-        post :make_displayed, params: { id: Rebuild.first.id }
+        post :make_displayed,
+             params: { id: Rebuild.first.id }
         rs.reload
-      end.to change(rs, :display_rebuild_id)
+      end.to change(rs,
+                    :display_rebuild_id)
     end
   end
 end

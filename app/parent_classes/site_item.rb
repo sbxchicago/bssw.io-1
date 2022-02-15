@@ -4,8 +4,6 @@
 class SiteItem < MarkdownImport
   include Searchable
 
-  #  before_save :set_search_text
-
   self.table_name = 'site_items'
 
   has_and_belongs_to_many :topics, -> { distinct }
@@ -44,9 +42,7 @@ class SiteItem < MarkdownImport
     if authors.empty?
       'BSSw Community'
     else
-      authors.map do |auth|
-        auth.link.html_safe
-      end.to_sentence.html_safe
+      authors.map { |a| a.link.html_safe }.to_sentence.html_safe
     end
   end
 
@@ -93,14 +89,6 @@ class SiteItem < MarkdownImport
   def topic_list
     topics.map(&:name).join(', ')
   end
-
-  # scope :get, lambda { |options|
-  #   result = self
-  #   options.each do |key, val|
-  #     result = result.send("with_#{key}", val) if val
-  #   end
-  #   result
-  # }
 
   def basic?
     is_a?(WhatIs) || is_a?(HowTo)

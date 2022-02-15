@@ -64,8 +64,7 @@ class AuthorUtility
 
   def self.make_from_data(node, rebuild)
     authors = []
-    txt = node.to_html.gsub('Contributed by', '').gsub(' and ', ',').strip
-    txt.split(',').each do |text|
+    node.to_html.gsub('Contributed by', '').gsub(' and ', ',').strip.split(',').each do |text|
       node_data = Nokogiri::HTML.parse(text)
       authors << if node_data.css('a').empty?
                    author_from_text(node_data.text, rebuild)

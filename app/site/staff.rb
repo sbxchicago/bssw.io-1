@@ -24,6 +24,10 @@ class Staff < Author
     end
     names = AuthorUtility.names_from(siblings.first.text)
     update(first_name: names.first, last_name: names.last, alphabetized_name: names.last)
+    update_affiliation(siblings)
+  end
+
+  def update_affiliation(siblings)
     if siblings[2].text.match('Title')
       update_attribute(:affiliation,
                        siblings[4].text.strip)

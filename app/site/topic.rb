@@ -26,9 +26,9 @@ class Topic < GithubImport
     topic
   end
 
-  def basics
-    site_items.select(&:basic?)
-  end
+  # def basics
+  #   site_items.select(&:basic?)
+  # end
 
   def get_order(doc)
     comment = doc.at("//comment()[contains(.,'Topic order')]")

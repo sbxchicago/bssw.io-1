@@ -46,16 +46,12 @@ class Author < MarkdownImport
   end
 
   def single_contribution
-    nums = [resource_count,
-            event_count,
-            blog_count]
+    nums = [resource_count, event_count, blog_count]
     nums.sort == [0, 0, 1]
   end
 
   def resource_count
-    SiteItem.published.displayed.with_author(self).size -
-      blog_count -
-      event_count
+    SiteItem.published.displayed.with_author(self).size - blog_count - event_count
   end
 
   def blog_count

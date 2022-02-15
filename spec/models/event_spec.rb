@@ -35,7 +35,9 @@ RSpec.describe Event, type: :model do
     event.parse_and_update(content)
     event.reload
     expect(event.additional_dates).not_to be_empty
-    expect(event.additional_dates.map(&:additional_date_values).flatten.map(&:date).flatten).to include(Chronic.parse('July 4 2022').to_date)
+    expect(
+      event.additional_dates.map(&:additional_date_values).flatten.map(&:date).flatten
+    ).to include(Chronic.parse('July 4 2022').to_date)
   end
 
   it 'can parse written dates' do
