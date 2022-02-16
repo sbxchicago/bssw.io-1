@@ -2,30 +2,26 @@
     <div class="container">
 	<div class="row">
 	    <div class="col-12">
-		<div class="row">
-		    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-			<div class="page-heading">
-			    <div class="row">
-				<div class="breadcrumbs">
-				    <ul>
-					<li><a href="/">Home</a></li>
-					<li><a href="/items/contributors">Contributors</a></li>
-					<li class="active"> <%= @author.first_name %> <%= @author.last_name %></li>
-					
-				    </ul>
-				</div>
-			    </div>
-			    <h1 > <%= @author.first_name %> <%= @author.last_name %></h1>
-			</div>
-			<div class="row">
-			    <% unless @author.avatar_url.blank? %>
-				<div class='col-xl-3 col-lg-3 col-md-5 col-sm-12 col-12'>
-				    <%= cl_image_tag(@author.avatar_url, :type => :fetch, :invalidate => true, :cloud_name => 'bssw', :class => 'fellows-photo') %>
-				    
-				</div>
-			    <% end %>
+		<div class="page-heading">
+		    <div class="row">
+			<div class="breadcrumbs">
+			    <ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="/items/contributors">Contributors</a></li>
+				<li class="active"> <%= @author.first_name %> <%= @author.last_name %></li>
+				
+			    </ul>
 			</div>
 		    </div>
+		    <h1 > <%= @author.first_name %> <%= @author.last_name %></h1>
+		</div>
+		<div class="row">
+		    <% unless @author.avatar_url.blank? %>
+			<div class='col-xl-3 col-lg-3 col-md-5 col-sm-12 col-12'>
+			    <%= cl_image_tag(@author.avatar_url, :type => :fetch, :invalidate => true, :cloud_name => 'bssw', :class => 'fellows-photo') %>
+			    
+			</div>
+		    <% end %>
 		</div>
 	    </div>
 
