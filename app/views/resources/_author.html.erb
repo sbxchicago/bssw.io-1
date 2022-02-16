@@ -5,7 +5,7 @@
 	    <%= cl_image_tag(author.avatar_url,
 			     :type => :fetch, :invalidate => true, :cloud_name => 'bssw', class: 'fellows-photo') %>
 	<% else %>
-<img src="https://raw.githubusercontent.com/betterscientificsoftware/bssw.io/master/images/People_BSSwContributor.png" class="fellows-photo" />
+	    <img src="https://raw.githubusercontent.com/betterscientificsoftware/bssw.io/master/images/People_BSSwContributor.png" class="fellows-photo" />
 
 	<% end %>
 
@@ -13,15 +13,15 @@
 	<h3>
 	    <%= link_to "#{author.first_name} #{author.last_name}", site_items_path(:author => author.slug) %>
 	</h3>
-<p>
-	<% if author.title && @page && @page.try(:name) == 'Team' %>
-	    <strong><%= author.title %></strong>
-<% elsif defined?(section) && @page && @page.try(:name) == 'Team' %>
-<strong><%= section.singularize %></strong>
-	<% end %>
-</p>
+	<p>
+	    <% if author.title && @page && @page.try(:name) == 'Team' %>
+		<strong><%= author.title %></strong>
+	    <% elsif defined?(section) && @page && @page.try(:name) == 'Team' %>
+		<strong><%= section.singularize %></strong>
+	    <% end %>
+	</p>
 	<% if author.affiliation && @page && @page.try(:name) == 'Team' %>
-<p class='affiliation'><%= author.affiliation %></p>
+	    <p class='affiliation'><%= author.affiliation %></p>
 	<% end %>
 
 
