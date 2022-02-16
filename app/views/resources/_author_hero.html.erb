@@ -4,13 +4,15 @@
 	    <div class="col-12">
 		<div class="page-heading">
 		    <div class="row">
-			<div class="breadcrumbs">
-			    <ul>
-				<li><a href="/">Home</a></li>
-				<li><a href="/items/contributors">Contributors</a></li>
-				<li class="active"> <%= @author.first_name %> <%= @author.last_name %></li>
-				
-			    </ul>
+			<div class="col-12">
+			    <div class="breadcrumbs">
+				<ul>
+				    <li><a href="/">Home</a></li>
+				    <li><a href="/items/contributors">Contributors</a></li>
+				    <li class="active"> <%= @author.first_name %> <%= @author.last_name %></li>
+				    
+				</ul>
+			    </div>
 			</div>
 		    </div>
 		    <h1 > <%= @author.first_name %> <%= @author.last_name %></h1>
