@@ -13,15 +13,19 @@ RSpec.describe EventsController, type: :controller do
 
   describe 'get index' do
     it 'shows future' do
+      event = FactoryBot.create(:event, publish: true, rebuild_id: @rebuild.id)
+      AdditionalDate.make_date("Submission Date", 1.week.from_now.to_s, event)
+      AdditionalDate.make_date("Party Date", 2.weeks.from_now.to_s, event)
       FactoryBot.create(:page, name: 'Upcoming Events', rebuild_id: @rebuild.id)
-      event = FactoryBot.create(:event, publish: true)
+      event = FactoryBot.create(:event, publish: true, rebuild_id: @rebuild.id)
       doc = Nokogiri::XML('<ul><li>Dates: December 10 - January 10 </li></ul>')
       event.send(:update_dates, doc.css("li:contains('Dates:')"))
-
       get :index
-      expect(assigns(:upcoming_events)).not_to be_nil
+      expect(response.body).to match 'Party'
     end
+    
     it 'shows past' do
+      
       FactoryBot.create(:page, name: 'Past Events', rebuild_id: @rebuild.id)
       event = FactoryBot.create(:event, publish: true)
       doc = Nokogiri::XML('<ul><li>Dates: January 1 2019 - January 10 2019</li></ul>')
@@ -59,7 +63,11 @@ RSpec.describe EventsController, type: :controller do
 
   describe 'get show' do
     it 'shows an event' do
-      event = FactoryBot.create(:event, rebuild_id: @rebuild.id)
+      event = FactoryBot.create(:event, publish: true, rebuild_id: @rebuild.id)
+      event.additional_dates.all.each{|d| d.destroy }
+      expect(event.start_at).to be_blank
+      AdditionalDate.make_date("Submission Date", 1.week.from_now.to_s, event)
+      AdditionalDate.make_date("Party Date", 2.weeks.from_now.to_s, event)
       get :show, params: { id: event }
       expect(assigns(:event)).not_to be_nil
       expect(assigns(:resource)).not_to be_nil
