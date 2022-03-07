@@ -49,21 +49,25 @@ class Event < SiteItem
       send("#{method}=", node.text.split(':').last) if node
     end
     if doc.at("li:contains('Website')")
-      set_website(node = doc.at("li:contains('Website')").text.split(':').last)
+      set_website(doc.at("li:contains('Website')"))
       self.website = "http:#{website}" if website
     end
     date_nodes = doc.css("li:contains('Date')") + doc.css("li:contains(' date')")
     update_dates(date_nodes) if date_nodes
-
     doc.at("strong:contains('Description')").try(:remove)
   end
 
-  def set_website(url)
+  def set_website(node)
+#    puts node.at('a').inspect if node.at('a') && node.at('a')['href'].match('bssw')
+#    puts node.at('a').text if node.at('a') && node.at('a')['href'].match('bssw')
+    url = node.text
+#    puts "url: #{url}" if url.match("bssw")
     match = url.match('\[(.*?)\](.*)')
+#    puts "match: #{match.inspect}" if url.match("bssw")
     if match
-      self.website_label=(match[1])
-      self.website=(match[2])
-    else
+       self.update_attribute(:website_label, match[1])
+       self.update_attribute(:website, match[2])
+     else
       self.website=(url)
     end
   end

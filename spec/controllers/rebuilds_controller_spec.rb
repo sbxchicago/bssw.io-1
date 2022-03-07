@@ -29,8 +29,8 @@ RSpec.describe RebuildsController, type: :controller do
       FactoryBot.create(:site_item)
       FactoryBot.create(:author)
       post :import
-      puts RebuildStatus.displayed_rebuild.errors_encountered
-      puts RebuildStatus.displayed_rebuild.inspect
+      puts "errors: #{Rebuild.first.errors_encountered}"
+      puts Rebuild.first.inspect
       # these are specific checks to our resource library...
       # using variables defined at top of this file
       expect(SiteItem.count).to be > @min_site_item_count
