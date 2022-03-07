@@ -52,7 +52,7 @@ class Event < SiteItem
       set_website(doc.at("li:contains('Website')"))
       self.website = "http:#{website}" if website
     end
-    date_nodes = doc.css("li:contains('Date')") + doc.css("li:contains(' date')")
+    date_nodes = doc.css("li:contains('Date')") + doc.css("li:contains(' date')") + doc.css("li:contains('Deadline')") + doc.css("li:contains('deadline')")
     update_dates(date_nodes) if date_nodes
     doc.at("strong:contains('Description')").try(:remove)
   end
