@@ -5,6 +5,8 @@ class AdditionalDateValue < ApplicationRecord
   belongs_to :additional_date
   delegate :event, to: :additional_date
 
+  default_scope { order('date desc') }
+  
   scope :from_events, lambda { |events|
     joins(
       additional_date: 'event'
