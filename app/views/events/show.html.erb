@@ -86,7 +86,7 @@
 
             <% if @event.website %>
             <p class="offsite">
-              <!--<i class="fas fa-link"></i>--><a href="<%= @event.website %>" target="_blank"><% if @event.website_label.blank? %>Event Website<% else %><%= @event.website_label %></a></p>
+              <!--<i class="fas fa-link"></i>--><a href="<%= @event.website %>" target="_blank"><% if @event.website_label.blank? %>Event Website<% else %><%= @event.website_label %><% end %>></a></p>
             <% end %>
 
           </div>
