@@ -67,6 +67,7 @@ class Event < SiteItem
     if match
        self.update_attribute(:website_label, match[1])
        self.update_attribute(:website, match[2])
+       node.remove
      else
       self.website=(url)
     end
