@@ -44,17 +44,30 @@ class Event < SiteItem
   private
 
   def update_details(doc)
-    %w[website location organizers].each do |method|
+    %w[location organizers].each do |method|
       node = doc.at("li:contains('#{method.titleize}')")
       send("#{method}=", node.text.split(':').last) if node
     end
-    self.website = "http:#{website}" if website
+    if doc.at("li:contains('Website')")
+      set_website(node = doc.at("li:contains('Website')").text.split(':').last)
+      self.website = "http:#{website}" if website
+    end
     date_nodes = doc.css("li:contains('Date')") + doc.css("li:contains(' date')")
     update_dates(date_nodes) if date_nodes
 
     doc.at("strong:contains('Description')").try(:remove)
   end
 
+  def set_website(url)
+    match = url.match('\[(.*?)\](.*)')
+    if match
+      self.website_label=(match[1])
+      self.website=(match[2])
+    else
+      self.website=(url)
+    end
+  end
+  
   def update_dates(date_nodes)
     date_nodes.each do |date_node|
       text = date_node.text.split(':')
