@@ -51,9 +51,10 @@ module ApplicationHelper
   def formatted_additionals(event)
     used_dates = []
     event.special_additional_dates.map do |date|
-      "<strong>#{date.additional_date.label.titleize}</strong> " +
+      val = "<strong>#{date.additional_date.label.titleize}</strong> " +
         date.additional_date.additional_date_values.map { |adv| date_range(adv.date, nil) }.join('; ') unless used_dates.include?(date.additional_date)
       used_dates << date.additional_date
+      return val
     end
   end
 
