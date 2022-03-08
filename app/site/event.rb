@@ -5,7 +5,6 @@ class Event < SiteItem
   include Dateable
   has_many :additional_dates
   has_many :additional_date_values, -> { order(date: :desc) }, through: :additional_dates  
-
   
   def next_date
     additional_date_values.where('date >= ?', Date.today).first
@@ -32,7 +31,7 @@ class Event < SiteItem
   end
 
   self.table_name = 'site_items'
-  has_many :additional_dates
+
 
   def update_from_content(doc, rebuild)
     update_details(doc)
