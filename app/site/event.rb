@@ -4,7 +4,7 @@
 class Event < SiteItem
   include Dateable
   has_many :additional_dates
-  has_many :additional_date_values, -> { order(date: :desc) }, through: :additional_dates  
+  has_many :additional_date_values, -> { order(date: :asc) }, through: :additional_dates  
   
   def next_date
     additional_date_values.where('date >= ?', Date.today).first
