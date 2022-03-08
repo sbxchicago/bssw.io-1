@@ -3,14 +3,18 @@
 # Events e.g. conferences
 class Event < SiteItem
   include Dateable
+  has_many :additional_dates
+  has_many :additional_date_values, -> { order(date: :desc) }, through: :additional_dates  
 
-  has_many :additional_dates, -> {includes 'additional_date_values', order('additional_date_values.date': :desc) }
 
-  # def additional_dates
-  #   super.sort { |date|
-  #     date.additional_date_values.map(&:dates).sort_by(&:date).first
-  #   }
-  # end
+  
+  def next_date
+    additional_date_values.where('date >= ?', Date.today).first
+  end
+
+  def prev_date
+    additional_date_values.where('date <= ?', Date.today).last
+  end
   
   def start_date
     additional_dates.where(label: 'Start Date').first
