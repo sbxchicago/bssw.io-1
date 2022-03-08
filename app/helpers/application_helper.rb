@@ -50,8 +50,8 @@ module ApplicationHelper
 
   def formatted_additionals(event)
     event.special_additional_dates.map do |date|
-      "<strong>#{date.label.titleize}</strong> " +
-        date.additional_date_values.map { |adv| date_range(adv.date, nil) }.join('; ')
+      "<strong>#{date.additional_date.label.titleize}</strong> " +
+        date.additional_date.additional_date_values.map { |adv| date_range(adv.date, nil) }.join('; ')
     end
   end
 

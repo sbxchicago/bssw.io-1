@@ -6,7 +6,6 @@ class Event < SiteItem
   has_many :additional_dates
   has_many :additional_date_values, -> { order(date: :desc) }, through: :additional_dates  
 
-
   
   def next_date
     additional_date_values.where('date >= ?', Date.today).first
@@ -50,7 +49,7 @@ class Event < SiteItem
   }
 
   def special_additional_dates
-    additional_dates.where('label != ?', 'Start Date').where('label != ?', 'End Date')
+    additional_date_values.where('additional_date_id in (?)', additional_dates.where('label != ?', 'Start Date').where('label != ?', 'End Date').map(&:id))
   end
 
   private
