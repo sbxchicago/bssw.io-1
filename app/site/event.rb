@@ -5,13 +5,18 @@ class Event < SiteItem
   include Dateable
   has_many :additional_dates
   has_many :additional_date_values, -> { order(date: :asc) }, through: :additional_dates  
+
+  scope :upcoming, -> { joins(:additional_dates).joins(:additional_date_values).where('additional_date_values.date >= ?', Date.today)}
+
+  scope :past, -> { joins(:additional_dates).joins(:additional_date_values).where('additional_date_values.date < ?', Date.today)}
+
   
   def next_date
     additional_date_values.where('date >= ?', Date.today).first
   end
 
   def prev_date
-    additional_date_values.where('date <= ?', Date.today).last
+    additional_date_values.where('date < ?', Date.today).last
   end
   
   def start_date

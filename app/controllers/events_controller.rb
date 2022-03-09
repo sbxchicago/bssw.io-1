@@ -4,15 +4,13 @@
 class EventsController < ApplicationController
   def index
     page = params[:page]
-    filter_events
-    @dates = AdditionalDateValue.get_from_events(@events, @past_events)
-    @dates = @dates.order('date asc') if @upcoming_events
-    @dates = @dates.order('date desc') if @past_events
-    @dates = if params[:view] == 'all'
-               @dates.paginate(page: 1, per_page: @dates.size)
-             else
-               @dates.paginate(page: page, per_page: 25)
-             end
+    filter_events    
+    @events = if params[:view] == 'all'
+                @events.paginate(page: 1, per_page: @events.size)
+              else
+                @events.paginate(page: page, per_page: 25)
+              end
+    puts @events.size
   end
 
   def show
@@ -26,7 +24,9 @@ class EventsController < ApplicationController
     author = params[:author]
     events = Event.displayed.published
     if author
+      puts "author"
       @events = events.with_author(Author.displayed.find(author))
+      puts @events.size
     else
       filter_events_by_time(events)
     end

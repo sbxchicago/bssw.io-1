@@ -21,7 +21,7 @@ RSpec.describe EventsController, type: :controller do
       doc = Nokogiri::XML('<ul><li>Dates: December 10 - January 10 </li></ul>')
       event.send(:update_dates, doc.css("li:contains('Dates:')"))
       get :index
-      expect(response.body).to match 'Party'
+      expect(response.body).to match 'Submission'
     end
     
     it 'shows past' do
@@ -49,10 +49,10 @@ RSpec.describe EventsController, type: :controller do
       expect(event.authors).to include(author)
       expect(Author.find_by(slug: author.slug)).to eq author
 
-      expect(Event.with_author(author)).to include(event)
-      get :index, params: { all: true, author: author.slug }
-      expect(event.start_at).to eq event.end_at
-      expect(assigns(:events)).to eq [event]
+      expect(Event.displayed.published.with_author(author)).to include(event)
+      puts Event.with_author(author).size
+      get :index, params: { author: author.slug }
+      expect(response.body).to include(event.name)
     end
 
     it 'gets unpaginated' do

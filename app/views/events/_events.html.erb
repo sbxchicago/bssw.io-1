@@ -1,5 +1,10 @@
 
-<% dates.each do |date| %>
+<% events.each do |event| %>
+<% if @past_events %>
+<% date = event.prev_date %>
+<% else %>
+<% date = event.next_date %>
+<% end %>
 
     <div class="event-blog-row">
 	<div class="container">
