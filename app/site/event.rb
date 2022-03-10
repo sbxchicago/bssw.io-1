@@ -12,11 +12,11 @@ class Event < SiteItem
 
   
   def next_date
-    additional_date_values.where('date >= ?', Date.today).first
+    additional_date_values.joins(:additional_date).where('date >= ?', Date.today).where("additional_dates.label != 'End Date'").first
   end
 
   def prev_date
-    additional_date_values.where('date < ?', Date.today).last
+    additional_date_values.joins(:additional_date).where('date < ?', Date.today).where("additional_dates.label != 'End Date'").last
   end
   
   def start_date
