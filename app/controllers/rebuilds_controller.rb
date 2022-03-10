@@ -2,7 +2,7 @@
 
 # display and perform rebuilds
 class RebuildsController < ApplicationController
-  if Rails.env != 'preview'
+  if Rails.env != 'preview' && Rails.env != 'development'
     http_basic_authenticate_with name: Rails.application.credentials[:import][:name],
                                  password: Rails.application.credentials[:import][:password]
   end

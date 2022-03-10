@@ -6,11 +6,9 @@ class Event < SiteItem
   has_many :additional_dates
   has_many :additional_date_values, -> { order(date: :asc) }, through: :additional_dates  
 
-  scope :upcoming, -> { joins(:additional_dates).joins(:additional_date_values).where('additional_date_values.date >= ?', Date.today).order('additional_date_values.date', :asc).uniq
-  }
+  scope :upcoming, -> { left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date >= ?', Date.today).order('additional_date_values.date asc').distinct  }
 
-  scope :past, -> { joins(:additional_dates).joins(:additional_date_values).where('additional_date_values.date < ?', Date.today).order('additional_date_values.date', :desc).uniq
-  }
+  scope :past, -> { left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date < ?', Date.today).order('additional_date_values.date desc').distinct  }
 
   
   def next_date
@@ -46,13 +44,6 @@ class Event < SiteItem
     overview&.remove
     super(doc, rebuild)
   end
-  scope :upcoming, lambda {
-    left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date >= ?', Date.today)
-  }
-
-  scope :past, lambda {
-    left_outer_joins(additional_dates: :additional_date_values).where('additional_date_values.date < ?', Date.today)
-  }
 
   def special_additional_dates
     additional_date_values.where('additional_date_id in (?)', additional_dates.where('label != ?', 'Start Date').where('label != ?', 'End Date').map(&:id))

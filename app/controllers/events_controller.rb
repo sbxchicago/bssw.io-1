@@ -30,6 +30,7 @@ class EventsController < ApplicationController
     else
       filter_events_by_time(events)
     end
+    @events = @events.distinct
   end
 
   def filter_events_by_time(events)

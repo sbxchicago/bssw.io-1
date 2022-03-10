@@ -45,3 +45,5 @@ config/credentials/production.key
 /config/credentials/production.key
 
 /config/master.key
+
+/config/credentials/development.key
