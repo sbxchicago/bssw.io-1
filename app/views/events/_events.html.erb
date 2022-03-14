@@ -1,7 +1,7 @@
 
 <% events.each do |event| %>
 
-<% if @past_events %>
+<% if params[:past] %>
 <% date = event.prev_date %>
 <% else %>
 <% date = event.next_date %>
