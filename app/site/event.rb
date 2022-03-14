@@ -55,6 +55,7 @@ class Event < SiteItem
     %w[location organizers].each do |method|
       node = doc.at("li:contains('#{method.titleize}')")
       send("#{method}=", node.text.split(':').last) if node
+      node.try(:remove)
     end
     if doc.at("li:contains('Website')")
       set_website(doc.at("li:contains('Website')"))
@@ -66,12 +67,8 @@ class Event < SiteItem
   end
 
   def set_website(node)
-#    puts node.at('a').inspect if node.at('a') && node.at('a')['href'].match('bssw')
-#    puts node.at('a').text if node.at('a') && node.at('a')['href'].match('bssw')
     url = node.text
-#    puts "url: #{url}" if url.match("bssw")
     match = url.match('\[(.*?)\](.*)')
-#    puts "match: #{match.inspect}" if url.match("bssw")
     if match
        self.update_attribute(:website_label, match[1])
        self.update_attribute(:website, match[2])
@@ -79,6 +76,7 @@ class Event < SiteItem
      else
       self.website=(url)
     end
+    node.try(:remove)
   end
   
   def update_dates(date_nodes)
@@ -104,8 +102,8 @@ class Event < SiteItem
         dates = [dates.first, "#{our_month} #{dates.last}"] if our_month && !end_month
         AdditionalDate.make_date('Start Date', dates.first, self)
         AdditionalDate.make_date('End Date', dates.last, self)
-      elsif label_text.strip == 'Date'
-        AdditionalDate.make_date('Date', dates.first, self)
+      # elsif label_text.strip == 'Date'
+      #   AdditionalDate.make_date('Date', dates.first, self)
       else
         AdditionalDate.make_date(label_text, date_text, self)
       end
