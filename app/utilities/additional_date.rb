@@ -9,7 +9,7 @@ class AdditionalDate < ApplicationRecord
   include Dateable
 
   def self.make_date(label_text, dates, event)
-    event.additional_dates.where(label: label_text).each(&:delete) if ['Start Date', 'End Date'].include?(label_text)
+    event.additional_dates.where(label: label_text).each(&:delete) if (label_text.match('Start ') || label_text.match('End '))
     date = create(
       label: label_text,
       event: event

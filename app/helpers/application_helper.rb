@@ -90,8 +90,8 @@ module ApplicationHelper
 
   def show_label(date_value)
     date = date_value.additional_date
-    if date.label == 'Start Date'
-      date_value.event.end_at.blank? ? 'Event Date' : 'Event Dates'
+    if date.label.match('Start') 
+      date.label.gsub('Start ', '')
     else
       date.label
     end

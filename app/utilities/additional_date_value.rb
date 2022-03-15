@@ -10,7 +10,7 @@ class AdditionalDateValue < ApplicationRecord
     joins(
       additional_date: 'event'
     ).includes([additional_date: :event]).where(
-      'additional_dates.label != ?', 'End Date'
+      'additional_dates.label not like ?', 'End '
     ).where('site_items.id in (?)', events.map(&:id))
   }
 

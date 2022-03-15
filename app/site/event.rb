@@ -12,15 +12,15 @@ class Event < SiteItem
 
   
   def next_date
-    additional_date_values.joins(:additional_date).where('date >= ?', Date.today).where("additional_dates.label != 'End Date'").first
+    additional_date_values.joins(:additional_date).where('date >= ?', Date.today).where("additional_dates.label not LIKE ?", "%End %").first
   end
 
   def prev_date
-    additional_date_values.joins(:additional_date).where('date < ?', Date.today).where("additional_dates.label != 'End Date'").last
+    additional_date_values.joins(:additional_date).where('date < ?', Date.today).where("additional_dates.label not LIKE ?", "%End %").last
   end
   
   def start_date
-    additional_dates.where(label: 'Start Date').first
+    additional_dates.where("label LIKE ?", '%Start %').first
   end
 
   def start_at
@@ -28,7 +28,7 @@ class Event < SiteItem
   end
 
   def end_date
-    additional_dates.where(label: 'End Date').first
+    additional_dates.where("label LIKE ?", '%End %').first
   end
 
   def end_at
@@ -46,7 +46,7 @@ class Event < SiteItem
   end
 
   def special_additional_dates
-    additional_date_values.where('additional_date_id in (?)', additional_dates.where('label != ?', 'Start Date').where('label != ?', 'End Date').map(&:id))
+    additional_date_values.where('additional_date_id in (?)', additional_dates.where('label not LIKE ?', '%Start %').where('label not LIKE ?', '%End %').map(&:id))
   end
 
   private
@@ -100,8 +100,8 @@ class Event < SiteItem
           end_month = true if dates.last.match(month)
         end
         dates = [dates.first, "#{our_month} #{dates.last}"] if our_month && !end_month
-        AdditionalDate.make_date('Start Date', dates.first, self)
-        AdditionalDate.make_date('End Date', dates.last, self)
+        AdditionalDate.make_date("Start #{label_text}", dates.first, self)
+        AdditionalDate.make_date("End #{label_text}", dates.last, self)
       # elsif label_text.strip == 'Date'
       #   AdditionalDate.make_date('Date', dates.first, self)
       else
