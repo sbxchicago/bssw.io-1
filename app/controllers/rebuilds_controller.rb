@@ -25,6 +25,7 @@ class RebuildsController < ApplicationController
     rebuild = Rebuild.create(started_at: Time.now, ip: request.ip)
     RebuildStatus.start(rebuild, @branch)
     GithubImporter.populate(@branch)
+
     flash[:notice] = 'Import completed!'
     redirect_to controller: 'rebuilds', action: 'index', rebuilt: true
   end

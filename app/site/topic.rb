@@ -20,15 +20,12 @@ class Topic < GithubImport
 
   def self.create_from_node(child, cat_id, rebuild_id)
     name = child.at('strong').content
+
     child.at('strong').remove
     topic = Topic.find_or_create_by(slug: name.parameterize, rebuild_id: rebuild_id)
     topic.update(overview: child.content, name: name, order_num: topic.get_order(child), category_id: cat_id)
     topic
   end
-
-  # def basics
-  #   site_items.select(&:basic?)
-  # end
 
   def get_order(doc)
     comment = doc.at("//comment()[contains(.,'Topic order')]")

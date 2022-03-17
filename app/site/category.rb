@@ -47,10 +47,10 @@ class Category < MarkdownImport
     deets
   end
 
-  def update_topics(doc, rebuild_id)
+  def update_topics(doc, rebuild)
     node = doc.at("strong:contains('Topics')")
     doc.css('li').each do |child|
-      process_topic(child, rebuild_id)
+      process_topic(child, rebuild.try(:id))
       child.remove
     end
     node.remove
