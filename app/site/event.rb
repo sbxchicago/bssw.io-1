@@ -59,7 +59,7 @@ class Event < SiteItem
     end
     if doc.at("li:contains('Website')")
       set_website(doc.at("li:contains('Website')"))
-      self.website = "http:#{website}" if website
+#      self.website = "http:#{website}" if website
     end
     date_nodes = doc.css("li:contains('Date')") + doc.css("li:contains(' date')") + doc.css("li:contains('Deadline')") + doc.css("li:contains('deadline')")
     update_dates(date_nodes) if date_nodes
@@ -74,7 +74,7 @@ class Event < SiteItem
        self.update_attribute(:website, match[2])
        node.remove
      else
-      self.website=(url)
+      self.website=(url.split(':').last)
     end
     node.try(:remove)
   end
