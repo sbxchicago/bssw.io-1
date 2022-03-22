@@ -17,12 +17,12 @@ RSpec.describe BlogPost, type: :model do
 - ![fo](image.jpg) [bloo bloo]
 \n
 \n
-<!---
-Topics: foo, bar
+<!--
+Topics: foo, bar, \"quoted, topic\"
 Categories: Blah Blah
 Publish: true
 
---->"
+-->"
     FactoryBot.create(:category, name: 'Better Blah Blah')
 
     res = Rebuild.create.find_or_create_resource('Blog/FooPost.md')
@@ -31,7 +31,7 @@ Publish: true
     res.parse_and_update(content)
     res.reload
     expect(res.content).to match 'bar'
-    expect(res.topics).not_to be_empty
+    expect(res.topics.map(&:name)).to include("Quoted, Topic")
     expect(res.categories).not_to be_empty
     expect(res.authors.map(&:last_name).to_s).to match 'Doe'
     expect(res.hero_image_caption).not_to be_nil

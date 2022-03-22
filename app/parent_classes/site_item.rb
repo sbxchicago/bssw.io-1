@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 # resources, events, and blog posts
+
 class SiteItem < MarkdownImport
+  require 'csv'
   include Searchable
 
   self.table_name = 'site_items'

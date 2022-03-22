@@ -3,7 +3,8 @@
 # Filters - like tags
 class Topic < GithubImport
   #  default_scope -> { order(order_num: 'asc') }
-
+    require 'csv'
+  
   scope :displayed, lambda {
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
