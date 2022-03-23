@@ -22,6 +22,7 @@ class RebuildsController < ApplicationController
 
   def import
     branch
+    puts "branch is #{@branch}"
     rebuild = Rebuild.create(started_at: Time.now, ip: request.ip)
     RebuildStatus.start(rebuild, @branch)
     GithubImporter.populate(@branch)
