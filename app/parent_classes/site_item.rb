@@ -79,9 +79,9 @@ class SiteItem < MarkdownImport
       where.not(published_at: nil).where(
         'published_at > ?', Chronic.parse('June 1 2018').to_s
       )
-    ).order('rss_date desc', 'published_at desc').first(10)
+    ).order('coalesce(rss_date, published_at) desc').first(15)
   }
-
+  
   scope :standard_scope, lambda { |_all = false|
     distinct.order(Arel.sql('(case when pinned then 1 else 0 end) DESC, name ASC'))
   }
