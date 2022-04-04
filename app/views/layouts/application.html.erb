@@ -155,14 +155,18 @@
 		 animateOut: 'fadeOut',
 		 animateIn: 'flipInX',
 		 items:1,
-		 smartSpeed:12,
-		 loop:true
+		 loop:true,
+autoplay:true,
+autoplayTimeout:10000,
+autoplayHoverPause:true
 	     });
 	 });
 	</script>
 
 
 	<script>
+	 $(document).ready(function(){
+
 	 // When the user scrolls the page, execute myFunction 
 	 window.onscroll = function() {myFunction()};
 
@@ -185,7 +189,8 @@
 	     if (window.pageYOffset <= sticky) {
 		 navbar.classList.remove("sticky")
 	     }
-	 }
+				       }
+				       });
 	</script>
 
 
