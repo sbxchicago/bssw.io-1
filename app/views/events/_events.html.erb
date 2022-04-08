@@ -1,19 +1,15 @@
-		    <div class="pagination pagination-top">
-	    1-<%=
-	      if @events.current_page*@events.per_page > @events.total_entries
-		  @events.total_entries
-	      else 
-		  @events.current_page*@events.per_page 
-	      end
-	      %> of <%= @events.total_entries %> Items  
-	    <% if @events.next_page %>
-		| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
-	    <% end %>
-		    </div>
-		</div>
-	    </div>
-	</div>
-    </div>
+<div class="pagination pagination-top">
+    1-<%=
+      if @events.current_page*@events.per_page > @events.total_entries
+	  @events.total_entries
+      else 
+	  @events.current_page*@events.per_page 
+      end
+      %> of <%= @events.total_entries %> Items  
+    <% if @events.next_page %>
+	| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
+    <% end %>
+</div>
 
 <% if @page %>
     <div class="sub-nav-container events-sub-nav">
@@ -35,11 +31,11 @@
 
 <% events.each do |event| %>
 
-<% if params[:past] %>
-<% date = event.prev_date %>
-<% else %>
-<% date = event.next_date %>
-<% end %>
+    <% if params[:past] %>
+	<% date = event.prev_date %>
+    <% else %>
+	<% date = event.next_date %>
+    <% end %>
 
     <div class="event-blog-row">
 	<div class="container">
@@ -60,4 +56,19 @@
     </div>
 
 <% end %>
+
+<div class="bottom-event-blog-row">
+    <div class="container more-top">
+	<div class="row">
+	    <div class="col-xl-12">
+		<% if @events.next_page %>
+		    <span id="more">
+			<%= render 'show_more',  :events => @events  %>
+		    </span>
+		<% end %>
+		<a class="to-top" href="#top">To Top</a>
+	    </div>
+	</div>
+    </div>
+</div>
 

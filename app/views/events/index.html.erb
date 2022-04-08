@@ -1,37 +1,28 @@
 <%= render :partial => 'pages/page', :locals =>
 {:page => @page }  if @page %>
 
-    <div class="container">
-	<div class="page-heading">
-	    <div class="row">
-		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-		    <div class="breadcrumbs">
-			<ul>
-			    <li><a href="#">Home</a></li>
-			    <li><a href="/events">Events</a></li>
-			</ul>
-		    </div>
-<% if @author %>
+<div class="container">
+    <div class="page-heading">
+	<div class="row">
+	    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+		<div class="breadcrumbs">
+		    <ul>
+			<li><a href="#">Home</a></li>
+			<li><a href="/events">Events</a></li>
+		    </ul>
+		</div>
+		<% if @author %>
 		    <h1>Events by Contributor: <%= @author.first_name %> <%= @author.last_name %></h1>
-<% end %>
+		<% end %>
+	    </div>
+	</div>
+    </div>
+
+
 <div id='events'>
     <%= render 'events', :events => @events %>
     <div class="row"></div>
 </div>
 
-<div class="bottom-event-blog-row">
-    <div class="container more-top">
-	<div class="row">
-	    <div class="col-xl-12">
-		<% if @events.next_page %>
-		    <span id="more">
-			<%= render 'show_more',  :events => @events  %>
-		    </span>
-		<% end %>
-		<a class="to-top" href="#top">To Top</a>
-	    </div>
-	</div>
-    </div>
+
 </div>
-
-
