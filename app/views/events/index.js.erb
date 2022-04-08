@@ -10,3 +10,5 @@ $(".more-top").remove();
 
 
   $("#events").replace("<%= escape_javascript render('events', :events => @events.paginate(page: params[:page]) ) %>");
+
+  $("#events").replace("loaded");
