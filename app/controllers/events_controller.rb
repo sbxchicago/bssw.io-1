@@ -6,8 +6,12 @@ class EventsController < ApplicationController
     filter_events
     @events = if params[:view] == 'all'
                 @events.paginate(page: 1, per_page: @events.size)
+              elsif params[:page]
+                @events.paginate(page: 1, per_page: params[:page].to_i * 25)
               else
-                @events.paginate(page: 1, per_page: (params[:page] || 1).to_i * 25)
+                @events.paginate(page: 1, per_page: 25)
+                
+###                @events.paginate(page: 1, per_page: (params[:page].to_i || 1) * 25)
               end
   end
 
