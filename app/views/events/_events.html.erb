@@ -1,6 +1,6 @@
 
 <div class="pagination pagination-top">
-    p <%= @events.current_page %> / p <%= params[:page] %>
+ <%= params.inspect %>
     1-<%=
       if @events.current_page*@events.per_page > @events.total_entries
 	  @events.total_entries
