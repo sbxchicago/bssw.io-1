@@ -2,7 +2,7 @@
 <% if events.total_pages > events.current_page %>
 
   <%= link_to 'Load More',
-{ :page => events.current_page + 1,
+{ :page => params[:page] ? params[:page].to_i + 1 : 2,
 :controller => controller.controller_name,
   :action => controller.action_name,
   :past => params[:past]},
