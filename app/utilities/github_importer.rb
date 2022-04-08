@@ -64,9 +64,9 @@ class GithubImporter < ApplicationRecord
       rebuild.process_file(file)
     end
     puts Topic.where(name: 'Inclusivity').inspect
-    puts ".. about to complete rebuild status"
+    puts '.. about to complete rebuild status'
     RebuildStatus.complete(rebuild, file_path)
     puts Topic.where(name: 'Inclusivity').inspect
-    puts ".. finished populating"
+    puts '.. finished populating'
   end
 end

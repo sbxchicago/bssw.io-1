@@ -1,6 +1,6 @@
 <%= render :partial => 'pages/page', :locals =>
 {:page => @page }  if @page %>
-<% if @author %>
+
     <div class="container">
 	<div class="page-heading">
 	    <div class="row">
@@ -11,9 +11,9 @@
 			    <li><a href="/events">Events</a></li>
 			</ul>
 		    </div>
-
+<% if @author %>
 		    <h1>Events by Contributor: <%= @author.first_name %> <%= @author.last_name %></h1>
-
+<% end %>
 		    <div class="pagination pagination-top">
 	    1-<%=
 	      if @events.current_page*@events.per_page > @events.total_entries
@@ -30,7 +30,7 @@
 	    </div>
 	</div>
     </div>
-<% end %>
+
 <% if @page %>
     <div class="sub-nav-container events-sub-nav">
 	<div class="container">

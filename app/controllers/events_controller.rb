@@ -3,14 +3,12 @@
 # show past and upcoming events
 class EventsController < ApplicationController
   def index
-    page = params[:page]
-    filter_events    
+    filter_events
     @events = if params[:view] == 'all'
                 @events.paginate(page: 1, per_page: @events.size)
               else
-                @events.paginate(page: page, per_page: 25)
+                @events.paginate(page: params[:page], per_page: 25)
               end
-    puts @events.size
   end
 
   def show
@@ -24,7 +22,7 @@ class EventsController < ApplicationController
     author = params[:author]
     events = Event.displayed.published
     if author
-      puts "author"
+      puts 'author'
       @events = events.with_author(Author.displayed.find(author))
       puts @events.size
     else
