@@ -14,40 +14,6 @@
 <% if @author %>
 		    <h1>Events by Contributor: <%= @author.first_name %> <%= @author.last_name %></h1>
 <% end %>
-		    <div class="pagination pagination-top">
-	    1-<%=
-	      if @events.current_page*@events.per_page > @events.total_entries
-		  @events.total_entries
-	      else 
-		  @events.current_page*@events.per_page 
-	      end
-	      %> of <%= @events.total_entries %> Items  
-	    <% if @events.next_page %>
-		| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
-	    <% end %>
-		    </div>
-		</div>
-	    </div>
-	</div>
-    </div>
-
-<% if @page %>
-    <div class="sub-nav-container events-sub-nav">
-	<div class="container">
-	    <ul class="nav justify-content-end">
-		<% if @past_events %>
-		    <li class="nav-item">
-			<a class="nav-link" href="/events">View Upcoming Events</a>
-		    </li>
-		<% else %>
-		    <li class="nav-item">
-			<a class="nav-link" href="/events?past=true">View Past Events</a>
-		    </li>
-		<% end %>   
-	    </ul>
-	</div>
-    </div>
-<% end %>
 <div id='events'>
     <%= render 'events', :events => @events %>
     <div class="row"></div>

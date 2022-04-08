@@ -1,3 +1,37 @@
+		    <div class="pagination pagination-top">
+	    1-<%=
+	      if @events.current_page*@events.per_page > @events.total_entries
+		  @events.total_entries
+	      else 
+		  @events.current_page*@events.per_page 
+	      end
+	      %> of <%= @events.total_entries %> Items  
+	    <% if @events.next_page %>
+		| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
+	    <% end %>
+		    </div>
+		</div>
+	    </div>
+	</div>
+    </div>
+
+<% if @page %>
+    <div class="sub-nav-container events-sub-nav">
+	<div class="container">
+	    <ul class="nav justify-content-end">
+		<% if @past_events %>
+		    <li class="nav-item">
+			<a class="nav-link" href="/events">View Upcoming Events</a>
+		    </li>
+		<% else %>
+		    <li class="nav-item">
+			<a class="nav-link" href="/events?past=true">View Past Events</a>
+		    </li>
+		<% end %>   
+	    </ul>
+	</div>
+    </div>
+<% end %>
 
 <% events.each do |event| %>
 
@@ -22,7 +56,21 @@
 		</div>
 	    </a>
 	</div>
+
     </div>
 
 <% end %>
 
+<div class='pagination-bottom'>
+1-<%=
+if @events.current_page*@events.per_page > @events.total_entries
+	@events.total_entries
+else 
+	@events.current_page*@events.per_page 
+end
+%> of <%= @events.total_entries %> Items  
+    <% if @events.next_page %>
+    | <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
+    <% end %>
+
+</div>
