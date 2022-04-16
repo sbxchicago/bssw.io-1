@@ -24,22 +24,41 @@ RSpec.describe ResourcesController, type: :controller do
   describe 'preview' do
     it 'is invalid without auth' do
       @request.host = 'preview.bssw.io'
+      credentials = ActionController::HttpAuthentication::Basic.encode_credentials 'name', 'pw'
+      request.env['HTTP_AUTHORIZATION'] = credentials
       get 'index'
       expect(response).not_to render_template 'index'
     end
 
-    it 'sets the preview val' do
+    it 'is valid with auth' do
       @request.host = 'preview.bssw.io'
-      @request.env['HTTP_AUTHORIZATION'] = "Basic #{Base64.encode64('preview-bssw:SoMyCodeWillSeeTheFuture!!')}"
+      name = Rails.application.credentials[:preview][:name]
+      pw = Rails.application.credentials[:preview][:password]
+      credentials = ActionController::HttpAuthentication::Basic.encode_credentials name, pw
+      request.env['HTTP_AUTHORIZATION'] = credentials
       get 'index'
       expect(response).to render_template 'index'
+    end
+
+    
+    it 'sets the preview val' do
+      @request.host = 'preview.bssw.io'
+      name = Rails.application.credentials[:preview][:name]
+      pw = Rails.application.credentials[:preview][:password]
+      credentials = ActionController::HttpAuthentication::Basic.encode_credentials name, pw
+      request.env['HTTP_AUTHORIZATION'] = credentials
+      get 'index'
       expect(session[:preview]).to be true
     end
   end
 
   describe 'get search' do
     it 'searches' do
-      @request.env['HTTP_AUTHORIZATION'] = "Basic #{Base64.encode64('preview-bssw:SoMyCodeWillSeeTheFuture!!')}"
+      name = Rails.application.credentials[:preview][:name]
+      pw = Rails.application.credentials[:preview][:password]
+      credentials = ActionController::HttpAuthentication::Basic.encode_credentials name, pw
+      request.env['HTTP_AUTHORIZATION'] = credentials
+
       resource = FactoryBot.create(:resource, publish: true, type: 'Resource')
       expect(SiteItem.published.displayed).to include(resource)
       SiteItem.all.each(&:set_search_text)
