@@ -67,7 +67,7 @@ RSpec.describe EventsController, type: :controller do
       expect(Author.find_by(slug: author.slug)).to eq author
 
       expect(Event.displayed.published.with_author(author)).to include(event)
-      puts Event.with_author(author).size
+
       get :index, params: { author: author.slug }
       expect(response.body).to include(event.name)
     end

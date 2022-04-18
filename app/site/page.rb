@@ -34,7 +34,6 @@ class Page < MarkdownImport
     super(doc, rebuild)
     self.slug = 'homepage' if path.match('Home')
     save
-    puts "#{name} #{main}" if path.match('About')
   end
 
   def self.names_to_pages(names)
@@ -66,7 +65,7 @@ class Page < MarkdownImport
 
   def update_staff(doc)
     start_node = doc.css('h2')[0]
-    puts start_node.inspect
+
     return unless start_node
 
     node = start_node.next_element
