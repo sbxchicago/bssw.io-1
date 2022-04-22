@@ -7,12 +7,12 @@ class Event < SiteItem
   has_many :additional_date_values, -> { order(date: :asc) }, through: :additional_dates
 
   scope :upcoming, lambda {
-                     left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date >= ?', Date.today).order('additional_date_values.date asc').distinct
-                   }
+    left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date >= ?', Date.today).order('additional_date_values.date asc').distinct
+  }
 
   scope :past, lambda {
-                 left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date < ?', Date.today).order('additional_date_values.date desc').distinct
-               }
+    left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date < ?', Date.today).order('additional_date_values.date desc').distinct
+  }
 
   def next_date
     additional_date_values.joins(:additional_date).where('date >= ?', Date.today).where(
@@ -66,7 +66,7 @@ class Event < SiteItem
       node.try(:remove)
     end
     if doc.at("li:contains('Website')")
-      set_website(doc.at("li:contains('Website')"))
+      do_website(doc.at("li:contains('Website')"))
       #      self.website = "http:#{website}" if website
     end
     date_nodes = doc.css("li:contains('Date')") + doc.css("li:contains(' date')") + doc.css("li:contains('Deadline')") + doc.css("li:contains('deadline')")
@@ -74,7 +74,7 @@ class Event < SiteItem
     doc.at("strong:contains('Description')").try(:remove)
   end
 
-  def set_website(node)
+  def do_website(node)
     url = node.text
     match = url.match('\[(.*?)\](.*)')
     if match
@@ -98,25 +98,30 @@ class Event < SiteItem
                 date_text.split('-')
               end
       if dates.size > 1
-        end_year = dates.last.match(/\d{4}/)
-        dates = ["#{dates.first} #{end_year}", dates.last] unless dates.first.match(/\d{4}/)
-        months = Date::MONTHNAMES.slice(1..-1).map(&:to_s).map { |m| m[0, 3] }
-        our_month = nil
-        end_month = false
-        months.each do |month|
-          our_month = month if dates.first.match(month)
-          end_month = true if dates.last.match(month)
-        end
-        dates = [dates.first, "#{our_month} #{dates.last}"] if our_month && !end_month
-        AdditionalDate.make_date("Start #{label_text}", dates.first, self)
-        AdditionalDate.make_date("End #{label_text}", dates.last, self)
-      # elsif label_text.strip == 'Date'
-      #   AdditionalDate.make_date('Date', dates.first, self)
+        do_multiple_dates(dates, label_text)
       else
         AdditionalDate.make_date(label_text, date_text, self)
       end
       date_node.try(:remove)
     end
     fix_end_year(start_date, end_date)
+  end
+
+  def do_multiple_dates(dates, label_text)
+    end_year = dates.last.match(/\d{4}/)
+    dates = ["#{dates.first} #{end_year}", dates.last] unless dates.first.match(/\d{4}/)
+    dates = month_dates(dates)
+    AdditionalDate.make_date("Start #{label_text}", dates.first, self)
+    AdditionalDate.make_date("End #{label_text}", dates.last, self)
+  end
+
+  def month_dates(dates)
+    our_month, end_month = nil
+    Date::MONTHNAMES.slice(1..-1).map(&:to_s).map { |m| m[0, 3] }.each do |month|
+      our_month = month if dates.first.match(month)
+      end_month = true if dates.last.match(month)
+    end
+    dates = [dates.first, "#{our_month} #{dates.last}"] if our_month && !end_month
+    dates
   end
 end

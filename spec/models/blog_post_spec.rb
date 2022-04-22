@@ -31,7 +31,7 @@ Publish: true
     res.parse_and_update(content)
     res.reload
     expect(res.content).to match 'bar'
-    expect(res.topics.map(&:name)).to include("Quoted, Topic")
+    expect(res.topics.map(&:name)).to include('Quoted, Topic')
     expect(res.categories).not_to be_empty
     expect(res.authors.map(&:last_name).to_s).to match 'Doe'
     expect(res.hero_image_caption).not_to be_nil
