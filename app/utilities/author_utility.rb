@@ -66,20 +66,20 @@ class AuthorUtility
     authors = []
     node.to_html.gsub('Contributed by', '').gsub(' and ', ',').strip.split(',').each do |text|
       node_data = Nokogiri::HTML.parse(text)
-      if node_data.css('a').empty?
-        auth = author_from_text(node_data.text, rebuild)
-      else
-        auth = author_from_website(node_data.css('a').first, rebuild)
-      end
+      auth = if node_data.css('a').empty?
+               author_from_text(node_data.text, rebuild)
+             else
+               author_from_website(node_data.css('a').first, rebuild)
+             end
       puts auth.inspect unless auth.is_a?(Author) || auth.nil?
-      puts "#{auth.inspect} #{text}" if (!(auth.is_a?(Author)) && !(text.nil?) && !(text.blank?)) 
+      puts "#{auth.inspect} #{text}" if !auth.is_a?(Author) && !text.nil? && !text.blank?
       authors << auth
     end
     authors.delete_if(&:nil?)
   end
 
   def self.author_from_text(text, rebuild)
-    text = text.gsub("\:", "")
+    text = text.gsub("\:", '')
     return if text.blank? || text.match?("\#")
 
     names = names_from(text)

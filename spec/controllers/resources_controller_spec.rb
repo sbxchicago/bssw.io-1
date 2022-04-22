@@ -40,7 +40,6 @@ RSpec.describe ResourcesController, type: :controller do
       expect(response).to render_template 'index'
     end
 
-    
     it 'sets the preview val' do
       @request.host = 'preview.bssw.io'
       name = Rails.application.credentials[:preview][:name]

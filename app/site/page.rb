@@ -90,7 +90,7 @@ class Page < MarkdownImport
       Staff.make_from_data(node, val, rebuild_id)
       old_node = node
       node = old_node.next_element
-#      old_node.remove
+      #      old_node.remove
     end
   end
 

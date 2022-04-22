@@ -70,6 +70,7 @@ class ApplicationController < ActionController::Base
   def check_auth
     session[:preview] = false
     return unless request.base_url.to_s.match?('preview')
+
     session[:preview] = true
     http_authenticate
   end

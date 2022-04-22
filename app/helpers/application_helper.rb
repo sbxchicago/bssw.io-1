@@ -51,12 +51,12 @@ module ApplicationHelper
   def formatted_additionals(event)
     used_dates = []
     event.special_additional_dates.map do |date|
-      if used_dates.include?(date.additional_date)
-        val = ''
-      else
-        val = "<strong>#{date.additional_date.label.titleize}</strong> " +
-              date.additional_date.additional_date_values.map { |adv| date_range(adv.date, nil) }.join('; ')
-      end
+      val = if used_dates.include?(date.additional_date)
+              ''
+            else
+              "<strong>#{date.additional_date.label.titleize}</strong> " +
+                date.additional_date.additional_date_values.map { |adv| date_range(adv.date, nil) }.join('; ')
+            end
       used_dates << date.additional_date
       val
     end
@@ -90,7 +90,7 @@ module ApplicationHelper
 
   def show_label(date_value)
     date = date_value.additional_date
-    if date.label.match('Start') 
+    if date.label.match('Start')
       date.label.gsub('Start ', '')
     else
       date.label

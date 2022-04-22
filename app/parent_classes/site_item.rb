@@ -81,7 +81,7 @@ class SiteItem < MarkdownImport
       )
     ).order('coalesce(rss_date, published_at) desc').first(15)
   }
-  
+
   scope :standard_scope, lambda { |_all = false|
     distinct.order(Arel.sql('(case when pinned then 1 else 0 end) DESC, name ASC'))
   }

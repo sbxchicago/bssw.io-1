@@ -5,7 +5,6 @@ class AdditionalDateValue < ApplicationRecord
   belongs_to :additional_date
   delegate :event, to: :additional_date
 
-  
   scope :from_events, lambda { |events|
     joins(
       additional_date: 'event'

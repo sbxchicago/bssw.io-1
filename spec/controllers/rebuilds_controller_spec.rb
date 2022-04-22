@@ -25,7 +25,7 @@ RSpec.describe RebuildsController, type: :controller do
       name = Rails.application.credentials[:import][:name]
       pw = Rails.application.credentials[:import][:password]
       @request.env['HTTP_AUTHORIZATION'] =
-        "Basic #{Base64.encode64(name + ':' + pw)}"
+        "Basic #{Base64.encode64("#{name}:#{pw}")}"
       FactoryBot.create(:site_item)
       FactoryBot.create(:author)
       post :import
@@ -46,8 +46,8 @@ RSpec.describe RebuildsController, type: :controller do
       expect(topic.site_items).to include wi
       expect(topic.site_items).to include HowTo.displayed.find_by_name(@how_to_name)
       expect(topic.category).to eq Category.displayed.find_by_name(
-                                     @category_name
-                                   )
+        @category_name
+      )
 
       expect(Fellow.all).not_to be_empty
       expect(Fellow.all.map(&:fellow_links).flatten).not_to be_empty
@@ -91,11 +91,11 @@ RSpec.describe RebuildsController, type: :controller do
 
       expect(SiteItem.displayed.last.topic_list).not_to be_empty
       expect(Event.where(
-               base_path: '2021-10-wosss21.md'
-             ).first.start_at.to_date).to eq Date.parse('October 6 2021').to_date
+        base_path: '2021-10-wosss21.md'
+      ).first.start_at.to_date).to eq Date.parse('October 6 2021').to_date
       expect(Event.where(
-               base_path: '2021-10-wosss21.md'
-             ).first.end_at.to_date).to eq Date.parse('October 8 2021').to_date
+        base_path: '2021-10-wosss21.md'
+      ).first.end_at.to_date).to eq Date.parse('October 8 2021').to_date
       # expect do
       #   post :import
       # end.not_to change(Rebuild, :count)
@@ -107,7 +107,7 @@ RSpec.describe RebuildsController, type: :controller do
       name = Rails.application.credentials[:import][:name]
       pw = Rails.application.credentials[:import][:password]
       credentials = ActionController::HttpAuthentication::Basic.encode_credentials name, pw
-      request.env['HTTP_AUTHORIZATION'] =  credentials
+      request.env['HTTP_AUTHORIZATION'] = credentials
       build = Rebuild.create(
         started_at: 1.minute.ago, ended_at: nil
       )
@@ -131,14 +131,12 @@ RSpec.describe RebuildsController, type: :controller do
 
     it 'does not get index w/o pw' do
       credentials = ActionController::HttpAuthentication::Basic.encode_credentials 'bssw',
-'wrong'
+                                                                                   'wrong'
       request.env['HTTP_AUTHORIZATION'] =
         credentials
       get :index
       expect(response).not_to have_http_status(:success)
     end
-
-    
   end
 
   describe 'make displayed' do

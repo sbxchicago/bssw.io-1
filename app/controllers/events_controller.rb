@@ -4,7 +4,7 @@
 class EventsController < ApplicationController
   def index
     page = params[:page]
-    filter_events    
+    filter_events
     @events = if params[:view] == 'all'
                 @events.paginate(page: 1, per_page: @events.size)
               else
