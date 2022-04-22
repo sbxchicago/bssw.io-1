@@ -65,6 +65,7 @@ class Page < MarkdownImport
 
   def update_staff(doc)
     start_node = doc.css('h2')[0]
+
     return unless start_node
 
     node = start_node.next_element
@@ -74,7 +75,7 @@ class Page < MarkdownImport
       update_staffers(doc, node) if doc.css('h3').index(node)
       old_node = node
       node = old_node.next_element
-      old_node.remove
+      old_node.remove if doc.css('h3').index(old_node) || old_node.text.blank?
     end
   end
 
@@ -89,7 +90,7 @@ class Page < MarkdownImport
       Staff.make_from_data(node, val, rebuild_id)
       old_node = node
       node = old_node.next_element
-      old_node.remove
+      #      old_node.remove
     end
   end
 

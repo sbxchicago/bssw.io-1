@@ -4,23 +4,30 @@
 class Event < SiteItem
   include Dateable
   has_many :additional_dates
-  has_many :additional_date_values, -> { order(date: :asc) }, through: :additional_dates  
+  has_many :additional_date_values, -> { order(date: :asc) }, through: :additional_dates
 
-  scope :upcoming, -> { left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date >= ?', Date.today).order('additional_date_values.date asc').distinct  }
+  scope :upcoming, lambda {
+                     left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date >= ?', Date.today).order('additional_date_values.date asc').distinct
+                   }
 
-  scope :past, -> { left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date < ?', Date.today).order('additional_date_values.date desc').distinct  }
+  scope :past, lambda {
+                 left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date < ?', Date.today).order('additional_date_values.date desc').distinct
+               }
 
-  
   def next_date
-    additional_date_values.joins(:additional_date).where('date >= ?', Date.today).where("additional_dates.label not LIKE ?", "%End %").first
+    additional_date_values.joins(:additional_date).where('date >= ?', Date.today).where(
+      'additional_dates.label not LIKE ?', '%End %'
+    ).first
   end
 
   def prev_date
-    additional_date_values.joins(:additional_date).where('date < ?', Date.today).where("additional_dates.label not LIKE ?", "%End %").last
+    additional_date_values.joins(:additional_date).where('date < ?', Date.today).where(
+      'additional_dates.label not LIKE ?', '%End %'
+    ).last
   end
-  
+
   def start_date
-    additional_dates.where("label LIKE ?", '%Start %').first
+    additional_dates.where('label LIKE ?', '%Start %').first
   end
 
   def start_at
@@ -28,7 +35,7 @@ class Event < SiteItem
   end
 
   def end_date
-    additional_dates.where("label LIKE ?", '%End %').first
+    additional_dates.where('label LIKE ?', '%End %').first
   end
 
   def end_at
@@ -36,7 +43,6 @@ class Event < SiteItem
   end
 
   self.table_name = 'site_items'
-
 
   def update_from_content(doc, rebuild)
     update_details(doc)
@@ -46,7 +52,9 @@ class Event < SiteItem
   end
 
   def special_additional_dates
-    additional_date_values.where('additional_date_id in (?)', additional_dates.where('label not LIKE ?', '%Start %').where('label not LIKE ?', '%End %').map(&:id))
+    additional_date_values.where('additional_date_id in (?)',
+                                 additional_dates.where('label not LIKE ?', '%Start %').where('label not LIKE ?',
+                                                                                              '%End %').map(&:id))
   end
 
   private
@@ -59,7 +67,7 @@ class Event < SiteItem
     end
     if doc.at("li:contains('Website')")
       set_website(doc.at("li:contains('Website')"))
-#      self.website = "http:#{website}" if website
+      #      self.website = "http:#{website}" if website
     end
     date_nodes = doc.css("li:contains('Date')") + doc.css("li:contains(' date')") + doc.css("li:contains('Deadline')") + doc.css("li:contains('deadline')")
     update_dates(date_nodes) if date_nodes
@@ -70,15 +78,15 @@ class Event < SiteItem
     url = node.text
     match = url.match('\[(.*?)\](.*)')
     if match
-       self.update_attribute(:website_label, match[1])
-       self.update_attribute(:website, match[2])
-       node.remove
-     else
-      self.website=(url.split(':').last)
+      update_attribute(:website_label, match[1])
+      update_attribute(:website, match[2])
+      node.remove
+    else
+      self.website = (url.split(':').last)
     end
     node.try(:remove)
   end
-  
+
   def update_dates(date_nodes)
     date_nodes.each do |date_node|
       text = date_node.text.split(':')

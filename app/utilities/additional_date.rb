@@ -5,11 +5,12 @@ class AdditionalDate < ApplicationRecord
   belongs_to :event
   has_many :additional_date_values
 
-
   include Dateable
 
   def self.make_date(label_text, dates, event)
-    event.additional_dates.where(label: label_text).each(&:delete) if (label_text.match('Start ') || label_text.match('End '))
+    if label_text.match('Start ') || label_text.match('End ')
+      event.additional_dates.where(label: label_text).each(&:delete)
+    end
     date = create(
       label: label_text,
       event: event

@@ -155,16 +155,18 @@
 		 animateOut: 'fadeOut',
 		 animateIn: 'flipInX',
 		 items:1,
-		 smartSpeed:12,
-		 loop:true
+		 loop:true,
+autoplay:true,
+autoplayTimeout:10000,
+autoplayHoverPause:true
 	     });
 	 });
 	</script>
 
 
 	<script>
-	 // When the user scrolls the page, execute myFunction 
-	 window.onscroll = function() {myFunction()};
+	 $(document).ready(function(){
+
 
 	 // Get the navbar
 	 var navbar = document.getElementById("sidebar");
@@ -172,6 +174,10 @@
 	 if (navbar) {
 	     //Get the offset position of the navbar
 	     var sticky = navbar.offsetTop;
+	 // When the user scrolls the page, execute myFunction 
+
+	 window.onscroll = function() {myFunction()};
+
 	 }
 
 	 // Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
@@ -185,7 +191,8 @@
 	     if (window.pageYOffset <= sticky) {
 		 navbar.classList.remove("sticky")
 	     }
-	 }
+				       }
+				       });
 	</script>
 
 

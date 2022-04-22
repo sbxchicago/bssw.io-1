@@ -106,9 +106,8 @@ RSpec.describe RebuildsController, type: :controller do
     it 'can check rebuilds' do
       name = Rails.application.credentials[:import][:name]
       pw = Rails.application.credentials[:import][:password]
-      @request.env['HTTP_AUTHORIZATION'] =
-        "Basic #{Base64.encode64("#{name}:#{pw}")}"
-
+      credentials = ActionController::HttpAuthentication::Basic.encode_credentials name, pw
+      request.env['HTTP_AUTHORIZATION'] = credentials
       build = Rebuild.create(
         started_at: 1.minute.ago, ended_at: nil
       )
@@ -122,12 +121,21 @@ RSpec.describe RebuildsController, type: :controller do
 
   describe 'index' do
     it 'gets index' do
+      name = Rails.application.credentials[:import][:name]
+      pw = Rails.application.credentials[:import][:password]
+      credentials = ActionController::HttpAuthentication::Basic.encode_credentials name, pw
+      request.env['HTTP_AUTHORIZATION'] = credentials
+      get :index
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'does not get index w/o pw' do
       credentials = ActionController::HttpAuthentication::Basic.encode_credentials 'bssw',
-                                                                                   'rebuildlog'
+                                                                                   'wrong'
       request.env['HTTP_AUTHORIZATION'] =
         credentials
       get :index
-      expect(response).to have_http_status(:success)
+      expect(response).not_to have_http_status(:success)
     end
   end
 

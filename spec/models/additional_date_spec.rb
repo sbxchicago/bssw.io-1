@@ -30,9 +30,9 @@ RSpec.describe AdditionalDate, type: :model do
                                                 additional_date_values:
                                                   [FactoryBot.create(:additional_date_value,
                                                                      date: 3.weeks.from_now)], label: 'Date')
-    puts 'past'
+
     AdditionalDateValue.get_from_events(Event.all, true)
-    puts 'future'
+
     AdditionalDateValue.get_from_events(Event.all, false)
   end
 end
