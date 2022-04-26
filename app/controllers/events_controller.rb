@@ -7,7 +7,7 @@ class EventsController < ApplicationController
     @events = if params[:view] == 'all'
                 @events.paginate(page: 1, per_page: @events.size)
               else
-                @events.paginate(page: page, per_page: 25)
+                @events.paginate(page: params[:page] || 1, per_page: 25)
               end
     puts @events.size
   end
