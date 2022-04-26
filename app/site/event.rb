@@ -7,11 +7,17 @@ class Event < SiteItem
   has_many :additional_date_values, -> { order(date: :asc) }, through: :additional_dates
 
   scope :upcoming, lambda {
-    left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date >= ?', Date.today).order('additional_date_values.date asc').distinct
+    left_outer_joins(:additional_dates).includes(:additional_date_values).where(
+      'additional_date_values.date >= ?',
+      Date.today
+    ).order('additional_date_values.date asc').distinct
   }
 
   scope :past, lambda {
-    left_outer_joins(:additional_dates).includes(:additional_date_values).where('additional_date_values.date < ?', Date.today).order('additional_date_values.date desc').distinct
+    left_outer_joins(:additional_dates).includes(:additional_date_values).where(
+      'additional_date_values.date < ?',
+      Date.today
+    ).order('additional_date_values.date desc').distinct
   }
 
   def next_date
@@ -69,8 +75,7 @@ class Event < SiteItem
       do_website(doc.at("li:contains('Website')"))
       #      self.website = "http:#{website}" if website
     end
-    date_nodes = doc.css("li:contains('Date')") + doc.css("li:contains(' date')") + doc.css("li:contains('Deadline')") + doc.css("li:contains('deadline')")
-    update_dates(date_nodes) if date_nodes
+    update_dates(doc)
     doc.at("strong:contains('Description')").try(:remove)
   end
 
@@ -87,24 +92,33 @@ class Event < SiteItem
     node.try(:remove)
   end
 
-  def update_dates(date_nodes)
-    date_nodes.each do |date_node|
+  def update_dates(doc)
+    get_date_nodes(doc).each do |date_node|
       text = date_node.text.split(':')
-      date_text = text.last
-      label_text = text.first
-      dates = if date_text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
-                date_text.split('- ')
-              else
-                date_text.split('-')
-              end
-      if dates.size > 1
-        do_multiple_dates(dates, label_text)
-      else
-        AdditionalDate.make_date(label_text, date_text, self)
-      end
+      process_dates(text.last, text.first)
       date_node.try(:remove)
     end
     fix_end_year(start_date, end_date)
+  end
+
+  def get_date_nodes(doc)
+    doc.css("li:contains('Date')") +
+      doc.css("li:contains(' date')") +
+      doc.css("li:contains('Deadline')") +
+      doc.css("li:contains('deadline')")
+  end
+
+  def process_dates(date_text, label_text)
+    dates = if date_text.match(/\d{1,2}-\d{1,2}-\d{2,4}/)
+              date_text.split('- ')
+            else
+              date_text.split('-')
+            end
+    if dates.size > 1
+      do_multiple_dates(dates, label_text)
+    else
+      AdditionalDate.make_date(label_text, date_text, self)
+    end
   end
 
   def do_multiple_dates(dates, label_text)
@@ -124,4 +138,6 @@ class Event < SiteItem
     dates = [dates.first, "#{our_month} #{dates.last}"] if our_month && !end_month
     dates
   end
+
+  
 end
