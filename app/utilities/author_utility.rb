@@ -65,17 +65,21 @@ class AuthorUtility
   def self.make_from_data(node, rebuild)
     authors = []
     node.to_html.gsub('Contributed by', '').gsub(' and ', ',').strip.split(',').each do |text|
-      node_data = Nokogiri::HTML.parse(text)
-      auth = if node_data.css('a').empty?
-               author_from_text(node_data.text, rebuild)
-             else
-               author_from_website(node_data.css('a').first, rebuild)
-             end
-      puts auth.inspect unless auth.is_a?(Author) || auth.nil?
-      puts "#{auth.inspect} #{text}" if !auth.is_a?(Author) && !text.nil? && !text.blank?
-      authors << auth
+      authors << from_node_text(text, rebuild)
     end
     authors.delete_if(&:nil?)
+  end
+
+  def self.from_node_text(text, rebuild)
+    node_data = Nokogiri::HTML.parse(text)
+    if node_data.css('a').empty?
+      author_from_text(node_data.text,
+                       rebuild)
+    else
+      author_from_website(
+        node_data.css('a').first, rebuild
+      )
+    end
   end
 
   def self.author_from_text(text, rebuild)
@@ -96,9 +100,9 @@ class AuthorUtility
 
     auth = Author.find_by(website: website, rebuild_id: rebuild)
     unless auth
-      last_name = names.last
-      auth = Author.find_or_create_by(rebuild_id: rebuild, last_name: last_name, first_name: names.first)
-      auth.update(website: website, alphabetized_name: last_name)
+      #      last_name = names.last
+      auth = Author.find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
+      auth.update(website: website, alphabetized_name: names.last)
     end
     auth
   end

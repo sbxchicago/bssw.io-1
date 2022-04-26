@@ -25,14 +25,12 @@ class AdditionalDateValue < ApplicationRecord
     values
   end
 
-  def self.process_date_group(dg, past)
-    if past
-      new_dates = dg.last.select { |d| d.date < Date.today }.sort_by(&:date)
-      dates = dg.last.to_a - [new_dates.last]
-    else
-      new_dates = dg.last.select { |d| d.date >= Date.today }.sort_by(&:date)
-      dates = dg.last.to_a - [new_dates.first]
-    end
-    dates
+  def self.process_date_group(group, past)
+    new_date = if past
+                 group.last.select { |d| d.date < Date.today }.max_by(&:date)
+               else
+                 group.last.select { |d| d.date >= Date.today }.min_by(&:date)
+               end
+    group.last.to_a - [new_date]
   end
 end

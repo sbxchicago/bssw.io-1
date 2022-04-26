@@ -3,6 +3,7 @@
 # Filters - like tags
 class Topic < GithubImport
   #  default_scope -> { order(order_num: 'asc') }
+  require 'csv'
 
   scope :displayed, lambda {
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
@@ -20,10 +21,9 @@ class Topic < GithubImport
 
   def self.create_from_node(child, cat_id, rebuild_id)
     name = child.at('strong').content
-
     child.at('strong').remove
     topic = Topic.find_or_create_by(slug: name.parameterize, rebuild_id: rebuild_id)
-    topic.update(overview: child.content, name: name, order_num: topic.get_order(child), category_id: cat_id)
+    topic.update(overview: child.content, name: name.titleize, order_num: topic.get_order(child), category_id: cat_id)
     topic
   end
 
