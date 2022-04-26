@@ -30,14 +30,9 @@ class GithubImporter < ApplicationRecord
   end
 
   def self.save_content(branch, rebuild)
-    puts 'saving content'
     rebuild.update(commit_hash: github.commit(Rails.application.credentials[:github][:repo], branch)['sha'])
-    puts branch
-    puts rebuild.commit_hash
     time = Time.now.to_i.to_s
-    puts time
     file_path = "#{Rails.root}/tmp/repo-#{branch}-#{rebuild.commit_hash}-#{time}.tar.gz"
-    puts file_path
     agent.get(github.archive_link(Rails.application.credentials[:github][:repo],
                                   ref: branch)).save(file_path)
   end
@@ -63,10 +58,14 @@ class GithubImporter < ApplicationRecord
 
       rebuild.process_file(file)
     end
+<<<<<<< HEAD
     puts Topic.where(name: 'Inclusivity').inspect
     puts '.. about to complete rebuild status'
     RebuildStatus.complete(rebuild, file_path)
     puts Topic.where(name: 'Inclusivity').inspect
     puts '.. finished populating'
+=======
+    RebuildStatus.complete(rebuild, file_path)
+>>>>>>> main
   end
 end

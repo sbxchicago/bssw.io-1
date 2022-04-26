@@ -6,13 +6,10 @@ class EventsController < ApplicationController
     filter_events
     @events = if params[:view] == 'all'
                 @events.paginate(page: 1, per_page: @events.size)
-              elsif params[:page]
-                @events.paginate(page: 1, per_page: params[:page].to_i * 25)
               else
-                @events.paginate(page: 1, per_page: 25)
-                
-###                @events.paginate(page: 1, per_page: (params[:page].to_i || 1) * 25)
+                @events.paginate(page: page, per_page: 25)
               end
+    puts @events.size
   end
 
   def show
@@ -26,7 +23,7 @@ class EventsController < ApplicationController
     author = params[:author]
     events = Event.displayed.published
     if author
-      puts 'author'
+      puts "author"
       @events = events.with_author(Author.displayed.find(author))
       puts @events.size
     else

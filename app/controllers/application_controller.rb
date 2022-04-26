@@ -71,14 +71,14 @@ class ApplicationController < ActionController::Base
     session[:preview] = false
     return unless request.base_url.to_s.match?('preview')
 
+    session[:preview] = true
     http_authenticate
   end
 
   def http_authenticate
     authenticate_or_request_with_http_basic do |username, password|
-      (username == Rails.application.credentials[:preview][:name]) &&
-        (password == Rails.application.credentials[:preview][:password])
-      session[:preview] = true
+      username == Rails.application.credentials[:preview][:name] &&
+        password == Rails.application.credentials[:preview][:password]
     end
   end
 
