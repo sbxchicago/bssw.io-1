@@ -13,7 +13,7 @@
 <% else %>
                   <li><a href="/events">Events</a></li>
 <% end %>
-                  <li class="active"><%= @event.name[0..60].gsub(/\s\w+\s*$/, '...') %></li>
+                  <li class="active"><%= @event.name[0..50].gsub(/\s\w+\s*$/, '...') %></li>
                 </ul>
               </div>
             </div>
