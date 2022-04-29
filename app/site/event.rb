@@ -138,6 +138,4 @@ class Event < SiteItem
     dates = [dates.first, "#{our_month} #{dates.last}"] if our_month && !end_month
     dates
   end
-
-  
 end
