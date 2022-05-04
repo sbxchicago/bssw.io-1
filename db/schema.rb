@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_03_190830) do
+ActiveRecord::Schema.define(version: 2022_05_04_174254) do
 
   create_table "acronyms", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name"
@@ -342,7 +342,7 @@ ActiveRecord::Schema.define(version: 2022_03_03_190830) do
     t.text "search_text"
     t.integer "rebuild_id"
     t.string "slug"
-    t.string "topic_list"
+    t.text "topic_list"
     t.text "author_list"
     t.string "custom_slug"
     t.string "base_path"
