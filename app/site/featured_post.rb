@@ -7,7 +7,7 @@ class FeaturedPost < ApplicationRecord
   end
 
   def image?
-    path&.match(Regexp.new(/\.(gif|jpg|jpeg|tiff|png)$/i))
+    path.strip.match(Regexp.new(/\.(gif|jpg|jpeg|tiff|png)$/i))
   end
 
   def image
