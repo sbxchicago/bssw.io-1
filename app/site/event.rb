@@ -15,9 +15,7 @@ class Event < SiteItem
                }
 
   def next_date
-    additional_date_values.joins(:additional_date).where('date >= ?', Date.today).where(
-      'additional_dates.label not LIKE ?', '%End %'
-    ).first
+    additional_date_values.joins(:additional_date).where('date >= ?', Date.today).first
   end
 
   def prev_date
