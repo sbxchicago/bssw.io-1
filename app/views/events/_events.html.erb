@@ -6,7 +6,9 @@
 <% else %>
 <% date = event.next_date %>
 <% end %>
-
+<% if date.nil? %>
+<%= event.inspect %>
+<% else %>
     <div class="event-blog-row">
 	<div class="container">
 	    <a href="events/<%= date.event.slug %>">
@@ -23,6 +25,6 @@
 	    </a>
 	</div>
     </div>
-
+<% end %>
 <% end %>
 
