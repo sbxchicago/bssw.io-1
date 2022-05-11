@@ -94,7 +94,7 @@ module ApplicationHelper
       date.label.gsub('Start ', '')
     elsif date.label.match('End')
       date.label.gsub('End ', '')
-      elsee
+    else
       date.label
     end
   end
