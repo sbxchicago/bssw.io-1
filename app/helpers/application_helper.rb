@@ -79,7 +79,7 @@ module ApplicationHelper
 
   def show_date(date_value)
     date = date_value.additional_date
-    if date.label == 'Start Date'
+    if date.label.match('Start') || date.label.match('End')
       date_range(date.event.start_at,
                  date.event.end_at).to_s.html_safe
     else
