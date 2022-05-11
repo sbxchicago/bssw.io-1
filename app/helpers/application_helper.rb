@@ -92,7 +92,9 @@ module ApplicationHelper
     date = date_value.additional_date
     if date.label.match('Start')
       date.label.gsub('Start ', '')
-    else
+    elsif date.label.match('End')
+      date.label.gsub('End ', '')
+      elsee
       date.label
     end
   end
