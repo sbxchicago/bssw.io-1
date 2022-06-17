@@ -1,16 +1,16 @@
 
-<div class="pagination pagination-top">
-    1-<%=
-      if @events.current_page*@events.per_page > @events.total_entries
-	  @events.total_entries
-      else 
-	  @events.current_page*@events.per_page 
-      end
-      %> of <%= @events.total_entries %> Items  
-    <% if @events.next_page %>
-	| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
-    <% end %>
-</div>
+<!-- <div class="pagination pagination-top"> -->
+<!--     1-<%= -->
+<!--       if @events.current_page*@events.per_page > @events.total_entries -->
+<!-- 	  @events.total_entries -->
+<!--       else  -->
+<!-- 	  @events.current_page*@events.per_page  -->
+<!--       end -->
+<!--       %> of <%= @events.total_entries %> Items   -->
+<!--     <% if @events.next_page %> -->
+<!-- 	| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %> -->
+<!--     <% end %> -->
+<!-- </div> -->
 
 <% if @page %>
     <div class="sub-nav-container events-sub-nav">
