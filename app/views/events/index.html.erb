@@ -5,12 +5,6 @@
     <div class="page-heading">
 	<div class="row">
 	    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-		<!-- <div class="breadcrumbs"> -->
-		<!--     <ul> -->
-		<!-- 	<li><a href="#">Home</a></li> -->
-		<!-- 	<li><a href="/events">Events</a></li> -->
-		<!--     </ul> -->
-		<!-- </div> -->
 		<% if @author %>
 		    <h1>Events by Contributor: <%= @author.first_name %> <%= @author.last_name %></h1>
 		<% end %>
@@ -18,10 +12,42 @@
 	</div>
     </div>
 
+<% if @page %>
+    <div class="sub-nav-container events-sub-nav">
+	<div class="container">
+	    <ul class="nav justify-content-end">
+		<% if @past_events %>
+		    <li class="nav-item">
+			<a class="nav-link" href="/events">View Upcoming Events</a>
+		    </li>
+		<% else %>
+		    <li class="nav-item">
+			<a class="nav-link" href="/events?past=true">View Past Events</a>
+		    </li>
+		<% end %>   
+	    </ul>
+	</div>
+    </div>
+<% end %>
 
 <div id='events'>
     <%= render 'events', :events => @events %>
     <div class="row"></div>
+</div>
+<div class="bottom-event-blog-row">
+    <div class="container more-top">
+	<div class="row">
+	    <div class="col-xl-12">
+
+		<% if @events.next_page %>
+		    <span id="more">
+			<%= render 'show_more',  :events => @events  %>
+		    </span>
+		<% end %>
+		<a class="to-top" href="#top">To Top</a>
+	    </div>
+	</div>
+    </div>
 </div>
 
 
