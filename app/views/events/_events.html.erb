@@ -2,7 +2,7 @@
 <% @events.next_page %>
 
 
-<% events.each do |event| %>
+<% @events.each do |event| %>
 
     <% if params[:past] %>
 	<% date = event.prev_date %>
