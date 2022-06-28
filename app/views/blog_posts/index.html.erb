@@ -16,14 +16,15 @@
 </div>
 
 
-<div class="blog-list-container">
+
   <div class="posts-list" id="posts">
     <%= render 'posts', posts: @posts %>
-    <div class="reference-wrapper">
+ 
+   <div class="reference-wrapper">
 
     </div>
 
-  </div>
+</div>
   
   <div class="posts-list to-top-after-load">
     <div class="container">
@@ -34,7 +35,7 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <% if @posts[0].try(:hero_image_url) %>
 <style type="text/css">

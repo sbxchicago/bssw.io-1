@@ -2,16 +2,17 @@
 {:page => @page }  if @page %>
 
 <div class="container">
+		<% if @author %>
     <div class="page-heading">
 	<div class="row">
 	    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-		<% if @author %>
+
 		    <h1>Events by Contributor: <%= @author.first_name %> <%= @author.last_name %></h1>
-		<% end %>
+
 	    </div>
 	</div>
     </div>
-
+		<% end %>
 <% if @page %>
     <div class="sub-nav-container events-sub-nav">
 	<div class="container">
@@ -51,6 +52,5 @@
 	</div>
     </div>
 </div>
-
 
 
