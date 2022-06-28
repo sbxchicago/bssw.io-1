@@ -19,8 +19,19 @@
 
   <div class="posts-list" id="posts">
     <%= render 'posts', posts: @posts %>
- 
-  
+</div>
+<div class='row bottom-event-blog-row'>
+  <div class='container more-top'>
+    <% if @posts.next_page %>
+		<%= render 'show_more',  :posts => @posts  %>
+		<a class="to-top" href="#top">To Top</a>
+    <% end %>
+
+
+
+  </div>
+
+
   <div class="posts-list to-top-after-load">
     <div class="container">
       <div class="row">
@@ -31,6 +42,7 @@
     </div>
   </div>
 </div>
+
 
 <% if @posts[0].try(:hero_image_url) %>
 <style type="text/css">
