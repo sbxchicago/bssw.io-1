@@ -2,14 +2,14 @@
 <% @events.next_page %>
 
 
-<% @events.each do |event| %>
+<% events.each do |event| %>
 
     <% if params[:past] %>
 	<% date = event.prev_date %>
     <% else %>
 	<% date = event.next_date %>
     <% end %>
-
+<% if date %>
     <div class="event-blog-row">
 	<div class="container">
 	    <a href="events/<%= date.event.slug %>">
@@ -27,5 +27,5 @@
 	</div>
 
     </div>
-
+<% end %>
 <% end %>
