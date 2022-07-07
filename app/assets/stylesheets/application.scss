@@ -3185,6 +3185,9 @@ p.date { font-weight: bold;
   &:nth-last-child(2) .container a {
     border-bottom: 1px solid #dcdcdd;
   }
+  &:nth-last-child(1) .container a {
+    border-bottom: 1px solid #dcdcdd;
+  }
   &:before {
     opacity: 0;
     border-top: 1px solid #dcdcdd;
