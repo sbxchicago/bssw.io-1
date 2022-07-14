@@ -26,7 +26,10 @@ class EventsController < ApplicationController
     else
       filter_events_by_time(events)
     end
+    puts @events.map(&:id)
+    puts 'distinct'
     @events = @events.distinct
+    puts @events.map(&:id)
   end
 
   def filter_events_by_time(events)
