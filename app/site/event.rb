@@ -10,14 +10,14 @@ class Event < SiteItem
     left_outer_joins(:additional_dates).includes(:additional_date_values).where(
       'additional_date_values.date >= ?',
       Date.today
-    ).order('additional_date_values.date asc').uniq
+    ).order('additional_date_values.date asc').group('site_items.id, additional_date_values.id')
   }
 
   scope :past, lambda {
     left_outer_joins(:additional_dates).includes(:additional_date_values).where(
       'additional_date_values.date < ?',
       Date.today
-    ).order('additional_date_values.date desc').uniq
+    ).order('additional_date_values.date desc').group('site_items.id, additional_date_values.id')
   }
 
   def next_date
