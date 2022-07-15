@@ -11,7 +11,7 @@ class EventsController < ApplicationController
                 @events.paginate(page: 1, per_page: 25)
               else
                 older = []
-                events = @events
+                events = @events.distinct
                 for i in (1..(params[:page].to_i - 1))
                   older = older + events.paginate(page: i, per_page: 25).map(&:id)
                 end
