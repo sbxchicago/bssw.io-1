@@ -1,6 +1,6 @@
 
   $("#show_more_link").attr("href", '<%=
-  show_page(request.fullpath, @events.next_page)
+  show_page(request.fullpath, params[:page] ? params[:page].to_i + 1 : 2)
   %>');
 
 <% if !(@events.next_page) %>
