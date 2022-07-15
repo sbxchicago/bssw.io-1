@@ -16,7 +16,7 @@ class EventsController < ApplicationController
                   older = older + events.paginate(page: i, per_page: 25).map(&:id)
                 end
                 @events.where('site_items.id NOT IN (?)', older
-                             ).paginate(page: params[:page], per_page: 25)
+                             ).paginate(page: 1, per_page: 25)
               end
   end
 
