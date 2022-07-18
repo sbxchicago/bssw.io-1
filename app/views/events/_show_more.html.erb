@@ -1,5 +1,5 @@
 
-<% if events.total_pages > events.current_page %>
+<% if @last_page > @current_page %>
 
   <%= link_to 'Load More',
 { :page => params[:page] ? params[:page].to_i + 1 : 2,

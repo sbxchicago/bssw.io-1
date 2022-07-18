@@ -31,7 +31,7 @@ RSpec.describe RebuildsController, type: :controller do
       post :import
 
       puts "errors: #{Rebuild.first.errors_encountered}"
-            puts Rebuild.first.inspect
+      puts Rebuild.first.inspect
       # these are specific checks to our resource library...
       # using variables defined at top of this file
       expect(SiteItem.count).to be > @min_site_item_count
@@ -87,7 +87,7 @@ RSpec.describe RebuildsController, type: :controller do
       # expect(@blankline.main).to match('<span class="caption">Figure 4')
       # expect(@blankline.main).to match('<span class="caption">Figure 3')
       expect(Category.displayed.first.slug).to eq 'better-planning'
-#      expect(Event.displayed.where(name: 'test event').first.additional_dates.size).to be > 1
+      #      expect(Event.displayed.where(name: 'test event').first.additional_dates.size).to be > 1
       expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
 
       expect(SiteItem.displayed.last.topic_list).not_to be_empty
