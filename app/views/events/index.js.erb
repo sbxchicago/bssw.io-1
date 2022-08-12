@@ -1,5 +1,6 @@
-  $("#events").replace("<%= escape_javascript render('events', :events => @events)  %>");
-
+alert("events");
+$("#events").replace("<%= escape_javascript render('events', :events => @events)  %>");
+alert("foo");
   $("#show_more_link").attr("href", '<%=
   show_page(request.fullpath, params[:page] ? params[:page].to_i + 1 : 2)
   %>');
