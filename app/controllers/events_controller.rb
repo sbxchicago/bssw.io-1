@@ -6,7 +6,7 @@ class EventsController < ApplicationController
     filter_events
     @events = @events.distinct
     page_val = 25
-    @last_page = (@events.size / page_val)
+    @last_page = (@events.size / page_val).ceil
     @current_page = (params[:page] || 1).to_i
     puts "big size #{@events.size}"
     if params[:view] == 'all'
