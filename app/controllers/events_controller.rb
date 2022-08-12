@@ -9,35 +9,13 @@ class EventsController < ApplicationController
     @last_page = (@events.size / page_val)
     @current_page = (params[:page] || 1).to_i
     puts "big size #{@events.size}"
-#    if params[:view] == 'all'
+    if params[:view] == 'all'
       @events = @events.paginate(page: 1, per_page: @events.size)
       @last_page = @current_page = 1
-#     else
-#       per_page = (@current_page) * page_val
-#       if @current_page == 1
-#         @events = @events.paginate(page: 1, per_page: page_val)
-#       else
-        
-#         #  older = @events.paginate(page: 1, per_page: per_page - page_val)
-#         #        puts "older #{older.count}"
-#         #        @events = @events.where('site_items.id NOT IN (?)', older.map(&:id)).paginate(page: 1, per_page: per_page)
-# puts "per page #{per_page}"
-#         @events = @events.paginate(page: 1, per_page: per_page)
-#         puts "blank #{@events.where(id: nil).size}"
-#         puts "size #{@events.size}"
-#         puts "size #{@events.map(&:class).size}"
-#         puts "size #{@events.map(&:id).size}"
-#         @events.first(10).each { |e| puts e.name }
-#       end
-# #      if per_page == 0
-#       puts "current #{@current_page}"
-#       puts "last #{@last_page}"
-# #      puts "older #{(older).map(&:id)}"
-# #      end
-#     end
- #   puts "intersection #{(older & @events).size}" if older
-    puts "size #{@events.map(&:id).size}"
-    puts "-------"
+     else
+       per_page = (@current_page) * page_val
+       @events = @events.paginate(page: 1, per_page: per_page)
+    end
   end
 
   def show
