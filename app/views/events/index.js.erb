@@ -1,3 +1,4 @@
+  $("#events").replace("<%= escape_javascript render('events', :events => @events)  %>");
 
   $("#show_more_link").attr("href", '<%=
   show_page(request.fullpath, params[:page] ? params[:page].to_i + 1 : 2)
@@ -9,6 +10,5 @@ $(".more-top").remove();
 <% end %>
 
 
-  $("#events").replace("<%= escape_javascript render('events', :events => @events)  %>");
 
 
