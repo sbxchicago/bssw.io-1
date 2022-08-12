@@ -9,6 +9,6 @@ $(".more-top").remove();
 <% end %>
 
 
-  $("#events").append("<%= escape_javascript render('events', :events => @events)  %>");
+  $("#events").replace("<%= escape_javascript render('events', :events => @events)  %>");
 
 
