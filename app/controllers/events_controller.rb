@@ -5,17 +5,31 @@ class EventsController < ApplicationController
   def index
     filter_events
     @events = @events.distinct
-    @last_page = (@events.size / 25)
-    @current_page = params[:page].to_i
+    page_val = 25
+    @last_page = (@events.size / page_val)
+    @current_page = (params[:page] || 1).to_i
+    puts "big size #{@events.size}"
     if params[:view] == 'all'
       @events = @events.paginate(page: 1, per_page: @events.size)
       @last_page = @current_page = 1
-    # elsif params[:page].to_i == 1 || params[:page].blank?
-    #   @events = @events.paginate(page: 1, per_page: 25)
     else
-      older = @events.paginate(page: 1, per_page: 25 * params[:page].to_i).map(&:id)
-      @events = @events.where('site_items.id NOT IN (?)', older).paginate(page: 1, per_page: 25)
+      per_page = (@current_page - 1) * page_val
+      if per_page == 0
+        @events = @events.paginate(page: 1, per_page: page_val)
+      else
+        older = @events.paginate(page: 1, per_page: per_page)
+        @events = @events.where('site_items.id NOT IN (?)', older.map(&:id)).paginate(page: 1, per_page: page_val)
+      end
+#      if per_page == 0
+      puts "current #{@current_page}"
+      puts "last #{@last_page}"
+      puts "per page #{per_page}"
+#      puts "older #{(older).map(&:id)}"
+#      end
     end
+    puts "intersection #{(older & @events).size}" if older
+    puts "size #{@events.map(&:id).size}"
+    puts "-------"
   end
 
   def show
