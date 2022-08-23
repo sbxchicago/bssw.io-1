@@ -85,10 +85,12 @@ module ApplicationHelper
     end
   end
 
-  def show_label(date_value)
+  def show_label(date_value, sing=false)
     date = date_value.additional_date
     if date.label.match('Start')
       date.label.gsub('Start ', '')
+    elsif sing
+      date.label.gsub(/s$/, '')
     else
       date.label
     end
