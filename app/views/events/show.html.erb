@@ -8,10 +8,10 @@
               <div class="breadcrumbs">
                 <ul>
                   <li><a href="/">Home</a></li>
-<% if Event.displayed.past.include?(@event) %>
-                  <li><a href="/events?past=true">Past Events</a></li>
+<% if Event.displayed.upcoming.include?(@event) %>
+                  <li><a href="/events">Events</a></li>                  
 <% else %>
-                  <li><a href="/events">Events</a></li>
+<li><a href="/events?past=true">Past Events</a></li>
 <% end %>
                   <li class="active"><%= @event.name[0..50].gsub(/\s\w+\s*$/, '...') %></li>
                 </ul>
