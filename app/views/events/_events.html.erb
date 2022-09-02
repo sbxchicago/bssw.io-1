@@ -1,16 +1,15 @@
 
 <% events.each do |event| %>
 
-<% if params[:past] %>
-<% date = event.prev_date %>
-<% else %>
-<% date = event.next_date %>
-<% end %>
-
-
-
+    <% if params[:past] %>
+	<% date = event.prev_date %>
+    <% else %>
+	<% date = event.next_date %>
+    <% end %>
+<% if date %>
     <div class="event-blog-row">
 	<div class="container">
+
 	    <a href="events/<%= date.event.slug %>">
 		<div class="row">
 		    <div class="col-xl-8 order-xl-last col-lg-8 order-lg-last col-md-12 col-sm-12 col-12">
@@ -18,13 +17,16 @@
 		    </div>
 		    <div class="col-xl-4 order-xl-first col-lg-4 order-lg-first col-md-12 col-sm-12 col-12">
 			<h3><%= show_date(date) %></h3>
-			<p class="small-caps date"><%= show_label(date) %></p>
+			<p class="small-caps date"><%= show_label(date, date.event.end_at.nil?) %></p>
 		    </div>
 
 		</div>
 	    </a>
 	</div>
+
     </div>
+<% end %>
+<% end %>
 
 <% end %>
 

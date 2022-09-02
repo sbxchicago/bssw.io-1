@@ -3173,6 +3173,8 @@ p.date { font-weight: bold;
   }
 }
 
+
+
 .event-blog-row {
   position: relative;
   z-index: 2;
@@ -3181,6 +3183,9 @@ p.date { font-weight: bold;
     border-top: 1px solid #dcdcdd;
   }
   &:nth-last-child(2) .container a {
+    border-bottom: 1px solid #dcdcdd;
+  }
+  &:nth-last-child(1) .container a {
     border-bottom: 1px solid #dcdcdd;
   }
   &:before {

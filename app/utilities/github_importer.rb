@@ -58,6 +58,7 @@ class GithubImporter < ApplicationRecord
 
       rebuild.process_file(file)
     end
+
     RebuildStatus.complete(rebuild, file_path)
   end
 end

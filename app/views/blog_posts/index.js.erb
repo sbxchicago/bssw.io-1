@@ -5,8 +5,8 @@ $("#show_more_link").attr("href", '<%= show_page(request.fullpath, @posts.next_p
 %>');
 
 <% if !(@posts.next_page) %>
-    $('.to-top-after-load').show();
-
+   
+    $('#show_more_link').remove();
 <% end %>
 
 

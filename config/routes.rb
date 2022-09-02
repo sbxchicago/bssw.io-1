@@ -58,11 +58,6 @@ Rails.application.routes.draw do
   match '/FELLOWSHIP', to: 'pages#show',
                        defaults: { id: 'bssw-fellowship-program' }, via: :get
 
-  match '/blog_posts/working-remotely-the-exascale-computing-project-ecp-panel-series-tips',
-        to: 'resources#show',
-        defaults: { id: 'tips-for-producing-online-panel-discussions' },
-        via: :get
-
   match '/rebuild/search', to: 'rebuilds#search', via: :get
 
   match '/announcements/close', to: 'announcements#close', via: :post

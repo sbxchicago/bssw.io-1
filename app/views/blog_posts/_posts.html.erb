@@ -1,16 +1,5 @@
 <% posts.each do |post| %>
 
 <%= render 'post', :post => post %>
-
 <% end %>
-<div class='row bottom-event-row'>
-  <div class='container more-top'>
-    <% if @posts.next_page %>
-		<%= render 'show_more',  :posts => @posts  %>
-		<a class="to-top" href="#top">To Top</a>
-    <% end %>
 
-
-
-  </div>
-</div>

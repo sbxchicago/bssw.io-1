@@ -3,13 +3,20 @@
 # show past and upcoming events
 class EventsController < ApplicationController
   def index
-    page = params[:page]
     filter_events
-    @events = if params[:view] == 'all'
-                @events.paginate(page: 1, per_page: @events.size)
-              else
-                @events.paginate(page: page, per_page: 25)
-              end
+    @events = @events.distinct
+    page_val = 25
+    @total = @events.size
+    @last_page = (@events.size.to_f / page_val).ceil
+    @current_page = (params[:page] || 1).to_i
+    puts "big size #{@events.size}"
+    if params[:view] == 'all'
+      @events = @events.paginate(page: 1, per_page: @events.size)
+      @last_page = @current_page = 1
+     else
+       per_page = (@current_page) * page_val
+       @events = @events.paginate(page: 1, per_page: per_page)
+    end
   end
 
   def show
@@ -27,7 +34,6 @@ class EventsController < ApplicationController
     else
       filter_events_by_time(events)
     end
-    @events = @events.distinct
   end
 
   def filter_events_by_time(events)

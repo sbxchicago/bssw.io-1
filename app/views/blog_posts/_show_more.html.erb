@@ -2,7 +2,7 @@
 <% if @posts.total_pages > @posts.current_page %>
 
   <%= link_to 'Load More',
-{ :page => @posts.current_page + 1,
+{ :page => @posts.current_page.to_i + 1,
 :controller => controller.controller_name,
   :action => controller.action_name},
   

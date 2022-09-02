@@ -51,12 +51,9 @@ module ApplicationHelper
   def formatted_additionals(event)
     used_dates = []
     event.special_additional_dates.map do |date|
-      val = if used_dates.include?(date.additional_date)
-              ''
-            else
-              "<strong>#{date.additional_date.label.titleize}</strong> " +
-                date.additional_date.additional_date_values.map { |adv| date_range(adv.date, nil) }.join('; ')
-            end
+      val = "<strong>#{date.additional_date.label.titleize}</strong> " +
+            date.additional_date.additional_date_values.map { |adv| date_range(adv.date, nil) }.join('; ')
+      val = '' if used_dates.include?(date.additional_date)
       used_dates << date.additional_date
       val
     end
@@ -79,7 +76,7 @@ module ApplicationHelper
 
   def show_date(date_value)
     date = date_value.additional_date
-    if date.label.match('Start') || date.label.match('End')
+    if date.label =~ /Start/
       date_range(date.event.start_at,
                  date.event.end_at).to_s.html_safe
     else
@@ -88,15 +85,16 @@ module ApplicationHelper
     end
   end
 
-  def show_label(date_value)
+  def show_label(date_value, sing=false)
     date = date_value.additional_date
+    label = date.label
     if date.label.match('Start')
-      date.label.gsub('Start ', '')
-    elsif date.label.match('End')
-      date.label.gsub('End ', '')
-    else
-      date.label
+      label = label.gsub('Start ', '')
     end
+    if sing
+      label = label.gsub(/s$/, '')
+    end
+    label
   end
 
   def date_range(start_at, end_at)
