@@ -35,7 +35,7 @@ class MarkdownImport < GithubImport
         save if new_record?
         try(:add_topics, names)
       elsif respond_to?(method, true)
-        names = CSV.parse(names).first
+        names = CSV.parse(names, liberal_parsing: true).first
         send(method, names.join)
       end
     end
