@@ -9,7 +9,6 @@ class EventsController < ApplicationController
     @total = @events.size
     @last_page = (@events.size.to_f / page_val).ceil
     @current_page = (params[:page] || 1).to_i
-    puts "big size #{@events.size}"
     if params[:view] == 'all'
       @events = @events.paginate(page: 1, per_page: @events.size)
       @last_page = @current_page = 1
@@ -39,10 +38,14 @@ class EventsController < ApplicationController
   def filter_events_by_time(events)
     if params[:past]
       @page = Page.find_by_name('Past Events')
-      @events = @past_events = events.past
+      @events = @past_events = Rails.cache.fetch(:past_events) do
+        events.past
+      end
     else
       @page = Page.find_by_name('Upcoming Events')
-      @events = @upcoming_events = events.upcoming
+      @events = @upcoming_events = Rails.cache.fetch(:upcoming_events) do
+        events.upcoming
+      end
     end
   end
 end
