@@ -14,6 +14,7 @@ class Topic < GithubImport
   validates_presence_of :name
   validates_uniqueness_of :name, case_sensitive: false, scope: :rebuild_id
   belongs_to :category, optional: true
+  before_destroy { site_items.clear }
   # after_save :update_resource_categories
 
   extend FriendlyId

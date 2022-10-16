@@ -59,7 +59,7 @@ class Rebuild < ApplicationRecord
       everything += klass.where(rebuild_id: nil)
     end
 
-    everything.each(&:delete)
+    everything.each(&:destroy)
   end
 
   def self.file_structure # rubocop:disable Metrics/MethodLength

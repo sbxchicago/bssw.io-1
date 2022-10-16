@@ -10,6 +10,7 @@ class Author < MarkdownImport
 
   has_many :contributions, autosave: false
   has_many :site_items, through: :contributions
+  before_destroy { contributions.clear }
 
   extend FriendlyId
   friendly_id :last_name, use: %i[finders slugged scoped], scope: :rebuild_id
