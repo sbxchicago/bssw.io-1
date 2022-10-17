@@ -127,3 +127,4 @@ gem 'rouge-rails'
 gem 'warning'
 
 gem 'ed25519'
+gem 'bcrypt_pbkdf'
