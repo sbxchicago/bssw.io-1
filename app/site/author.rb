@@ -8,7 +8,7 @@ class Author < MarkdownImport
 
   include ActionView::Helpers::TextHelper
 
-  has_many :contributions, autosave: false
+  has_many :contributions, autosave: false, join_table: 'contributions'
   has_many :site_items, through: :contributions
   before_destroy { contributions.clear }
 

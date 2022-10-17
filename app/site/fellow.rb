@@ -8,7 +8,7 @@ class Fellow < MarkdownImport
 
   self.table_name = 'fellows'
 
-  has_many :fellow_links
+  has_many :fellow_links, dependent: :destroy
 
   after_create :set_hm
 

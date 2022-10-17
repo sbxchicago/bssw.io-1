@@ -38,14 +38,15 @@ class EventsController < ApplicationController
   def filter_events_by_time(events)
     if params[:past]
       @page = Page.find_by_name('Past Events')
-      @events = @past_events = Rails.cache.fetch(:past_events) do
-        events.past
-      end
+      @events = @past_events = events.past #  Rails.cache.fetch(:past_events) do
+      #   events.past
+      # end
     else
       @page = Page.find_by_name('Upcoming Events')
-      @events = @upcoming_events = Rails.cache.fetch(:upcoming_events) do
-        events.upcoming
-      end
+      @events = @upcoming_events = events.upcoming
+      # Rails.cache.fetch(:upcoming_events) do
+      #   events.upcoming
+      # end
     end
   end
 end

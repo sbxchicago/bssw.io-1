@@ -8,12 +8,12 @@ class SiteItem < MarkdownImport
 
   self.table_name = 'site_items'
 
-  has_and_belongs_to_many :topics, -> { distinct }
+  has_and_belongs_to_many :topics, -> { distinct }, join_table: 'site_items_topics', dependent: :destroy
   before_destroy { topics.clear }
   before_destroy { contributions.clear }
-  has_many :contributions #, dependent: :destroy
+  has_many :contributions,  join_table: 'contributions', dependent: :destroy
   has_many :authors, through: :contributions
-  has_and_belongs_to_many :communities, through: :features, class_name: 'Resource'
+  # has_and_belongs_to_many :communities, through: :features, class_name: 'Resource'
 
   has_many :features
 

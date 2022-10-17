@@ -3,7 +3,7 @@
 # Events e.g. conferences
 class Event < SiteItem
   include Dateable
-  has_many :additional_dates
+  has_many :additional_dates, dependent: :destroy
   has_many :additional_date_values, -> { order(date: :asc) }, through: :additional_dates
 
   scope :upcoming, lambda {
