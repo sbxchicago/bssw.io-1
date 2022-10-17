@@ -52,7 +52,7 @@ class Rebuild < ApplicationRecord
   def clear_old
     rebuild_ids = Rebuild.first(5).to_a.map(&:id).delete_if(&:nil?)
     rebuild_ids += [id]
-    classes = [Community, Category, Topic, Announcement, Author, Quote, SiteItem, FeaturedPost, Fellow]
+    classes = [Community, Category, Topic, Announcement, Author, Quote, SiteItem, FeaturedPost, Fellow, Page]
     everything = Rebuild.where(['id NOT IN (?)', rebuild_ids])
     classes.each do |klass|
       everything += klass.where(['rebuild_id NOT IN (?)', rebuild_ids])
