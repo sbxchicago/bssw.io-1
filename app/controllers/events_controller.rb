@@ -12,9 +12,9 @@ class EventsController < ApplicationController
     if params[:view] == 'all'
       @events = @events.paginate(page: 1, per_page: @events.size)
       @last_page = @current_page = 1
-     else
-       per_page = (@current_page) * page_val
-       @events = @events.paginate(page: 1, per_page: per_page)
+    else
+      per_page = (@current_page) * page_val
+      @events = @events.paginate(page: 1, per_page: per_page)
     end
   end
 
@@ -36,17 +36,19 @@ class EventsController < ApplicationController
   end
 
   def filter_events_by_time(events)
+    last_modified = Event.order(:updated_at).last
+    last_modified_str = last_modified.updated_at.utc.to_s(:number)
+    cache_key = "all_events/#{last_modified_str}"
     if params[:past]
       @page = Page.find_by_name('Past Events')
-      @events = @past_events = events.past #  Rails.cache.fetch(:past_events) do
-      #   events.past
-      # end
+      @events = @past_events = Rails.cache.fetch(cache_key) do
+        events.past
+      end
     else
       @page = Page.find_by_name('Upcoming Events')
-      @events = @upcoming_events = events.upcoming
-      # Rails.cache.fetch(:upcoming_events) do
-      #   events.upcoming
-      # end
+      @events = @upcoming_events = Rails.cache.fetch(cache_key) do
+        events.upcoming
+      end
     end
   end
 end
