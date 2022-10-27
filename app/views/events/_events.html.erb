@@ -1,6 +1,6 @@
 
 <% events.each do |event| %>
-
+  <% cache event do %>
     <% if params[:past] %>
 	<% date = event.prev_date %>
     <% else %>
@@ -26,7 +26,8 @@
 
     </div>
 <% end %>
-<% end %>
+  <% end %>
+  <% end %>
 
 
 
