@@ -1,12 +1,12 @@
-<% cache events do %>
+
 <% events.each do |event| %>
-  <% cache event do %>
+
     <% if params[:past] %>
 	<% date = event.prev_date %>
     <% else %>
 	<% date = event.next_date %>
     <% end %>
-<% if date %>
+    <% if date %>
     <div class="event-blog-row">
 	<div class="container">
 
@@ -27,5 +27,4 @@
     </div>
 <% end %>
   <% end %>
-<% end %>
-<% end %>
+
