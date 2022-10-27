@@ -38,7 +38,7 @@ class EventsController < ApplicationController
   def filter_events_by_time(events)
     last_modified = Event.order(:updated_at).last
     last_modified_str = last_modified.updated_at.utc.to_s(:number)
-    cache_key = "all_events/#{last_modified_str}"
+    cache_key = "#{params[:past]}/all_events/#{last_modified_str}"
     if params[:past]
       @page = Page.find_by_name('Past Events')
       @events = @past_events = Rails.cache.fetch(cache_key) do
