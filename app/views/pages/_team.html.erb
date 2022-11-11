@@ -1,4 +1,4 @@
-<%= @page.main.split('<h2>Partners</h2>').first.html_safe %>
+<%= @page.main.split('<h2 id="partners">Partners</h2>').first.html_safe %>
 		    </div>
 		    </div>
 		    </div>
@@ -20,8 +20,8 @@
 			    </div>
 			</div>
 
-			<h2>Partners</h2>
-			<%= @page.main.split('<h2>Partners</h2>').last.html_safe %>
+			<h2 id='partners'>Partners</h2>
+			<%= @page.main.split('<h2 id="partners">Partners</h2>').last.html_safe %>
 		    </div>
 		    </div>
 
