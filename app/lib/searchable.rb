@@ -53,7 +53,7 @@ module Searchable
   end
 
   def self.word_str(str_var)
-    str_var = Regexp.escape(ApplicationRecord.sanitize_sql_like(str_var))
+#    str_var = Regexp.escape(ApplicationRecord.sanitize_sql_like(str_var))
     "search_text REGEXP \"([\\W]*|^)#{str_var}\" or search_text REGEXP \"#{str_var}([\\W]*|$)\""
   end
 end

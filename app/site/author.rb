@@ -93,9 +93,9 @@ class Author < MarkdownImport
   def update_info(hash)
     update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
     update(affiliation: hash.company) if affiliation.blank?
-    names = AuthorUtility.names_from(hash.name)
-    last_name = names.last
-    update(first_name: names.first, last_name: last_name, alphabetized_name: last_name) unless names == [nil, nil]
+    # names = AuthorUtility.names_from(hash.name)
+    # last_name = names.last
+    # update(first_name: names.first, last_name: last_name, alphabetized_name: last_name) unless names == [nil, nil]
   end
 
   def do_overrides(alpha_name, display_name)
