@@ -136,6 +136,7 @@ RSpec.describe ResourcesController, type: :controller do
 
     it 'finds quoted terms in search' do
       resource = FactoryBot.create(:resource, content: 'Four score and seven')
+      resource.set_search_text
       SiteItem.all.each(&:set_search_text)
       get :search, params: { search_string: '"four score"' }
       expect(assigns(:resources)).to include(resource)
