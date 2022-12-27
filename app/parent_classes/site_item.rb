@@ -128,7 +128,7 @@ class SiteItem < MarkdownImport
 
   def set_search_text
     text = ActionController::Base.helpers.strip_tags(
-      " #{content} #{try(:author_list)} #{name} #{try(:description)} #{try(:location)} #{try(:organizers)} ".downcase.gsub(/\s+/, " ")
+      " #{content.to_s.gsub('"', '')} #{try(:author_list)} #{name} #{try(:description)} #{try(:location)} #{try(:organizers)} ".downcase.gsub(/\s+/, " ")
     )
 #    puts text
     update(search_text: text)
