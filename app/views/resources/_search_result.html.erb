@@ -35,32 +35,18 @@
 
 
 				    <% if result.respond_to?('content') || result.respond_to?('long_bio')%>
-					<% strings = [] 
-					@search.each do |str| 
 
-					str.each do |s|
-					strings.delete_if{|str| str && str.match(s)}
-					    new_strings = []
-					    if result.respond_to?('content')
-						new_strings << (excerpt ActionController::Base.helpers.strip_tags(result.content), s)
+<%					    if result.respond_to?('content')
+str = ActionController::Base.helpers.strip_tags(result.content)
 					    else
-						new_strings << (excerpt ActionController::Base.helpers.strip_tags(result.long_bio), s)
+						str = ActionController::Base.helpers.strip_tags(result.long_bio)
 
 					    end
 					%>
-					<% new_strings.delete_if{|str| str && !(str.match(/\b#{s}|#{s}\b/i)) } %>
-
-					<%
-
-					strings = strings + new_strings
-					end 
-					end
-					%>
 
 
-					<% strings.flatten.uniq.each do |str| %>
-					    <%= highlight(str, @search.flatten) %>
-					<% end %>
+					    <%= highlight((excerpt(str, @search.flatten.first)), @search.flatten) %>
+
 				    <% end %>
 				</p>
 				<p class="topics small-caps">
