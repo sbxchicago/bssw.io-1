@@ -27,6 +27,10 @@ class RebuildStatus < ApplicationRecord
   end
 
   def self.start(rebuild, branch)
+    begin
+      Staff.all.each(&:delete)
+    rescue
+    end
     rebuild.update(content_branch: branch)
     status = first || create
     status.update_attribute(:in_progress_rebuild_id, rebuild.id)
