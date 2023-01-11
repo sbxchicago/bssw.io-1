@@ -11,7 +11,11 @@
 
 
 	<h3>
+	  <% if author.respond_to?(:slug) %>
 	    <%= link_to "#{author.first_name} #{author.last_name}", site_items_path(:author => author.slug) %>
+	  <% else %>
+	    <%= author.first_name %> <%= author.last_name %>
+	  <% end %>
 	</h3>
 	<p>
 	    <% if author.title && @page && @page.try(:name) == 'Team' %>
