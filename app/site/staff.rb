@@ -2,7 +2,14 @@
 
 # to display on "about" page
 class Staff < MarkdownImport #Author
-  include Searchable
+
+
+
+  scope :displayed, lambda {
+    where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
+  }
+
+  
   def self.make_from_data(node, val, rebuild)
     node.css('a').each do |link|
       auth = Staff.find_or_create_by(website: link['href'], rebuild_id: rebuild)
