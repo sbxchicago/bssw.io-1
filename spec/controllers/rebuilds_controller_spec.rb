@@ -73,12 +73,18 @@ RSpec.describe RebuildsController, type: :controller do
       expect(Page.displayed.where(name: 'Contributors')).not_to be_empty
 
       expect(Author.displayed.where(website: @author_slug).first.resource_listing).not_to eq '0 resources'
-
-      expect(Author.displayed.select do |a|
+      puts Staff.displayed
+      expect(Staff.displayed.select do |a|
                a.website.try(
                  :match?, 'maherou'
                )
              end.first.affiliation).to eq 'Sandia National Laboratories'
+      expect(Author.displayed.select do |a|
+               a.website.try(
+                 :match?, 'maherou'
+               )
+             end.first.affiliation).to eq "Sandia National Labs and St. John's University"
+      
       @search_expectations.each do |key, val|
         expect(Searchable.perform_search(Searchable.prepare_strings(key),
                                          1).size).to be > val

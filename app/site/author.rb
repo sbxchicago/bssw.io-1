@@ -74,7 +74,7 @@ class Author < MarkdownImport
   end
 
   def event_listing
-    "#{event_count} #{'event'.pluralize(event_count)}"
+   "#{event_count} #{'event'.pluralize(event_count)}"
   end
 
   def update_from_github

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_04_174254) do
+ActiveRecord::Schema.define(version: 2023_01_06_153917) do
 
   create_table "acronyms", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name"
@@ -357,6 +357,22 @@ ActiveRecord::Schema.define(version: 2022_05_04_174254) do
   create_table "site_items_topics", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "topic_id"
     t.integer "site_item_id"
+  end
+
+  create_table "staffs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "website"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "section"
+    t.string "affiliation"
+    t.string "first_name"
+    t.string "last_name"
+    t.text "search_text"
+    t.integer "rebuild_id"
+    t.string "avatar_url"
+    t.string "title"
+    t.string "alphabetized_name"
   end
 
   create_table "subresource_relations", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
