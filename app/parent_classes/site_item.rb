@@ -3,8 +3,21 @@
 # resources, events, and blog posts
 
 class SiteItem < MarkdownImport
+
+  include AlgoliaSearch
+
+  algoliasearch per_environment: true, sanitize: true, auto_index: false do
+    # the list of attributes sent to Algolia's API
+    attribute :content, :name, :author_list, :location, :organizers
+    attribute :description do
+      respond_to?(:description) ? description : nil
+    end
+    advancedSyntax true
+  end
+
+
   require 'csv'
-  include Searchable
+  #include Searchable
 
   self.table_name = 'site_items'
 
@@ -130,8 +143,8 @@ class SiteItem < MarkdownImport
     text = ActionController::Base.helpers.strip_tags(
       " #{content.to_s.gsub('"', '')} #{try(:author_list)} #{name} #{try(:description)} #{try(:location)} #{try(:organizers)} ".downcase.gsub(/\s+/, " ")
     )
-#    puts text
+    #    puts text
     update(search_text: text)
-#    save
+    #    save
   end
 end

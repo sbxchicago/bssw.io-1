@@ -47,8 +47,10 @@ class Rebuild < ApplicationRecord
       Author.all.each(&:cleanup)
     rescue
     end
-    Fellow.all.each(&:set_search_text)
-    SiteItem.all.each(&:set_search_text)
+    SiteItem.clear_index!
+    SiteItem.displayed.reindex
+    # Fellow.all.each(&:set_search_text)
+    # SiteItem.all.each(&:set_search_text)
     File.delete(file_path)
   end
 
