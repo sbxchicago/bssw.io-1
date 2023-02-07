@@ -9,7 +9,7 @@
 		    <div class="row">
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 
-			    <h3><% name = highlight((result.name), @search.flatten) %>
+			    <h3><% name = highlight((result.name), @search) %>
 				<%= name.blank? ? result.name : name %>
 			    </h3>
 			</div>
@@ -24,7 +24,7 @@
 				<% [:location, :organizers].each do |facet| %>
 				    <% if result.respond_to?(facet) && !(result.try(facet).blank?) %>
 					<p class='small-caps'><strong><%= facet %></strong>
-					    <%=  highlight((result.try(facet)), @search.flatten) %>
+					    <%=  highlight((result.try(facet)), @search) %>
 					</p>
 				    <% end %>
 
@@ -45,7 +45,7 @@ str = ActionController::Base.helpers.strip_tags(result.content)
 					%>
 
 
-					    <%= highlight((excerpt(str, @search.flatten.first)), @search.flatten) %>
+					    <%= highlight((excerpt(str, @search)), @search) %>
 
 				    <% end %>
 				</p>

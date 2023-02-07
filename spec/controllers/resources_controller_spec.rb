@@ -60,12 +60,14 @@ RSpec.describe ResourcesController, type: :controller do
 
       resource = FactoryBot.create(:resource, publish: true, type: 'Resource')
       expect(SiteItem.published.displayed).to include(resource)
-      SiteItem.all.each(&:set_search_text)
-      expect(SiteItem.where(Arel.sql(Searchable.word_str(resource.name)))).to include(resource)
-      expect(SiteItem.where(Arel.sql("search_text REGEXP '#{resource.name}'"))).to include(resource)
+      
+      SiteItem.reindex!
+      sleep(5)
+ # expect(SiteItem.where(Arel.sql(Searchable.word_str(resource.name)))).to include(resource)
+ #      expect(SiteItem.where(Arel.sql("search_text REGEXP '#{resource.name}'"))).to include(resource)
 
-      expect(Searchable.get_word_results([[resource.name]], SiteItem.displayed)).to include(resource)
-      expect(Searchable.perform_search([[resource.name]], nil)).to include(resource)
+ #      expect(Searchable.get_word_results([[resource.name]], SiteItem.displayed)).to include(resource)
+ #      expect(Searchable.perform_search([[resource.name]], nil)).to include(resource)
       get :search, params: { search_string: resource.name }
       expect(assigns(:resources)).to include(resource)
     end
@@ -76,11 +78,10 @@ RSpec.describe ResourcesController, type: :controller do
       author = FactoryBot.create(:author, first_name: 'Joe', last_name: 'Blow',
                                           rebuild_id: RebuildStatus.displayed_rebuild.id)
       fellow = FactoryBot.create(:fellow, name: 'Joe Blow', rebuild_id: RebuildStatus.displayed_rebuild.id)
-      SiteItem.all.each(&:set_search_text)
-      Author.all.each(&:set_search_text)
-      Fellow.all.each(&:set_search_text)
+            Fellow.reindex
+      Author.reindex
+      sleep(5)
 
-      expect(Author.perform_search([['Joe']])).to include(author)
       get :search, params: { search_string: 'Joe' }
       expect(assigns(:resources)).to include(author)
       expect(assigns(:resources)).to include(fellow)
@@ -94,41 +95,51 @@ RSpec.describe ResourcesController, type: :controller do
 
     it 'performs an empty search' do
       get :search, params: { search_string: 'foob' }
-      SiteItem.all.each(&:set_search_text)
+      SiteItem.reindex!
+      sleep(5)
+
       expect(assigns(:resources)).to be_empty
     end
 
     it 'performs a simple search' do
       resource = FactoryBot.create(:resource, name: 'foob')
-      SiteItem.all.each(&:set_search_text)
+      SiteItem.reindex!
+      sleep(5)
+
       get :search, params: { search_string: 'foob' }
       expect(assigns(:resources)).to include(resource)
     end
 
     it 'performs a simple search' do
       resource = FactoryBot.create(:resource, name: 'foob')
-      SiteItem.all.each(&:set_search_text)
+      SiteItem.reindex!
+      sleep(5)
+
       get :search, params: { search_string: "'foob'" }
       expect(assigns(:resources)).to include(resource)
     end
 
     it 'finds fellows' do
       fellow = FactoryBot.create(:fellow, name: 'bar bar', rebuild_id: RebuildStatus.displayed_rebuild.id)
-      Fellow.all.each(&:set_search_text)
+      Fellow.reindex
+      Author.reindex
+      sleep(5)
       get :search, params: { search_string: 'bar' }
       expect(assigns(:resources)).to include(fellow)
     end
 
     it 'performs a more complex search' do
       resource = FactoryBot.create(:resource, content: 'Four score and seven')
-      SiteItem.all.each(&:set_search_text)
+      SiteItem.reindex
+      sleep(5)
       get :search, params: { search_string: 'four seven' }
       expect(assigns(:resources)).to include(resource)
     end
 
     it 'respects quote marks in search' do
       resource = FactoryBot.create(:resource, content: 'Four score and seven')
-      SiteItem.all.each(&:set_search_text)
+      SiteItem.reindex
+      sleep(5)
       get :search, params: { search_string: '"four seven"' }
 
       expect(assigns(:resources)).not_to include(resource)
@@ -136,8 +147,8 @@ RSpec.describe ResourcesController, type: :controller do
 
     it 'finds quoted terms in search' do
       resource = FactoryBot.create(:resource, content: 'Four score and seven')
-      resource.set_search_text
-      SiteItem.all.each(&:set_search_text)
+      SiteItem.reindex
+      sleep(5)
       get :search, params: { search_string: '"four score"' }
       expect(assigns(:resources)).to include(resource)
     end
@@ -148,12 +159,20 @@ RSpec.describe ResourcesController, type: :controller do
       resource2 = FactoryBot.create(:resource, content: 'bloo bloo')
       FactoryBot.create(:blog_post, name: 'search string')
       expect(resource.content).not_to be_blank
-      expect(Resource.all).to include(resource2)
-      SiteItem.all.each(&:set_search_text)
+      expect(Resource.displayed).to include(resource2)
+      #      SiteItem.all.each(&:set_search_text)
+      SiteItem.reindex!
+      sleep(5)
+      expect(SiteItem.search(resource.name)).to include(resource)
       get :search, params: { search_string: 'search string' }
       expect(assigns(:search_string)).to eq('search string')
       expect(assigns(:resources)).to include(resource)
       expect(assigns(:resources)).not_to eq Resource.all
+      # puts resource.content
+      # puts resource2.content
+      # puts SiteItem.search('search string').size
+      # puts assigns(:resources).size
+      # puts assigns(:search_string)
       expect(assigns(:resources)).not_to include(resource2)
       expect(response.body).to match '<mark>search'
     end

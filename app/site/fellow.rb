@@ -7,6 +7,12 @@ class Fellow < MarkdownImport
   }
 
   self.table_name = 'fellows'
+  include AlgoliaSearch
+
+  algoliasearch per_environment: true, sanitize: true, auto_index: false do
+    # the list of attributes sent to Algolia's API
+    attribute :short_bio, :long_bio, :name
+  end
 
   has_many :fellow_links, dependent: :destroy
 
