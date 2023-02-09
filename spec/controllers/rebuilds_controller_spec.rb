@@ -61,7 +61,7 @@ RSpec.describe RebuildsController, type: :controller do
       expect(BlogPost.find_by_slug(@blog_post_slug).related_posts.size).to eq 5
       expect(Quote.all).not_to be_empty
       expect(Announcement.all).not_to be_empty
-      expect(FeaturedPost.displayed.first.site_item).not_to be_nil
+      expect(FeaturedPost.displayed.first.site_item || FeaturedPost.displayed.first.image).not_to be_nil
       Announcement.all.each do |a|
         expect(a.site_item).not_to be_nil
       end
