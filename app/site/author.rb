@@ -1,30 +1,19 @@
 # frozen_string_literal: true
 
 # contributor of a resource
-class Author < MarkdownImport
-  #  include Searchable
-  include AlgoliaSearch
-
-  algoliasearch per_environment: true, sanitize: true, auto_index: false do
-    # the list of attributes sent to Algolia's API
-    attribute :name
-  end
+class Author < SearchResult
 
 
 
-
-
-
-self.table_name = 'authors'
+#self.table_name = 'authors'
 
 include ActionView::Helpers::TextHelper
 
 has_many :contributions, autosave: false, join_table: 'contributions'
-has_many :site_items, through: :contributions
+has_many :site_items, through: :contributions, foreign_key: 'site_item_id'
 before_destroy { contributions.clear }
 
-extend FriendlyId
-friendly_id :last_name, use: %i[finders slugged scoped], scope: :rebuild_id
+
 
 scope :displayed, lambda {
   where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)

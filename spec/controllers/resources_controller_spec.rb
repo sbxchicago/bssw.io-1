@@ -61,7 +61,7 @@ RSpec.describe ResourcesController, type: :controller do
       resource = FactoryBot.create(:resource, publish: true, type: 'Resource')
       expect(SiteItem.published.displayed).to include(resource)
       
-      SiteItem.reindex!
+      SearchResult.reindex!
       sleep(5)
  # expect(SiteItem.where(Arel.sql(Searchable.word_str(resource.name)))).to include(resource)
  #      expect(SiteItem.where(Arel.sql("search_text REGEXP '#{resource.name}'"))).to include(resource)
@@ -78,8 +78,7 @@ RSpec.describe ResourcesController, type: :controller do
       author = FactoryBot.create(:author, first_name: 'Joe', last_name: 'Blow',
                                           rebuild_id: RebuildStatus.displayed_rebuild.id)
       fellow = FactoryBot.create(:fellow, name: 'Joe Blow', rebuild_id: RebuildStatus.displayed_rebuild.id)
-            Fellow.reindex
-      Author.reindex
+      SearchResult.reindex
       sleep(5)
 
       get :search, params: { search_string: 'Joe' }
@@ -95,7 +94,7 @@ RSpec.describe ResourcesController, type: :controller do
 
     it 'performs an empty search' do
       get :search, params: { search_string: 'foob' }
-      SiteItem.reindex!
+      SearchResult.reindex!
       sleep(5)
 
       expect(assigns(:resources)).to be_empty
@@ -103,7 +102,7 @@ RSpec.describe ResourcesController, type: :controller do
 
     it 'performs a simple search' do
       resource = FactoryBot.create(:resource, name: 'foob')
-      SiteItem.reindex!
+      SearchResult.reindex!
       sleep(5)
 
       get :search, params: { search_string: 'foob' }
@@ -112,7 +111,7 @@ RSpec.describe ResourcesController, type: :controller do
 
     it 'performs a simple search' do
       resource = FactoryBot.create(:resource, name: 'foob')
-      SiteItem.reindex!
+      SearchResult.reindex!
       sleep(5)
 
       get :search, params: { search_string: "'foob'" }
@@ -121,8 +120,7 @@ RSpec.describe ResourcesController, type: :controller do
 
     it 'finds fellows' do
       fellow = FactoryBot.create(:fellow, name: 'bar bar', rebuild_id: RebuildStatus.displayed_rebuild.id)
-      Fellow.reindex
-      Author.reindex
+      SearchResult.reindex!
       sleep(5)
       get :search, params: { search_string: 'bar' }
       expect(assigns(:resources)).to include(fellow)
@@ -130,7 +128,7 @@ RSpec.describe ResourcesController, type: :controller do
 
     it 'performs a more complex search' do
       resource = FactoryBot.create(:resource, content: 'Four score and seven')
-      SiteItem.reindex
+      SearchResult.reindex!
       sleep(5)
       get :search, params: { search_string: 'four seven' }
       expect(assigns(:resources)).to include(resource)
@@ -138,7 +136,7 @@ RSpec.describe ResourcesController, type: :controller do
 
     it 'respects quote marks in search' do
       resource = FactoryBot.create(:resource, content: 'Four score and seven')
-      SiteItem.reindex
+      SearchResult.reindex
       sleep(5)
       get :search, params: { search_string: '"four seven"' }
 
@@ -147,7 +145,7 @@ RSpec.describe ResourcesController, type: :controller do
 
     it 'finds quoted terms in search' do
       resource = FactoryBot.create(:resource, content: 'Four score and seven')
-      SiteItem.reindex
+      SearchResult.reindex
       sleep(5)
       get :search, params: { search_string: '"four score"' }
       expect(assigns(:resources)).to include(resource)
@@ -161,9 +159,9 @@ RSpec.describe ResourcesController, type: :controller do
       expect(resource.content).not_to be_blank
       expect(Resource.displayed).to include(resource2)
       #      SiteItem.all.each(&:set_search_text)
-      SiteItem.reindex!
+      SearchResult.reindex!
       sleep(5)
-      expect(SiteItem.search(resource.name)).to include(resource)
+      expect(SearchResult.search(resource.name)).to include(resource)
       get :search, params: { search_string: 'search string' }
       expect(assigns(:search_string)).to eq('search string')
       expect(assigns(:resources)).to include(resource)
@@ -192,7 +190,7 @@ RSpec.describe ResourcesController, type: :controller do
   describe 'get show' do
     it 'renders the show template' do
       resource = FactoryBot.create(:resource, rebuild_id: @rebuild.id)
-
+      puts resource.inspect
       resource.categories << FactoryBot.create(:category)
       get :show, params: { id: resource }
       expect(response).to render_template :show
