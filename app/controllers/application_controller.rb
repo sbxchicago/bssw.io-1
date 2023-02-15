@@ -83,7 +83,7 @@ class ApplicationController < ActionController::Base
   end
 
   def scoped_resources
-    SiteItem.published.displayed
+    SearchResult.published.displayed
   end
 
   def set_announcement

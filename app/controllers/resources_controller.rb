@@ -8,9 +8,11 @@ class ResourcesController < ApplicationController
   end
 
   def show
+
     @resource = scoped_resources.find(params[:id])
     redirect_to "/events/#{@resource.slug}" if @resource.is_a?(Event)
     redirect_to "/blog_posts/#{@resource.slug}" if @resource.is_a?(BlogPost)
+
   end
 
   def index
@@ -31,8 +33,13 @@ class ResourcesController < ApplicationController
       @resources = scoped_resources.paginate(page: params[:page], per_page: 25)
     else
       @search = @search_string = search_string
-      @results = SiteItem.search(search_string) + Fellow.search(search_string) + Author.search(search_string)
+      @results = SearchResult.search(search_string) #SiteItem.search(search_string) + Fellow.search(search_string) + Author.search(search_string)
       @resources = @results
+      begin
+        paginate
+      rescue Exception => e
+        puts e.inspect
+      end
 #      populate_resources
 #      perform_search(Searchable.prepare_strings(search_string))
     end

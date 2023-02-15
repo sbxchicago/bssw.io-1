@@ -1,26 +1,18 @@
 # frozen_string_literal: true
 
 # bios etc for fellows
-class Fellow < MarkdownImport
+class Fellow < SearchResult
   scope :displayed, lambda {
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
 
-  self.table_name = 'fellows'
-  include AlgoliaSearch
-
-  algoliasearch per_environment: true, sanitize: true, auto_index: false do
-    # the list of attributes sent to Algolia's API
-    attribute :short_bio, :long_bio, :name
-  end
+#  self.table_name = 'fellows'
 
   has_many :fellow_links, dependent: :destroy
 
   after_create :set_hm
 
-  extend FriendlyId
 
-  friendly_id :name, use: %i[finders slugged scoped], scope: %i[rebuild_id honorable_mention]
 
   def self.perform_search(words)
     results = Fellow.displayed.where(honorable_mention: false)
