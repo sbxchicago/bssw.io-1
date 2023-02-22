@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.1.0'
+ruby '3.2.0'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
@@ -10,7 +10,7 @@ end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'mysql2'
-gem 'rails', '~> 6.0.0'
+gem 'rails', '7.0.4'
 gem 'sqlite3'
 
 # Use Puma as the app server
@@ -130,3 +130,4 @@ gem 'ed25519'
 gem 'bcrypt_pbkdf'
 
 gem 'algoliasearch-rails'
+gem 'faraday', '1.10.3'

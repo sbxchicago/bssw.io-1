@@ -6,5 +6,6 @@ FactoryBot.define do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     website { Faker::Name.first_name }
+    rebuild
   end
 end

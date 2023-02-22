@@ -3,5 +3,7 @@
 FactoryBot.define do
   factory :additional_date_value do
     date { 3.weeks.ago }
+    additional_date
+    event
   end
 end

@@ -5,6 +5,8 @@
 class SiteItem < SearchResult
 
 
+
+
   require 'csv'
   #include Searchable
 

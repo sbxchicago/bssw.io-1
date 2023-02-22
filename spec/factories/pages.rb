@@ -6,5 +6,6 @@ FactoryBot.define do
     content { 'MyText' }
     path { (0...8).map { rand(65..90).chr }.join }
     publish { true }
+    rebuild
   end
 end

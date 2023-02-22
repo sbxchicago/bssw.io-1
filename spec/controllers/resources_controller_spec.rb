@@ -244,6 +244,7 @@ RSpec.describe ResourcesController, type: :controller do
       resource_with_author = FactoryBot.create(:resource, rebuild_id: @rebuild.id)
       resource_without_author = FactoryBot.create(:resource, rebuild_id: @rebuild.id)
       resource_with_author.authors << author
+      puts Resource.displayed.with_author(author).size
       get :index, params: { author: author.slug }
       expect(assigns(:resources)).to include resource_with_author
       expect(assigns(:resources)).not_to include resource_without_author

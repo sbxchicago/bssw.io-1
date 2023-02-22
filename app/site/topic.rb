@@ -10,7 +10,7 @@ class Topic < GithubImport
   }
 
   self.table_name = 'topics'
-  has_and_belongs_to_many :site_items, -> { distinct }, join_table: 'site_items_topics' 
+  has_and_belongs_to_many :search_results, -> { distinct }, join_table: 'site_items_topics' 
   validates_presence_of :name
   validates_uniqueness_of :name, case_sensitive: false, scope: :rebuild_id
   belongs_to :category, optional: true
