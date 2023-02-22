@@ -4,6 +4,9 @@
 class BlogPost < SiteItem
   default_scope -> { order(published_at: 'desc') }
 
+  friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
+
+  
   def related_posts
     posts = []
     5.times do
@@ -11,7 +14,7 @@ class BlogPost < SiteItem
 
       topics.each do |topic|
         ids = posts.map(&:id) + [id]
-        post = BlogPost.displayed.published.with_topic(topic).where('site_items.id NOT in (?)', ids).first
+        post = BlogPost.displayed.published.with_topic(topic).where('search_results.id NOT in (?)', ids).first
         posts << post unless post.nil?
       end
     end

@@ -25,6 +25,7 @@ class SearchResult < MarkdownImport
     custom_slug_changed? || name_changed? || super
   end
 
+  
   scope :published, lambda {
     where(publish: true)
   }

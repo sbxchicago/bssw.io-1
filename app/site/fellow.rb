@@ -6,30 +6,15 @@ class Fellow < SearchResult
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
 
-#  self.table_name = 'fellows'
+
+   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 
   has_many :fellow_links, dependent: :destroy
 
   after_create :set_hm
 
-
-
-  def self.perform_search(words)
-    results = Fellow.displayed.where(honorable_mention: false)
-    results = Searchable.get_word_results(words, results)
-    words.flatten.uniq.each do |str_var|
-      str_var = Regexp.escape(sanitize_sql_like(str_var))
-      results = results.order(Arel.sql("name REGEXP \"#{Regexp.escape(str_var)}\" DESC"))
-    end
-    results
-  end
-
   def should_generate_new_friendly_id?
     name_changed?
-  end
-
-  def set_search_text
-    update(search_text: ActionController::Base.helpers.strip_tags("#{name} #{short_bio} #{long_bio}"))
   end
 
   def last_name

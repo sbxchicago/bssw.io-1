@@ -10,7 +10,7 @@ class AdditionalDateValue < ApplicationRecord
       additional_date: 'event'
     ).includes([additional_date: :event]).where(
       'additional_dates.label not like ?', 'End '
-    ).where('site_items.id in (?)', events.map(&:id))
+    ).where('search_results.id in (?)', events.map(&:id))
   }
 
   def self.get_from_events(events, past)

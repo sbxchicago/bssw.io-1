@@ -17,7 +17,7 @@ FactoryBot.define do
     location { 'MyString' }
     aggregate { 'base' }
     website { 'MyString' }
-
+    rebuild
     publish { true }
     type { 'Event' }
   end

@@ -60,13 +60,22 @@ class ResourcesController < ApplicationController
   # end
 
   def populate_resources
+    begin
     set_filters
     @resources = scoped_resources
-    @resources = scoped_resources.joins(:siteitems_topics).with_topic(@topic) if @topic
+    @resources = scoped_resources.joins(:searchresults_topics).with_topic(@topic) if @topic
     @resources = scoped_resources.with_category(@category) if @category
-    @resources = scoped_resources.with_author(@author) if @author
-    @resources = @resources.standard_scope
+    if @author
+      puts 'we gots author'
+      @resources = scoped_resources.with_author(@author)
+    else
+      puts 'no author'
+    end
+#    @resources = @resources.standard_scope
     paginate
+    rescue Exception => e
+      puts e.inspect
+    end
   end
 
   def paginate

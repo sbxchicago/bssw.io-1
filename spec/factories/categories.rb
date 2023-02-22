@@ -3,5 +3,6 @@
 FactoryBot.define do
   factory :category do
     name { "Category #{rand(100)}" }
+    rebuild
   end
 end
