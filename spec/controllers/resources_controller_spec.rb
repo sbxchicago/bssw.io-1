@@ -262,7 +262,13 @@ RSpec.describe ResourcesController, type: :controller do
   describe 'rss feed' do
     it 'shows nothing' do
       5.times { FactoryBot.create(:resource) }
-      get :index, format: :rss
+      begin
+        get :index, format: :rss
+      rescue Exception => e
+        puts e.inspect
+      end
+        
+      puts response.inspect
       expect(assigns(:resources)).to be_empty
       expect(response.media_type).to eq 'application/rss+xml'
       expect(response).to be_ok

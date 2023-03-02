@@ -56,7 +56,7 @@ class SearchResult < MarkdownImport
       where.not(published_at: nil).where(
         'published_at > ?', Chronic.parse('June 1 2018').to_s
       )
-    ).order('coalesce(rss_date, published_at) desc').first(15)
+    ).order(Arel.sql('coalesce(rss_date, published_at) desc')).first(15)
   }
 
   scope :standard_scope, lambda { |_all = false|
