@@ -8,5 +8,6 @@ FactoryBot.define do
     aggregate { 'base' }
 
     type { 'BlogPost' }
+    rebuild
   end
 end

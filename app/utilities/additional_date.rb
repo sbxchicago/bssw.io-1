@@ -8,6 +8,9 @@ class AdditionalDate < ApplicationRecord
   include Dateable
 
   def self.make_date(label_text, dates, event)
+    event.save
+
+
     if label_text.match('Start ') || label_text.match('End ')
       event.additional_dates.where(label: label_text).each(&:delete)
     end
@@ -16,7 +19,7 @@ class AdditionalDate < ApplicationRecord
       event: event
     )
     dates.split(';').each do |datetime|
-      date.additional_date_values << AdditionalDateValue.create(date: Chronic.parse(datetime).try(:to_date))
+      date.additional_date_values << AdditionalDateValue.new(date: Chronic.parse(datetime).try(:to_date))
     end
   end
 end

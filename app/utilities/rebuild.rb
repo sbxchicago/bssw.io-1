@@ -108,7 +108,7 @@ class Rebuild < ApplicationRecord
         break
       end
     end
-    item = res.find_or_create_by(base_path: File.basename(path), rebuild_id: id)
+    item = res.find_or_create_by(base_path: File.basename(path), rebuild_id: self.id)
     item.update(path: GithubImporter.normalized_path(path))
     item
   end

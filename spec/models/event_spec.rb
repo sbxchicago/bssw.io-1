@@ -8,7 +8,8 @@ RSpec.describe Event, type: :model do
         \n* Dates: December 3, #{Date.today.year} - January 5
         \n* Location: Place \n* \n* <!--- Publish: Yes --->"
 
-    event = Rebuild.new.find_or_create_resource('stuff/Events/foo.md')
+    rebuild = FactoryBot.create(:rebuild)
+    event = rebuild.find_or_create_resource('stuff/Events/foo.md')
     expect(event).to be_a(Event)
     expect(event.path).to eq 'Events/foo.md'
     event.parse_and_update(content)
@@ -31,7 +32,7 @@ RSpec.describe Event, type: :model do
         \n* Poster Dates: November 2 2021 - November 3 2021
         \n* Party dates: June 3 2022; July 4 2022
         \n* Location: Place \n* \n* <!--- Publish: Yes --->"
-    event = Rebuild.new.find_or_create_resource('stuff/Events/foo.md')
+    event = Rebuild.create.find_or_create_resource('stuff/Events/foo.md')
     event.parse_and_update(content)
     event.reload
     expect(event.additional_dates).not_to be_empty
@@ -47,7 +48,7 @@ RSpec.describe Event, type: :model do
     \n* Dates: 10-9-18 - 1-25-19
     \n* Location: Place \n* \n* <!--- Publish: Yes --->"
 
-    event = Rebuild.new.find_or_create_resource('Events/foo.md')
+    event = Rebuild.create.find_or_create_resource('Events/foo.md')
     event.parse_and_update(content)
     expect(event.start_at).to eq Chronic.parse('October 9 2018').to_date
   end
@@ -57,7 +58,7 @@ RSpec.describe Event, type: :model do
     \n* Dates: February 1 - March 2 #{Date.today.year}
     \n* Location: Place \n* \n* <!--- Publish: Yes --->"
 
-    event = Rebuild.new.find_or_create_resource('Events/foo.md')
+    event = Rebuild.create.find_or_create_resource('Events/foo.md')
     event.parse_and_update(content)
     expect(event.start_at.to_date).to eq Chronic.parse("February 1 #{Date.today.year}").to_date
   end
@@ -66,7 +67,7 @@ RSpec.describe Event, type: :model do
     content = "# Foo \n bar
     \n* Dates: December 1 - December 20 #{Date.today.year}
     \n* Location: Place \n* \n* <!--- Publish: Yes --->"
-    event = Rebuild.new.find_or_create_resource('Events/foo.md')
+    event = Rebuild.create.find_or_create_resource('Events/foo.md')
     event.parse_and_update(content)
     expect(event.start_at.to_date).to eq Chronic.parse("December 1 #{Date.today.year}").to_date
   end
@@ -76,7 +77,7 @@ RSpec.describe Event, type: :model do
      \n* Dates: December 1 - January 2
      \n* Location: Place \n* \n* <!--- Publish: Yes --->"
 
-    event = Rebuild.new.find_or_create_resource('Events/foo.md')
+    event = Rebuild.create.find_or_create_resource('Events/foo.md')
     event.parse_and_update(content)
 
     expect(event.start_at).to eq Chronic.parse("December 1 #{Date.today.year}").to_date

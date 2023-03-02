@@ -3,33 +3,42 @@
 require 'rails_helper'
 
 RSpec.describe AdditionalDate, type: :model do
+
+  it 'exists' do
+    event = FactoryBot.create(:event)
+    date = FactoryBot.create(:additional_date,
+                        additional_date_values:
+                          [FactoryBot.build(:additional_date_value, date: 1.week.ago)], label: 'Date', event_id: event.id)
+
+    expect(date).to be_valid
+  end
+
+    
   it 'has values' do
     event = FactoryBot.create(:event)
-    event.additional_dates <<
-      FactoryBot.create(:additional_date,
+
+    FactoryBot.create(:additional_date,
                         additional_date_values:
-                          [FactoryBot.create(:additional_date_value, date: 1.week.ago)], label: 'Date')
-    event.additional_dates << FactoryBot.create(:additional_date,
+                          [FactoryBot.build(:additional_date_value, date: 1.week.ago)], label: 'Date', event_id: event.id)
+    FactoryBot.create(:additional_date,
                                                 additional_date_values:
-                                                  [FactoryBot.create(:additional_date_value,
-                                                                     date: 2.weeks.ago)], label: 'Date')
-    event.additional_dates << FactoryBot.create(:additional_date,
+                                                  [FactoryBot.build(:additional_date_value,
+                                                                     date: 2.weeks.ago)], label: 'Date', event: event)
+    FactoryBot.create(:additional_date,
                                                 additional_date_values:
-                                                  [FactoryBot.create(:additional_date_value,
-                                                                     date: 3.weeks.ago)], label: 'Date')
-    event.additional_dates <<
-      FactoryBot.create(:additional_date,
+                                                  [FactoryBot.build(:additional_date_value,
+                                                                     date: 3.weeks.ago)], label: 'Date', event: event)
+    FactoryBot.create(:additional_date,
                         additional_date_values:
-                          [FactoryBot.create(:additional_date_value, date: 1.week.from_now)], label: 'Date')
-    event.additional_dates <<
-      FactoryBot.create(:additional_date,
+                          [FactoryBot.build(:additional_date_value, date: 1.week.from_now)], label: 'Date', event: event)
+    FactoryBot.create(:additional_date,
                         additional_date_values:
-                          [FactoryBot.create(:additional_date_value,
-                                             date: 2.weeks.from_now)], label: 'Date')
-    event.additional_dates << FactoryBot.create(:additional_date,
+                          [FactoryBot.build(:additional_date_value,
+                                             date: 2.weeks.from_now)], label: 'Date', event_id: event.id)
+    FactoryBot.create(:additional_date,
                                                 additional_date_values:
-                                                  [FactoryBot.create(:additional_date_value,
-                                                                     date: 3.weeks.from_now)], label: 'Date')
+                                                  [FactoryBot.build(:additional_date_value,
+                                                                     date: 3.weeks.from_now)], label: 'Date', event_id: event.id)
 
     AdditionalDateValue.get_from_events(Event.all, true)
 

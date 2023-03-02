@@ -32,7 +32,7 @@ RSpec.describe EventsController, type: :controller do
         event.send(:update_dates, doc.css("li:contains('Dates:')"))
         10.times do
           event.additional_dates.first.additional_date_values << FactoryBot.create(:additional_date_value,
-                                                                                   date: 1.week.ago)
+                                                                                   date: 1.week.ago, additional_date: event.additional_dates.first)
         end
       end
       get :index, params: { past: true }
@@ -47,9 +47,9 @@ RSpec.describe EventsController, type: :controller do
     it 'shows past' do
       FactoryBot.create(:page, name: 'Past Events', rebuild_id: @rebuild.id)
       event = FactoryBot.create(:event, publish: true, rebuild_id: @rebuild.id)
-      event.additional_dates << FactoryBot.create(:additional_date, label: 'foo')
+      event.additional_dates << FactoryBot.create(:additional_date, label: 'foo', event: event)
       event.additional_dates.first.additional_date_values << FactoryBot.create(:additional_date_value,
-                                                                               date: 1.week.ago)
+                                                                               date: 1.week.ago, additional_date: event.additional_dates.first)
       get :index, params: { past: true }
 
       expect(assigns(:past_events)).to include(event)
@@ -60,7 +60,8 @@ RSpec.describe EventsController, type: :controller do
     it 'gets by author' do
       author = FactoryBot.create(:author, rebuild_id: @rebuild.id)
       author.save
-      event = FactoryBot.create(:event, publish: true, authors: [author], rebuild_id: @rebuild.id)
+      event = FactoryBot.create(:event, publish: true, rebuild_id: @rebuild.id)
+      event.authors << author
       expect(Event.displayed).to include(event)
       expect(Event.displayed.with_author(author)).to include(event)
       doc = Nokogiri::XML('<ul><li>Dates: January 10 - January 10</li></ul>')

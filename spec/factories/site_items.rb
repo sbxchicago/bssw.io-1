@@ -7,5 +7,6 @@ FactoryBot.define do
     type { 'Resource' }
     aggregate { 'base' }
     publish { true }
+    rebuild
   end
 end
