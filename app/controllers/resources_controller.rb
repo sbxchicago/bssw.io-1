@@ -29,19 +29,14 @@ class ResourcesController < ApplicationController
 
   def search
     search_string = params[:search_string]
+    params[:page] ? page = params[:page].to_i : page = 1
     if search_string.blank?
-      @resources = scoped_resources.paginate(page: params[:page], per_page: 25)
+      @resources = scoped_resources.paginate(page: page, per_page: 75)
     else
       @search = @search_string = search_string
-      @results = SearchResult.search(search_string) #SiteItem.search(search_string) + Fellow.search(search_string) + Author.search(search_string)
+      @results = SearchResult.search(search_string)
+#      puts @results.inspect
       @resources = @results
-      begin
-        paginate
-      rescue Exception => e
-        puts e.inspect
-      end
-#      populate_resources
-#      perform_search(Searchable.prepare_strings(search_string))
     end
     render 'index'
   end
@@ -53,29 +48,18 @@ class ResourcesController < ApplicationController
 
   private
 
-  # def perform_search(search)
-  #   @search = search
-  #   @results = Searchable.perform_search(search, params[:page])
-  #   @resources = @results
-  # end
+
 
   def populate_resources
-    begin
+
     set_filters
     @resources = scoped_resources
     @resources = scoped_resources.joins(:searchresults_topics).with_topic(@topic) if @topic
     @resources = scoped_resources.with_category(@category) if @category
     if @author
-      puts 'we gots author'
       @resources = scoped_resources.with_author(@author)
-    else
-      puts 'no author'
     end
-#    @resources = @resources.standard_scope
     paginate
-    rescue Exception => e
-      puts e.inspect
-    end
   end
 
   def paginate

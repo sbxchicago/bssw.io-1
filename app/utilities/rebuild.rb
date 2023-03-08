@@ -34,7 +34,7 @@ class Rebuild < ApplicationRecord
   end
 
   def update_links_and_images
-    (Page.all + SiteItem.all + Community.all
+    (Page.all + SearchResult.all + Community.all
     ).each(&:update_links_and_images)
   end
 
@@ -47,8 +47,8 @@ class Rebuild < ApplicationRecord
       Author.all.each(&:cleanup)
     rescue
     end
-    SiteItem.clear_index!
-    SiteItem.displayed.reindex
+    SearchResult.clear_index!
+    SearchResult.displayed.reindex
     # Fellow.all.each(&:set_search_text)
     # SiteItem.all.each(&:set_search_text)
     File.delete(file_path)
@@ -57,7 +57,7 @@ class Rebuild < ApplicationRecord
   def clear_old
     rebuild_ids = Rebuild.first(5).to_a.map(&:id).delete_if(&:nil?)
     rebuild_ids += [id]
-    classes = [Community, Category, Topic, Announcement, Author, Quote, SiteItem, FeaturedPost, Fellow, Page]
+    classes = [Community, Category, Topic, Announcement, Author, Quote, SearchResult, FeaturedPost, Fellow, Page]
     everything = Rebuild.where(['id NOT IN (?)', rebuild_ids])
     classes.each do |klass|
       everything += klass.where(['rebuild_id NOT IN (?)', rebuild_ids])
@@ -108,8 +108,8 @@ class Rebuild < ApplicationRecord
         break
       end
     end
-    item = res.find_or_create_by(base_path: File.basename(path), rebuild_id: self.id)
-    item.update(path: GithubImporter.normalized_path(path))
+    item = res.find_or_create_by(path: GithubImporter.normalized_path(path), rebuild_id: self.id)
+    item.update(base_path: File.basename(path))
     item
   end
 end
