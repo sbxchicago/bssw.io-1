@@ -73,7 +73,8 @@ class SearchResult < MarkdownImport
 
   has_many :features, foreign_key: 'site_item_id'
 
-  validates_uniqueness_of :path, optional: true, case_sensitive: false, scope: :rebuild_id
+  validates :path,  uniqueness: { case_sensitive: false, scope: :rebuild_id }
+
   has_many :announcements, foreign_key: 'site_item_id'
 
 

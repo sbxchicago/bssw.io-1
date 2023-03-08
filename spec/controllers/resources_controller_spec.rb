@@ -166,11 +166,7 @@ RSpec.describe ResourcesController, type: :controller do
       expect(assigns(:search_string)).to eq('search string')
       expect(assigns(:resources)).to include(resource)
       expect(assigns(:resources)).not_to eq Resource.all
-      # puts resource.content
-      # puts resource2.content
-      # puts SiteItem.search('search string').size
-      # puts assigns(:resources).size
-      # puts assigns(:search_string)
+
       expect(assigns(:resources)).not_to include(resource2)
       expect(response.body).to match '<mark>search'
     end
@@ -190,7 +186,7 @@ RSpec.describe ResourcesController, type: :controller do
   describe 'get show' do
     it 'renders the show template' do
       resource = FactoryBot.create(:resource, rebuild_id: @rebuild.id)
-      puts resource.inspect
+
       resource.categories << FactoryBot.create(:category)
       get :show, params: { id: resource }
       expect(response).to render_template :show
@@ -244,7 +240,7 @@ RSpec.describe ResourcesController, type: :controller do
       resource_with_author = FactoryBot.create(:resource, rebuild_id: @rebuild.id)
       resource_without_author = FactoryBot.create(:resource, rebuild_id: @rebuild.id)
       resource_with_author.authors << author
-      puts Resource.displayed.with_author(author).size
+
       get :index, params: { author: author.slug }
       expect(assigns(:resources)).to include resource_with_author
       expect(assigns(:resources)).not_to include resource_without_author
@@ -262,13 +258,13 @@ RSpec.describe ResourcesController, type: :controller do
   describe 'rss feed' do
     it 'shows nothing' do
       5.times { FactoryBot.create(:resource) }
-      begin
+#      begin
         get :index, format: :rss
-      rescue Exception => e
-        puts e.inspect
-      end
+ #     rescue Exception => e
+  #      puts e.inspect
+   #   end
         
-      puts response.inspect
+    #  puts response.inspect
       expect(assigns(:resources)).to be_empty
       expect(response.media_type).to eq 'application/rss+xml'
       expect(response).to be_ok

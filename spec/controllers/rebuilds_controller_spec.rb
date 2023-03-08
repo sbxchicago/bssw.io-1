@@ -42,7 +42,7 @@ RSpec.describe RebuildsController, type: :controller do
 
       expect(Community.first.resources).not_to be_empty
       topic = Topic.displayed.where(slug: @topic_slug).first
-      wi = SiteItem.displayed.find(@what_is_slug)
+      wi = SearchResult.displayed.find(@what_is_slug)
       expect(wi.topics).to include topic
       expect(topic.site_items).to include wi
       expect(topic.site_items).to include HowTo.displayed.find_by_name(@how_to_name)
