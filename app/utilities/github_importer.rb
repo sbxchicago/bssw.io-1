@@ -59,7 +59,7 @@ class GithubImporter < ApplicationRecord
 
       rebuild.process_file(file)
     end
-
+    puts "time to complete"
     RebuildStatus.complete(rebuild, file_path)
   end
 end

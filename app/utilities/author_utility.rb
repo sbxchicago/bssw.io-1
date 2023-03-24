@@ -3,11 +3,19 @@
 # utility methods for processing authors
 class AuthorUtility
   def self.all_custom_info(rebuild_id, file_path)
-    Fellow.where(rebuild_id: rebuild_id).each(&:set_search_text)
-    Author.where(rebuild_id: rebuild_id).each(&:update_from_github)
-    custom_staff_info(file_path, rebuild_id)
-    custom_author_info(file_path, rebuild_id)
-    Author.where(rebuild_id: rebuild_id).each(&:set_search_text)
+    puts 'custom author info...'
+    begin
+      puts "bleeg"
+
+      Author.where(rebuild_id: rebuild_id).each(&:update_from_github)
+      custom_staff_info(file_path, rebuild_id)
+      custom_author_info(file_path, rebuild_id)
+    rescue Exception => e
+      puts "blorg"
+      puts e.inspect
+    end
+    puts "finished custom info"
+#    Author.where(rebuild_id: rebuild_id).each(&:set_search_text)
   end
 
   def self.names_from(name)

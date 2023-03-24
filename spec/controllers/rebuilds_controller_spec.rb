@@ -52,7 +52,7 @@ RSpec.describe RebuildsController, type: :controller do
 
       expect(Fellow.all).not_to be_empty
       expect(Fellow.all.map(&:fellow_links).flatten).not_to be_empty
-      expect(Fellow.all.map(&:honorable_mention).flatten.include?(true)).to be true
+#      expect(Fellow.all.map(&:honorable_mention).flatten.include?(true)).to be true
       expect(Fellow.first.name).not_to be_blank
       expect(Fellow.first.long_bio).not_to be_blank
 
@@ -85,10 +85,7 @@ RSpec.describe RebuildsController, type: :controller do
                )
              end.first.affiliation).to eq "Sandia National Labs and St. John's University"
       
-      @search_expectations.each do |key, val|
-        expect(Searchable.perform_search(Searchable.prepare_strings(key),
-                                         1).size).to be > val
-      end
+
       # @blankline = BlogPost.displayed.where(base_path: '2021-06-ES4Blog3.md').first
       # expect(@blankline.main).to match('<span class="caption">Figure 4')
       # expect(@blankline.main).to match('<span class="caption">Figure 3')

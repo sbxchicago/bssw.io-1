@@ -37,10 +37,12 @@ class Rebuild < ApplicationRecord
     (Page.all + SearchResult.all + Community.all
     ).each(&:update_links_and_images)
   end
-
+ 
   def clean(file_path)
     Category.displayed.each { |category| category.update(slug: nil) }
+    puts "time for custom info"
     AuthorUtility.all_custom_info(id, file_path)
+    puts "did custom info"
     clear_old
     update_links_and_images
     begin
