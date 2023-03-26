@@ -11,7 +11,7 @@ class Fellow < SearchResult
 
   has_many :fellow_links, dependent: :destroy
 
-  after_create :set_hm
+
 
   def should_generate_new_friendly_id?
     name_changed?
@@ -43,6 +43,7 @@ class Fellow < SearchResult
     do_fields(doc)
     node = doc.at("strong:contains('Long Bio')")
     node.try(:remove)
+    set_hm
     send('long_bio=', doc.to_html)
     save
   end

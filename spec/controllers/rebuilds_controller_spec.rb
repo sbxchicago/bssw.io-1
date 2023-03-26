@@ -52,7 +52,7 @@ RSpec.describe RebuildsController, type: :controller do
 
       expect(Fellow.all).not_to be_empty
       expect(Fellow.all.map(&:fellow_links).flatten).not_to be_empty
-#      expect(Fellow.all.map(&:honorable_mention).flatten.include?(true)).to be true
+      expect(Fellow.all.map(&:honorable_mention).flatten.include?(true)).to be true
       expect(Fellow.first.name).not_to be_blank
       expect(Fellow.first.long_bio).not_to be_blank
 
@@ -91,7 +91,7 @@ RSpec.describe RebuildsController, type: :controller do
       # expect(@blankline.main).to match('<span class="caption">Figure 3')
       expect(Category.displayed.first.slug).to eq 'better-planning'
       #      expect(Event.displayed.where(name: 'test event').first.additional_dates.size).to be > 1
-      expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
+      expect(Fellow.displayed.where(base_path: 'LowndesJu.md').first.modified_path).to match('NSFcohort')
 
       expect(SiteItem.displayed.last.topic_list).not_to be_empty
       expect(Event.where(

@@ -60,7 +60,7 @@ class Author < SearchResult
   end
 
   def update_from_github
-    puts "#{name} / #{website} / #{affiliation}"
+
     return unless website&.match('github')
     return unless affiliation.blank? || avatar_url.blank?
 
@@ -74,7 +74,7 @@ class Author < SearchResult
   end
 
   def update_info(hash)
-    puts hash
+
     update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
     update(affiliation: hash.company) if affiliation.blank?
 
@@ -107,7 +107,6 @@ class Author < SearchResult
     if SiteItem.published.displayed.with_author(self).empty?
       delete
     else
-      set_search_text
       blog_listing
       resource_listing
       event_listing

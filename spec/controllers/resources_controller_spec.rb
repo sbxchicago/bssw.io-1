@@ -121,7 +121,7 @@ RSpec.describe ResourcesController, type: :controller do
     it 'finds fellows' do
       fellow = FactoryBot.create(:fellow, name: 'bar bar', rebuild_id: RebuildStatus.displayed_rebuild.id)
       SearchResult.reindex!
-      sleep(5)
+      sleep(15)
       get :search, params: { search_string: 'bar' }
       expect(assigns(:resources)).to include(fellow)
     end
