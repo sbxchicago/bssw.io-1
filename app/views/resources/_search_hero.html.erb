@@ -7,7 +7,7 @@
 			<% if @results %>
 			    <p>
 				<% if @search %>
-				    Results found for <i><%= @search_string %></i> (<%= @resources.count %>)
+				    Results found for <i><%= @search_string %></i> (<%= @resources.total_entries %>)
 				    
 				<% else %>
 				    All Resources (<%= @resources.total %>)

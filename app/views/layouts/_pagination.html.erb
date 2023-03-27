@@ -1,4 +1,4 @@
-<% if controller.action_name != 'search' %>
+
 
 1-<%=
 if @resources.current_page*@resources.per_page > @resources.total_entries
@@ -11,4 +11,4 @@ end
     | <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
     <% end %>
 
-<% end %>
+
