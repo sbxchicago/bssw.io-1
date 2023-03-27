@@ -2,8 +2,8 @@
     <% results.each do |result| %>
 	<%= render 'search_result', :result => result  %>
     <% end %>
-<% elsif resources %>
-    <% if controller.action_name != 'search' %>
+<% end %>
+
 <div class='container'>
 <div class='row'>
 	<div class="pagination pagination-top col-md-12">
@@ -11,7 +11,7 @@
 	</div>
 </div>
 </div>
-    <% end %>
+
     <div class="resources">
 	<% resources.each do |resource| %>
 <% if @author %>
