@@ -1,73 +1,69 @@
 `
 <% if controller.action_name == 'search' %>
-    <%= render :partial => 'search_hero' %>
-
-
-
+  <%= render :partial => 'search_hero' %>
 <% elsif @author %>
-    <%= render :partial => 'author_hero' %>
+  <%= render :partial => 'author_hero' %>
 <% else %>
 
-    <div class="main <% if !@category && !@topic && controller.action_name != 'search' %>all_resources_page<% end %>" >
-	<div class="container">
-	    <div class="row">
-		<div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-12">
-		    <div class="page-heading all"> 
-			<div class="breadcrumbs">
-			    <ul>
-				<li><a href="/">Home</a></li>
-				<li><%= link_to 'Resources', site_items_path %></li>
+  <div class="main <% if !@category && !@topic && controller.action_name != 'search' %>all_resources_page<% end %>" >
+    <div class="container">
+      <div class="row">
+	<div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-12">
+	  <div class="page-heading all"> 
+	    <div class="breadcrumbs">
+	      <ul>
+		<li><a href="/">Home</a></li>
+		<li><%= link_to 'Resources', site_items_path %></li>
 
-			    </ul>
-			</div>
+	      </ul>
+	    </div>
 
-			<%= render :partial => 'pages/page', :locals =>
-			{:page => Page.find_by_name('Resources')} %>
-			
+	    <%= render :partial => 'pages/page', :locals =>
+  {:page => Page.find_by_name('Resources')} %>
+	    
 <% end %>
 
 
 <% if @topic %>
-    <h1><%= @topic.name %></h1>
-    <%= @topic.overview.try(:html_safe) %>
+  <h1><%= @topic.name %></h1>
+  <%= @topic.overview.try(:html_safe) %>
 <% elsif @category  %>
-    <h1><%= @category.name %></h1>
-    <%= @category.overview.try(:html_safe) %>
+  <h1><%= @category.name %></h1>
+  <%= @category.overview.try(:html_safe) %>
 <% elsif controller.action_name != 'search' && !(@author)%>
-    <h1 class="all_resources">All Resources</h1>
+  <h1 class="all_resources">All Resources</h1>
 <% end %>
 
 
 <div id='resources'>
-    <%= render 'resources', :resources => @resources, :results => (@search? @results : nil), cached: true %>
+  <%= render 'resources', :resources => @resources, :results => (@search? @results : nil), cached: true %>
 </div>
 
-		    </div>
-		</div>
+</div>
+</div>
 
-		    <div class="posts-list to-top-after-load">
-			<div class="container">
-			  <div class="row">
-<div class='col-9'>
-    <% if @resources.next_page %>
-      <%= render 'show_more' %>
-    <% end %>
-  </div>
-
-				<div class="col-3">
-				    <a class="to-top" href="#top">To Top</a>
-				</div>
-			    </div>
-			</div>
-		    </div>
-		<% end %>
-	    </div>
-
-	    <% if controller.action_name != 'search' && !(@author)%>
-		<%= render :partial => '/layouts/sidebar' %>
-	</div>
+<div class="posts-list to-top-after-load">
+  <div class="container">
+    <div class="row">
+      <div class='col-9'>
+	<% if @resources.next_page %>
+	  <%= render 'show_more' %>
+	<% end %>
+      </div>
+      
+      <div class="col-3">
+	<a class="to-top" href="#top">To Top</a>
+      </div>
     </div>
+  </div>
+</div>
 
-	    <% end %>
+
+
+<% if controller.action_name != 'search' && !(@author)%>
+  <%= render :partial => '/layouts/sidebar' %>
+<% end %>
+
+
 
 
