@@ -1,4 +1,4 @@
-
+`
 <% if controller.action_name == 'search' %>
     <%= render :partial => 'search_hero' %>
 
@@ -44,11 +44,17 @@
 
 		    </div>
 		</div>
-		<%if controller.action_name === 'search' %>
+
 		    <div class="posts-list to-top-after-load">
 			<div class="container">
-			    <div class="row">
-				<div class="col-xl-12 col-lg-12 col-nd-12 col-sm-12 col-12">
+			  <div class="row">
+<div class='col-9'>
+    <% if @resources.next_page %>
+      <%= render 'show_more' %>
+    <% end %>
+  </div>
+
+				<div class="col-3">
 				    <a class="to-top" href="#top">To Top</a>
 				</div>
 			    </div>

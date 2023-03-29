@@ -24,12 +24,8 @@
 	<%= render :partial => '/layouts/pagination' %>
       </div></div>
 
-    <% if @resources.next_page %>
-      <%= render 'show_more' %>
-    <% end %>
-  </div>
-
 <% if defined?(results) && results %>
+
   <style>
     .to-top-after-load {
     display:block;
