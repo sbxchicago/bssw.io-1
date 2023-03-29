@@ -1,8 +1,3 @@
-<% if defined?(results) && results %>
-  <% results.each do |result| %>
-    <%= render 'search_result', :result => result  %>
-  <% end %>
-<% end %>
 
 <div class='container'>
   <div class='row'>
@@ -30,9 +25,6 @@
 
     <% if @resources.next_page %>
       <%= render 'show_more' %>
-    <% end %>
-    <% if controller.action_name === 'search' %>
-      <a class="to-top" href="#top">To Top</a>
     <% end %>
   </div>
 
