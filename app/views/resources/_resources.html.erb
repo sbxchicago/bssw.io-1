@@ -16,6 +16,7 @@
       <%= render 'listing', :resource => resource  %>
     <% end %>
   <% end %>
+</div>
   <div class='container'>
     <div class='row'>
 
@@ -25,28 +26,3 @@
       </div>
     </div>
   </div>
-  <div class='container'>
-    <div class='row'>
-
-	<div class='col-6'>
-	<% if @resources.next_page %>
-	  <%= render 'show_more' %>
-	<% end %>
-	</div>
-	<div class='col-6'>
-	        <div class="posts-list to-top-after-load">
-		  <a class="to-top" href="#top">To Top</a>
-</div>
-	</div>
-      </div>
-    </div>
-
-</div>
-
-  <style>
-    .to-top-after-load {
-    display:block;
-    }
-  </style>
-
-
