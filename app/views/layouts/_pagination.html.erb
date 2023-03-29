@@ -1,4 +1,6 @@
-
+<% if params[:view] == 'all' %>
+  1-<%= @resources.total_entries %> of <%= @resources.total_entries %> Items
+<% else %>
 
 1-<%=
 if @resources.current_page*@resources.per_page > @resources.total_entries
@@ -12,3 +14,4 @@ end
     <% end %>
 
 
+<% end %>
