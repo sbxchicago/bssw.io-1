@@ -21,15 +21,21 @@ end
     </div>
 </div>
 
-<div class="posts-list to-top-after-load">
+
   <div class="container">
     <div class="row">
+      <div class='col-3'>
 	<% if @resources.next_page %>
 	  <%= render 'show_more' %>
 	<% end %>
-
+      </div>
+      <div class='col-6'>
+      </div>
+      <div class='col-3'>
 	<a class="to-top" href="#top">To Top</a>
+      </div>
+
 
     </div>
   </div>
-</div>
+
