@@ -28,11 +28,12 @@
   <div class='container'>
     <div class='row'>
       <div class="posts-list to-top-after-load">
-	
+	<div class='col-6'>
 	<% if @resources.next_page %>
 	  <%= render 'show_more' %>
 	<% end %>
-	<div class='col-3'>
+	</div>
+	<div class='col-6'>
 	<a class="to-top" href="#top">To Top</a>
 	</div>
       </div>
