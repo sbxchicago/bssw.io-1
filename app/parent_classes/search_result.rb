@@ -9,7 +9,7 @@ class SearchResult < MarkdownImport
       attribute facet do
         respond_to?(facet) ? self.send(facet) : nil
       end
-
+      ranking ['desc(published_at)', 'typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact', 'custom']
       advancedSyntax true
     end
 

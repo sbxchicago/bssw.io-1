@@ -10,7 +10,9 @@
 
 <div class="resources">
   <% resources.each do |resource| %>
-    <% if @author %>
+    <% if controller.action_name == 'search' %>
+      <%= render 'search_result', :result => resource  %>
+    <% elsif @author %>
       <%= render 'author_listing', :resource => resource  %>
     <% else %>
       <%= render 'listing', :resource => resource  %>
