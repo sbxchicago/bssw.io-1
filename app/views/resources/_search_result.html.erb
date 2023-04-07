@@ -63,6 +63,10 @@ str = ActionController::Base.helpers.strip_tags(result.content)
 					Resource
 				    <% end %>
 				</p>
+			    <p class='topics small-caps'
+			       >
+			      <strong>Published</strong>
+			      <%= result.published_at.strftime('%F') %>
 			</div>
 		    </div>
 
