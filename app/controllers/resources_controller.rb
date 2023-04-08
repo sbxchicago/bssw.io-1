@@ -34,9 +34,9 @@ class ResourcesController < ApplicationController
       @resources = scoped_resources.paginate(page: page, per_page: 75)
     else
       @search = @search_string = search_string
-      SearchResult.reindex
+
       @results = SearchResult.search(search_string, hitsPerPage: 75, page: page)
-      puts "#{@results.current_page} / #{@results.total_pages} / #{@results.total_entries} / #{@results.count}"
+
       @resources = @results
     end
     render 'index'
