@@ -1,4 +1,4 @@
-hg# frozen_string_literal: true
+# frozen_string_literal: true
 
 # controller for the Resource class
 class ResourcesController < ApplicationController
