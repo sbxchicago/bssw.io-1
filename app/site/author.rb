@@ -3,6 +3,8 @@
 # contributor of a resource
 class Author < SearchResult
 
+  self.table_name = 'search_results'
+
   include ActionView::Helpers::TextHelper
 
   has_many :contributions, autosave: false, join_table: 'contributions'

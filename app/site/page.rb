@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # plain content
-class Page < MarkdownImport
+class Page < SearchResult
   scope :displayed, lambda {
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
@@ -10,11 +10,9 @@ class Page < MarkdownImport
   validates_uniqueness_of :path, case_sensitive: false, scope: :rebuild_id
   scope :published, -> { where(publish: true) }
 
-  self.table_name = 'pages'
 
-  extend FriendlyId
 
-  friendly_id :name, use: %i[finders history slugged scoped], scope: :rebuild_id
+  friendly_id :name, use: %i[finders slugged scoped], scope: :rebuild_id
 
   def regular
     name != 'Contact BSSw' &&

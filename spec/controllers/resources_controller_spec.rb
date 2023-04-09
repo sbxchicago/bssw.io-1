@@ -76,8 +76,8 @@ RSpec.describe ResourcesController, type: :controller do
       @request.env['HTTP_AUTHORIZATION'] = "Basic {Base64.encode64('preview-bssw:SoMyCodeWillSeeTheFuture!!')}"
       resource = FactoryBot.create(:resource, publish: true, type: 'Resource', name: 'Blorgon')
       author = FactoryBot.create(:author, first_name: 'Joe', last_name: 'Blow',
-                                          rebuild_id: RebuildStatus.displayed_rebuild.id)
-      fellow = FactoryBot.create(:fellow, name: 'Joe Blow', rebuild_id: RebuildStatus.displayed_rebuild.id)
+                                          rebuild_id: RebuildStatus.displayed_rebuild.id, publish: true)
+      fellow = FactoryBot.create(:fellow, name: 'Joe Blow', rebuild_id: RebuildStatus.displayed_rebuild.id, publish: true)
       SearchResult.reindex
       sleep(5)
 
@@ -119,7 +119,7 @@ RSpec.describe ResourcesController, type: :controller do
     end
 
     it 'finds fellows' do
-      fellow = FactoryBot.create(:fellow, name: 'bar bar', rebuild_id: RebuildStatus.displayed_rebuild.id)
+      fellow = FactoryBot.create(:fellow, name: 'bar bar', rebuild_id: RebuildStatus.displayed_rebuild.id, publish: true)
       SearchResult.reindex!
       sleep(15)
       get :search, params: { search_string: 'bar' }

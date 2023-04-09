@@ -2,7 +2,7 @@ class SearchResult < MarkdownImport
 
   include AlgoliaSearch
 
-  algoliasearch per_environment: true, sanitize: true, auto_index: false do
+  algoliasearch per_environment: true, sanitize: true, auto_index: false, if: :searchable? do
     # the list of attributes sent to Algolia's API
     attribute :name
     [:description, :short_bio, :long_bio, :author_list, :location, :organizers, :content].each do |facet|
@@ -10,7 +10,7 @@ class SearchResult < MarkdownImport
         respond_to?(facet) ? self.send(facet) : nil
       end
       ranking ['custom', 'typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact' ]
-      customRanking ['desc(published_at)', 'asc(is_person)']
+      customRanking ['desc(is_person)', 'desc(published_at)']
       advancedSyntax true
     end
 
@@ -22,10 +22,14 @@ class SearchResult < MarkdownImport
   def slug_candidates
     custom_slug.blank? ? name : custom_slug
   end
+
   def should_generate_new_friendly_id?
     custom_slug_changed? || name_changed? || super
   end
 
+  def searchable?
+    publish && rebuild_id == RebuildStatus.first.display_rebuild_id
+  end
   
   scope :published, lambda {
     where(publish: true)

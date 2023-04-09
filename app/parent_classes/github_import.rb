@@ -17,7 +17,7 @@ class GithubImport < ApplicationRecord
     title_chunk = MarkdownUtility.get_title_chunk(doc)
     update(name: title_chunk)
     dates(doc, rebuild)
-    update_author(doc.at("h4:contains('Contributed')"), rebuild_id)
+    update_author(doc.at("h4:contains('Contributed')"), rebuild_id) unless is_a?(Page)
     update_taxonomy(doc, rebuild)
 
     content_string = doc.css('body').to_s + "\n<!-- file path: #{path} -->".html_safe
