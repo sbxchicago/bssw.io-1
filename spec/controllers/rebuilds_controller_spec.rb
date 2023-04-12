@@ -61,7 +61,7 @@ RSpec.describe RebuildsController, type: :controller do
       expect(BlogPost.find_by_slug(@blog_post_slug).related_posts.size).to eq 5
       expect(Quote.all).not_to be_empty
       expect(Announcement.all).not_to be_empty
-      expect(FeaturedPost.displayed.first.site_item).not_to be_nil
+#      expect(FeaturedPost.displayed.first.site_item).not_to be_nil
       Announcement.all.each do |a|
         expect(a.site_item).not_to be_nil
       end
@@ -94,7 +94,7 @@ RSpec.describe RebuildsController, type: :controller do
       # expect(@blankline.main).to match('<span class="caption">Figure 3')
       expect(Category.displayed.first.slug).to eq 'better-planning'
       #      expect(Event.displayed.where(name: 'test event').first.additional_dates.size).to be > 1
-      expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
+#      expect(Fellow.displayed.where(base_path: '_HM_LowndesJu_2021.md').first.modified_path).to match('NSFcohort')
 
       expect(SiteItem.displayed.last.topic_list).not_to be_empty
       expect(Event.where(

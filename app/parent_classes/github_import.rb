@@ -7,7 +7,8 @@ class GithubImport < ApplicationRecord
   belongs_to :rebuild
 
   def parse_and_update(content)
-    doc = GithubImporter.parse_html_from(content)
+    content_string = content.dup.force_encoding('UTF-8').encode!
+    doc = GithubImporter.parse_html_from(content_string)
     update_from_content(doc, rebuild)
     self
   end
