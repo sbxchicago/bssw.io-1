@@ -17,7 +17,7 @@ class GithubImporter < ApplicationRecord
                                        fenced_code_blocks: true,
                                        no_intra_emphasis: true,
                                       )
-    Nokogiri::HTML(markdown.render((updated_content.gsub("\'", "'"))), nil, 'UTF-8')
+    Nokogiri::HTML(markdown.render(updated_content)), nil, 'UTF-8')
   end
 
   def self.normalized_path(path)
