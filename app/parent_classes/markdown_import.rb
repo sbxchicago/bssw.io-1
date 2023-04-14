@@ -13,7 +13,7 @@ class MarkdownImport < GithubImport
     doc = Nokogiri::HTML.parse(content, nil, 'UTF-8')
     MarkdownUtility.update_links(doc)
     MarkdownUtility.update_images(doc)
-    html = doc.to_html.to_s.force_encoding('UTF-8')
+    html = doc.to_html.to_s
     update_attribute(:content, html) unless content == html
   end
 
