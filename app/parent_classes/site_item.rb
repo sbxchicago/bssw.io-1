@@ -100,14 +100,15 @@ class SiteItem < MarkdownImport
 
   def add_topics(names)
     topics = []
-#    puts self.name
+    puts self.name if self.path.match('qmcpack')
     names.each do |top_name|
       next if top_name.blank?
       top_name = top_name.gsub('"', '')
       topic = Topic.from_name(top_name, rebuild_id)
-      topics << topic if topic
+      self.topics << topic if topic
     end
- #   puts self.topics.map(&:name)
+    self.save
+    puts "topics: #{self.topics.map(&:name)}" if self.name.match('QMCPACK')
   end
 
   def rss_date

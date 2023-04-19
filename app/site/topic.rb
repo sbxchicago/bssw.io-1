@@ -40,7 +40,7 @@ class Topic < GithubImport
   def self.from_name(top_name, rebuild_id)
     return if top_name.match(Regexp.new(/\[(.*)\]/))
 
-    name = top_name.strip
+    name = top_name.strip.downcase
     puts name
     top = find_or_create_by(
       name: name,
