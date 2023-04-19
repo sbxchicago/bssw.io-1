@@ -99,13 +99,15 @@ class SiteItem < MarkdownImport
   end
 
   def add_topics(names)
-    puts self.name
+    topics = []
+#    puts self.name
     names.each do |top_name|
       next if top_name.blank?
       top_name = top_name.gsub('"', '')
       topic = Topic.from_name(top_name, rebuild_id)
       topics << topic if topic
     end
+ #   puts self.topics.map(&:name)
   end
 
   def rss_date
