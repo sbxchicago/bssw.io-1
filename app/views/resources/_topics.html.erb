@@ -4,21 +4,16 @@
     <div class="topics">
       <div class="row">
 	<span class="topics-heading">TOPICS</span>
-	<% index = 0 %>
-	<% resource.categories.each do |cat| %>
-	  <% if cat %>
+	<% resource.topics.group_by(&:category).each do |cat, topics| %>
 	    <div class="topic">
 	      <%= link_to cat.name, "/items?category="+cat.slug %>
 	    </div>
-	    <% resource.topics.select{|t| t.category == cat}.each do |basic| %>
-	      <% if basic.category == cat %>
-		<div class="sub-topic" id="sub-topic-<%= index %>"><%= link_to basic.name, "/items?topic="+basic.slug %>
+	    <% topics.each do |topic| %>
+		<div class="sub-topic" id="sub-topic-<%= index %>"><%= link_to topic.name, "/items?topic="+topic.slug %>
 		</div>
-		<% index = index + 1 %>
-	      <% end %>
 	    <% end %>
 	  <% end %>
-	<% end %>
+
       </div>
     </div>
   </div>
