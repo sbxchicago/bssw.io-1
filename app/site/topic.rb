@@ -41,6 +41,7 @@ class Topic < GithubImport
     return if top_name.match(Regexp.new(/\[(.*)\]/))
 
     name = top_name.strip
+    puts name
     top = find_or_create_by(
       name: name,
       rebuild_id: rebuild_id

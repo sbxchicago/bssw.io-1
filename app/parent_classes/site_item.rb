@@ -101,7 +101,7 @@ class SiteItem < MarkdownImport
   def add_topics(names)
     names.each do |top_name|
       next if top_name.blank?
-
+      top_name = top_name.gsub('"', '')
       topic = Topic.from_name(top_name, rebuild_id)
       topics << topic if topic
     end
