@@ -99,6 +99,7 @@ class SiteItem < MarkdownImport
   end
 
   def add_topics(names)
+    puts self.name
     names.each do |top_name|
       next if top_name.blank?
       top_name = top_name.gsub('"', '')
