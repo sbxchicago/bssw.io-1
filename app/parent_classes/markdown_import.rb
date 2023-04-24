@@ -13,7 +13,7 @@ class MarkdownImport < GithubImport
     doc = Nokogiri::HTML.parse(content, nil, 'UTF-8')
     MarkdownUtility.update_links(doc)
     MarkdownUtility.update_images(doc)
-    html = doc.to_html.to_s.force_encoding('UTF-8')
+    html = doc.to_html.to_s
     update_attribute(:content, html) unless content == html
   end
 
@@ -32,6 +32,7 @@ class MarkdownImport < GithubImport
       method = "add_#{string.strip}".downcase.tr(' ', '_')
       if method == 'add_topics'
         names = CSV.parse(names.gsub(/,\s+"/, ',"'), liberal_parsing: true).first
+        puts names.inspect
         save if new_record?
         try(:add_topics, names)
       elsif respond_to?(method, true)

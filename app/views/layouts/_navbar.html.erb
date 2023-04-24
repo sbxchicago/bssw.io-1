@@ -115,11 +115,11 @@
               <li><a href="/items">View All Resources</a></li>
             </ul>
           </li>
-          <li class="nav-item <% if (defined? page.slug) && (page.slug == 'bssw-blog') || controller.controller_name == 'blog_posts' =%>active<% end %>">
+          <li class="nav-item <% if (defined? page.slug) && (page.slug == 'bssw-blog') =%>active<% end %>">
             <a class="nav-link" href="/blog_posts">Blog</a>
           </li>
 
-          <li class="nav-item <% if (defined? page.slug) && (page.slug == 'upcoming-events') || controller.controller_name == 'events' =%>active<% end %>">
+          <li class="nav-item <% if (defined? page.slug) && (page.slug == 'upcoming-events') =%>active<% end %>">
             <a class="nav-link" href="/events">Events</a>
           </li>
           <!--
