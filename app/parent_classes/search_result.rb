@@ -10,7 +10,8 @@ class SearchResult < MarkdownImport
         respond_to?(facet) ? self.send(facet) : nil
       end
       ranking ['custom', 'typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact' ]
-      customRanking ['desc(is_person)', 'desc(published_at)']
+      #      customRanking ['desc(is_person)', 'desc(published_at)']
+      customRanking ['desc(published_at)']
       advancedSyntax true
     end
 
