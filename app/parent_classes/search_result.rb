@@ -5,7 +5,8 @@ class SearchResult < MarkdownImport
   algoliasearch per_environment: true, sanitize: true, auto_index: false, if: :searchable? do
     # the list of attributes sent to Algolia's API
     attribute :name
-    [:description, :short_bio, :long_bio, :author_list, :location, :organizers, :content, :published_at, :is_person].each do |facet|
+    attribute :published_at
+    [:description, :short_bio, :long_bio, :author_list, :location, :organizers, :content, :is_person].each do |facet|
       attribute facet do
         respond_to?(facet) ? self.send(facet) : nil
       end
