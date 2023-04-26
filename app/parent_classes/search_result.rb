@@ -4,12 +4,12 @@ class SearchResult < MarkdownImport
 
   algoliasearch per_environment: true, sanitize: true, auto_index: false, if: :searchable? do
     # the list of attributes sent to Algolia's API
-    attribute :name
-    attribute :published_at
-    [:description, :short_bio, :long_bio, :author_list, :location, :organizers, :content, :is_person].each do |facet|
+    attribute :name, :published_at, :is_person
+    [:description, :short_bio, :long_bio, :author_list, :location, :organizers, :content].each do |facet|
       attribute facet do
         respond_to?(facet) ? self.send(facet) : nil
       end
+      searchableAttributes [ 'unordered(name)', 'unordered(description)']
       ranking ['desc(published_at)', 'custom', 'typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact' ]
       #      customRanking ['desc(is_person)', 'desc(published_at)']
       customRanking ['desc(published_at)']
