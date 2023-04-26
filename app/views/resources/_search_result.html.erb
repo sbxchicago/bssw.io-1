@@ -67,7 +67,8 @@ str = ActionController::Base.helpers.strip_tags(result.content)
 			    <p class='topics small-caps'
 			       >
 			      <strong>Published</strong>
-			      <%= result.try(:published_at).try(:strftime, '%F') %>
+			      <%= result.published_at %>
+			      	      <%= result.try(:published_at).try(:strftime, '%F') %>
 			    </p>
 
 			</div>
