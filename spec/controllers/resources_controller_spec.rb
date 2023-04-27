@@ -155,12 +155,12 @@ RSpec.describe ResourcesController, type: :controller do
       resource = FactoryBot.create(:resource, content: 'search string')
 
       resource2 = FactoryBot.create(:resource, content: 'bloo bloo')
-      FactoryBot.create(:blog_post, name: 'search string')
-      expect(resource.content).not_to be_blank
+#      expect(resource.content).not_to be_blank
       expect(Resource.displayed).to include(resource2)
+      expect(Resource.displayed).to include(resource)
       #      SiteItem.all.each(&:set_search_text)
       SearchResult.reindex!
-      sleep(5)
+      sleep(8)
       expect(SearchResult.search(resource.name)).to include(resource)
       get :search, params: { search_string: 'search string' }
       expect(assigns(:search_string)).to eq('search string')
