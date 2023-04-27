@@ -10,7 +10,7 @@ class Page < SearchResult
   validates_uniqueness_of :path, case_sensitive: false, scope: :rebuild_id
   scope :published, -> { where(publish: true) }
 
-
+  table_name = 'search_results'
 
   friendly_id :name, use: %i[finders slugged scoped], scope: :rebuild_id
 

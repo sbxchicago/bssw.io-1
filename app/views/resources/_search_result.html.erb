@@ -18,7 +18,7 @@
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 			    <p class="search-results-content">
 				<% if result.is_a?(SiteItem) %>
-				    <p class='small-caps'><%= author_list_without_links(result) %></p>
+				    <p class='small-caps'><%= highlight(author_list_without_links(result), @search) %></p>
 				<% end %>
 
 				<% [:location, :organizers].each do |facet| %>
@@ -60,15 +60,14 @@ str = ActionController::Base.helpers.strip_tags(result.content)
 				    <% elsif result.is_a?(Author) %>
 					Author
 				    <% elsif result.is_a?(SiteItem) %>
-					Resource
+				      Resource
 				    <% end %>
 				</p>
 
 			    <p class='topics small-caps'
 			       >
 			      <strong>Published</strong>
-			      <%= result.published_at %>
-			      	      <%= result.try(:published_at).try(:strftime, '%F') %>
+			      <%= result.try(:published_at).try(:strftime, '%F') %>
 			    </p>
 
 			</div>
