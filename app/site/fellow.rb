@@ -12,8 +12,6 @@ class Fellow < SearchResult
 
   has_many :fellow_links, dependent: :destroy
 
-  before_save { is_person = true}
-
 
   def should_generate_new_friendly_id?
     name_changed?

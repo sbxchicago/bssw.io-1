@@ -4,18 +4,22 @@ class SearchResult < MarkdownImport
 
   algoliasearch per_environment: true, sanitize: true, auto_index: false, if: :searchable? do
     # the list of attributes sent to Algolia's API
-    attribute :name, :published_at, :is_person, :content
+    attribute :name, :published_at, :is_fellow, :content
     [:description, :short_bio, :long_bio, :author_list, :location, :organizers].each do |facet|
       attribute facet do
         respond_to?(facet) ? self.send(facet) : nil
       end
       searchableAttributes [ 'unordered(name)', 'unordered(description)', 'unordered(content)', 'short_bio', 'long_bio', 'author_list', 'location', 'organizers' ]
-      ranking ['desc(is_person)', 'desc(published_at)', 'typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact', 'custom' ]
+      ranking ['desc(is_fellow)', 'desc(published_at)', 'typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact', 'custom' ]
       advancedSyntax true
     end
 
   end
 
+  def is_fellow
+    is_a?(Fellow)
+  end
+  
   extend FriendlyId
   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 
@@ -28,7 +32,7 @@ class SearchResult < MarkdownImport
   end
 
   def searchable?
-    publish && rebuild_id == RebuildStatus.first.display_rebuild_id
+    (publish || is_fellow) && rebuild_id == RebuildStatus.first.display_rebuild_id
   end
   
   scope :published, lambda {
