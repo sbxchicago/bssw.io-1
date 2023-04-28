@@ -16,7 +16,7 @@ class GithubImport < ApplicationRecord
   def update_from_content(doc, rebuild)
     self.save
     title_chunk = MarkdownUtility.get_title_chunk(doc)
-    update(name: title_chunk)
+    update(name: title_chunk.try(:strip))
     dates(doc, rebuild)
     update_author(doc.at("h4:contains('Contributed')"), rebuild_id) unless is_a?(Page)
     update_taxonomy(doc, rebuild)
