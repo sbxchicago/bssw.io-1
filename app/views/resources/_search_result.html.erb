@@ -56,20 +56,21 @@ str = ActionController::Base.helpers.strip_tags(result.content)
 				    <% elsif result.is_a?(BlogPost) %>
 					Blog Post
 				    <% elsif result.is_a?(Fellow) %>
-					Fellow <%= result.honorable_mention %>
+					Fellow 
 				    <% elsif result.is_a?(Author) %>
 					Author
 				    <% elsif result.is_a?(SiteItem) %>
 				      Resource
 				    <% end %>
 				</p>
-
+<% if result.published_at %>
 			    <p class='topics small-caps'
 			       >
+
 			      <strong>Published</strong>
 			      <%= result.try(:published_at).try(:strftime, '%F') %>
 			    </p>
-
+<% end %>
 			</div>
 		    </div>
 
