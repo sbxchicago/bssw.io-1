@@ -56,7 +56,7 @@ str = ActionController::Base.helpers.strip_tags(result.content)
 				    <% elsif result.is_a?(BlogPost) %>
 					Blog Post
 				    <% elsif result.is_a?(Fellow) %>
-					Fellow
+					Fellow <%= result.honorable_mention %>
 				    <% elsif result.is_a?(Author) %>
 					Author
 				    <% elsif result.is_a?(SiteItem) %>
