@@ -29,6 +29,7 @@ class RebuildStatus < ApplicationRecord
   def self.start(rebuild, branch)
     begin
       Staff.all.each(&:delete)
+      FellowLink.all.each(&:delete)
     rescue
     end
     rebuild.update(content_branch: branch)
