@@ -10,7 +10,7 @@ class SearchResult < MarkdownImport
         respond_to?(facet) ? self.send(facet) : nil
       end
       searchableAttributes [ 'unordered(name)', 'unordered(description)', 'unordered(content)', 'short_bio', 'long_bio', 'author_list', 'location', 'organizers' ]
-      ranking ['desc(is_fellow)', 'desc(published_at)', 'typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact', 'custom' ]
+      ranking ['asc(is_fellow)', 'desc(published_at)', 'typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact', 'custom' ]
       advancedSyntax true
     end
 
@@ -32,7 +32,7 @@ class SearchResult < MarkdownImport
   end
 
   def searchable?
-    (publish || is_fellow) && rebuild_id == RebuildStatus.first.display_rebuild_id
+    (publish || (is_fellow && !(honorable_mention))) && rebuild_id == RebuildStatus.first.display_rebuild_id
   end
   
   scope :published, lambda {
