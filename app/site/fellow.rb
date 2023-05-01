@@ -14,7 +14,7 @@ class Fellow < SearchResult
 
 
   def should_generate_new_friendly_id?
-    name_changed?
+    true #    name_changed?
   end
 
   def last_name
