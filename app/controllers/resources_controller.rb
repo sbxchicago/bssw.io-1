@@ -33,7 +33,7 @@ class ResourcesController < ApplicationController
     if search_string.blank?
       @resources = scoped_resources.paginate(page: page, per_page: 75)
     else
-      @search = @search_string = search_string
+      @search = @search_string = search_string.gsub("\"", "").gsub("^'", "").gsub("'$", "")
       if params[:view] == 'all'
         @results = SearchResult.search(search_string, hitsPerPage: 1000)
       else

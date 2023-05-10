@@ -61,6 +61,8 @@ str = ActionController::Base.helpers.strip_tags(result.content)
 					Author
 				    <% elsif result.is_a?(SiteItem) %>
 				      Resource
+				    <% elsif result.is_a?(Page) %>
+				      Page
 				    <% end %>
 				</p>
 <% if result.published_at %>

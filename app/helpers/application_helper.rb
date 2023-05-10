@@ -16,6 +16,8 @@ module ApplicationHelper
       site_items_url(author: result.slug)
     when Fellow
       fellow_url(result)
+    when Page
+      page_url(result)
     end
   end
 
