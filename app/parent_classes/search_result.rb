@@ -32,7 +32,7 @@ class SearchResult < MarkdownImport
   end
 
   def searchable?
-    (publish || (is_fellow && !(honorable_mention))) && rebuild_id == RebuildStatus.first.display_rebuild_id
+    (publish || (is_a?(Page)) || (is_fellow && !(honorable_mention))) && rebuild_id == RebuildStatus.first.display_rebuild_id
   end
   
   scope :published, lambda {
