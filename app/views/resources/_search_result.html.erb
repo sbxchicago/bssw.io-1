@@ -9,7 +9,7 @@
 		    <div class="row">
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 
-			    <h3><% name = highlight((result.name), @search) %>
+			    <h3><% name = result.highlight_result['name']['value'].try(:html_safe)  %>
 				<%= name.blank? ? result.name : name %>
 			    </h3>
 			</div>
@@ -18,13 +18,13 @@
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 			    <p class="search-results-content">
 				<% if result.is_a?(SiteItem) %>
-				    <p class='small-caps'><%= highlight(author_list_without_links(result), @search) %></p>
+				    <p class='small-caps'><%= result.highlight_result.keys.include?('author_list_without_links') ? result.highlight_result['author_list_without_links']['value'].try(:html_safe) : result.author_list_without_links %></p>
 				<% end %>
 
 				<% [:location, :organizers].each do |facet| %>
-				    <% if result.respond_to?(facet) && !(result.try(facet).blank?) %>
+				    <% if result.respond_to?(facet) && !(result.try(:[], facet).blank?) %>
 					<p class='small-caps'><strong><%= facet %></strong>
-					    <%=  highlight((result.try(facet)), @search) %>
+					    <%=  result.highlight_result[facet]['value'].try(:html_safe) %>
 					</p>
 				    <% end %>
 
@@ -36,18 +36,8 @@
 
 				    <% if result.respond_to?('content') || result.respond_to?('long_bio')%>
 
-<%					    if result.respond_to?('content')
-str = ActionController::Base.helpers.strip_tags(result.content)
-					    else
-						str = ActionController::Base.helpers.strip_tags(result.long_bio)
-
-					    end
-					%>
-
-
-					    <%= highlight((excerpt(str, @search)), @search) %>
-
-				    <% end %>
+					    <%= result.highlight_result['content'].try(:[], 'value').try(:html_safe) %>
+					    <%= result.highlight_result['long_bio'].try(:[], 'value').try(:html_safe)			    %> <% end %>
 				</p>
 				<p class="topics small-caps">
 				    <strong>Type of Item</strong>

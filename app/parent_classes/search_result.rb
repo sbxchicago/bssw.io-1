@@ -9,7 +9,10 @@ class SearchResult < MarkdownImport
       attribute facet do
         respond_to?(facet) ? self.send(facet) : nil
       end
-      searchableAttributes [ 'unordered(name)', 'unordered(description)', 'unordered(content)', 'short_bio', 'long_bio', 'author_list', 'location', 'organizers' ]
+      searchableAttributes [ 'unordered(name)', 'unordered(description)', 'unordered(content)', 'short_bio', 'long_bio', 'author_list_without_links', 'location', 'organizers' ]
+      attributesToSnippet [ 'content:80', 'long_bio:80' ]
+      highlightPreTag '<mark>'
+      highlightPostTag '</mark>'
       ranking ['asc(is_fellow)', 'desc(published_at)', 'typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact', 'custom' ]
       advancedSyntax true
     end
