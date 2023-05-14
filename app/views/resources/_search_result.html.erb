@@ -22,7 +22,7 @@
 				<% end %>
 
 				<% [:location, :organizers].each do |facet| %>
-				    <% if result.respond_to?(facet) && !(result.highlight_result.gtry(:[], facet).blank?) %>
+				    <% if result.respond_to?(facet) && !(result.highlight_result.try(:[], facet).blank?) %>
 					<p class='small-caps'><strong><%= facet %></strong>
 					    <%=  result.highlight_result[facet]['value'].try(:html_safe) %>
 					</p>
