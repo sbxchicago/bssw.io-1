@@ -32,10 +32,7 @@
 
 
 				<p class='search-results-content'>
-
-
-
-
+					    <%= result.snippet_result['snippet'].try(:[], 'value').try(:html_safe) %>
 					    <%= result.snippet_result['content'].try(:[], 'value').try(:html_safe) %>
 					    <%= result.snippet_result['long_bio'].try(:[], 'value').try(:html_safe)			    %> 
 				</p>
