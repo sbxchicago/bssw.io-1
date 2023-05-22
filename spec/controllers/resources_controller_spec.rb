@@ -163,7 +163,7 @@ RSpec.describe ResourcesController, type: :controller do
       sleep(8)
       expect(SearchResult.search(resource.name)).to include(resource)
       get :search, params: { search_string: 'search string' }
-      expect(assigns(:search_string)).to eq('search string')
+      expect(assigns(:search)).to eq('search string')
       expect(assigns(:resources)).to include(resource)
       expect(assigns(:resources)).not_to eq Resource.all
 
