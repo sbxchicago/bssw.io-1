@@ -10,6 +10,7 @@ class SearchResult < MarkdownImport
         respond_to?(facet) ? self.send(facet) : nil
       end
       searchableAttributes [ 'unordered(name)', 'unordered(description)', 'unordered(content)', 'short_bio', 'long_bio', 'author_list_without_links', 'location', 'organizers' ]
+      attributesToHighlight [ 'content', 'long_bio', 'author_list_without_links', 'name', 'description', 'short_bio', 'location', 'organizers']
       attributesToSnippet [ 'content:80', 'long_bio:80']
       highlightPreTag '<mark>'
       highlightPostTag '</mark>'
