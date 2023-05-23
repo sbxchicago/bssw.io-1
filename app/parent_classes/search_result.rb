@@ -5,7 +5,7 @@ class SearchResult < MarkdownImport
   algoliasearch per_environment: true, sanitize: true, auto_index: false, if: :searchable? do
 
     attribute :name, :published_at, :is_fellow, :content, :author_list_without_links, :short_bio, :long_bio, :location, :organizers
-    searchableAttributes [ 'name', 'author_list_without_links', 'unordered(content)'] ]
+    searchableAttributes [ 'name', 'author_list_without_links', 'unordered(content)'] 
 #    attributesToHighlight [ 'content', 'long_bio', 'author_list_without_links', 'name', 'description', 'short_bio', 'location', 'organizers']
     attributesToSnippet [ 'content:80', 'name:80', 'author_list_without_links' ]
     highlightPreTag '<mark>'
