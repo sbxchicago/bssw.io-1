@@ -33,13 +33,9 @@
 
 	      <p class='search-results-content'>
 
-		<!-- <%= result.snippet_result['content'].try(:[], 'value').try(:html_safe) %> -->
-		
-		<%= result.algoliasearch_settings.inspect %>
+		<%= result.snippet_result['content'].try(:[], 'value').try(:html_safe) %>
 
-		<%= result.snippet_result['name']['matchLevel'] %>
-		<%= result.snippet_result['content']['matchLevel'] %>
-		<%= result.snippet_result['author_list_without_links']['matchLevel'] %>
+
 	      </p>
 	      <p class="topics small-caps">
 		<strong>Type of Item</strong>
