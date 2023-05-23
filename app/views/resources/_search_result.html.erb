@@ -36,9 +36,9 @@
 		<!-- <%= result.snippet_result['content'].try(:[], 'value').try(:html_safe) %> -->
 
 		<!-- <%= result.snippet_result['long_bio'].try(:[], 'value').try(:html_safe)			    %>  -->
-		<%= result.snippet_result['name'] %>
-		<%= result.snippet_result['content'] %>
-		<%= result.snippet_result['author_list_without_links'] %>
+		<%= result.snippet_result['name']['matchLevel'] %>
+		<%= result.snippet_result['content']['matchLevel'] %>
+		<%= result.snippet_result['author_list_without_links']['matchLevel'] %>
 	      </p>
 	      <p class="topics small-caps">
 		<strong>Type of Item</strong>
