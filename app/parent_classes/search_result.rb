@@ -4,11 +4,11 @@ class SearchResult < MarkdownImport
 
   algoliasearch per_environment: true, sanitize: true, auto_index: false, if: :searchable? do
     # the list of attributes sent to Algolia's API
-    attribute :name, :published_at, :is_fellow, :content
-    [:description, :short_bio, :long_bio, :author_list, :location, :organizers].each do |facet|
-      attribute facet do
-        respond_to?(facet) ? self.send(facet) : nil
-      end
+#    attribute :name, :published_at, :is_fellow, :content, :author_list_without_links, :short_bio, :long_bio, :location, :organizers
+    # [:description, :short_bio, :long_bio, :author_list, :location, :organizers].each do |facet|
+    #   attribute facet do
+    #     respond_to?(facet) ? self.send(facet) : nil
+    #   end
       searchableAttributes [ 'unordered(name)', 'unordered(description)', 'unordered(content)', 'short_bio', 'long_bio', 'author_list_without_links', 'location', 'organizers' ]
       attributesToHighlight [ 'content', 'long_bio', 'author_list_without_links', 'name', 'description', 'short_bio', 'location', 'organizers']
       attributesToSnippet [ 'content:80', 'long_bio:80']
@@ -16,7 +16,7 @@ class SearchResult < MarkdownImport
       highlightPostTag '</mark>'
       ranking ['asc(is_fellow)', 'desc(published_at)', 'typo', 'geo', 'words', 'filters', 'proximity', 'attribute', 'exact', 'custom' ]
       advancedSyntax true
-    end
+#    end
 
   end
 
