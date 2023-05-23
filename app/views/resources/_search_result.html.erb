@@ -34,7 +34,7 @@
 	      <p class='search-results-content'>
 
 		<!-- <%= result.snippet_result['content'].try(:[], 'value').try(:html_safe) %> -->
-
+		<%= result.ranking_info %>
 		<%= result.highlight_result.keys %>
 		<%= result.snippet_result['name']['matchLevel'] %>
 		<%= result.snippet_result['content']['matchLevel'] %>
