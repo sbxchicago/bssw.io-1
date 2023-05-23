@@ -35,8 +35,8 @@
 
 		<!-- <%= result.snippet_result['content'].try(:[], 'value').try(:html_safe) %> -->
 		
-		<%= result.algoliasearch_settings %>
-		<%= result.algoliasearch_options %>
+		<%= result.algoliasearch_settings.inspect %>
+
 		<%= result.snippet_result['name']['matchLevel'] %>
 		<%= result.snippet_result['content']['matchLevel'] %>
 		<%= result.snippet_result['author_list_without_links']['matchLevel'] %>
