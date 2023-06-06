@@ -4,14 +4,15 @@
 		<div class="col-md-9">
 		    <h1>Search </h1>
 		    <div class="deck">
-			<% if @results %>
+			<% if @resources %>
 			    <p>
-				<% if @search %>
-				    Results found for <i><%= @search %></i> (<%= @resources.total_entries %>)
-				    
-				<% else %>
-				    All Resources (<%= @resources.total %>)
-				<% end %>
+			      <% if @search && @resources.respond_to?(:total_entries) %>
+				Results found for <i><%= @search %></i> (<%= @resources.total_entries %>)
+			      <% else %>
+				All Resources (<%= @resources.total %>)
+			      <% end %>
+
+
 			    </p>
 			<% else %>
 			    <p>No results found </p>

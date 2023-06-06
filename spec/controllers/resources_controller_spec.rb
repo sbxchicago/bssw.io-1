@@ -72,7 +72,7 @@ RSpec.describe ResourcesController, type: :controller do
       expect(assigns(:resources)).to include(resource)
     end
 
-    it 'finds authors and fellows' do
+    it 'finds fellows' do
       @request.env['HTTP_AUTHORIZATION'] = "Basic {Base64.encode64('preview-bssw:SoMyCodeWillSeeTheFuture!!')}"
       resource = FactoryBot.create(:resource, publish: true, type: 'Resource', name: 'Blorgon')
       author = FactoryBot.create(:author, first_name: 'Joe', last_name: 'Blow',
@@ -87,6 +87,21 @@ RSpec.describe ResourcesController, type: :controller do
       expect(assigns(:resources)).not_to include(resource)
     end
 
+    it 'finds pages' do
+      @request.env['HTTP_AUTHORIZATION'] = "Basic {Base64.encode64('preview-bssw:SoMyCodeWillSeeTheFuture!!')}"
+      resource = FactoryBot.create(:resource, publish: true, type: 'Resource', name: 'Blorgon')
+      page = FactoryBot.create(:page, name: 'Joe', content: 'Blow',
+                                          rebuild_id: RebuildStatus.displayed_rebuild.id, publish: true)
+      SearchResult.reindex
+      sleep(5)
+
+      get :search, params: { search_string: 'Joe' }
+#      expect(assigns(:resources)).to include(author)
+      expect(assigns(:resources)).to include(page)
+      expect(assigns(:resources)).not_to include(resource)
+    end
+
+    
     it 'renders template' do
       get :search
       expect(response).to render_template :index
@@ -161,14 +176,14 @@ RSpec.describe ResourcesController, type: :controller do
       #      SiteItem.all.each(&:set_search_text)
       SearchResult.reindex!
       sleep(8)
-      expect(SearchResult.search(resource.name)).to include(resource)
-      get :search, params: { search_string: 'search string' }
-      expect(assigns(:search)).to eq('search string')
+      expect(SearchResult.algolia_search(resource.name)).to include(resource)
+      get :search, params: { search_string: resource.name }
+      expect(assigns(:search)).to eq(resource.name)
       expect(assigns(:resources)).to include(resource)
       expect(assigns(:resources)).not_to eq Resource.all
 
       expect(assigns(:resources)).not_to include(resource2)
-      expect(response.body).to match '<mark>search'
+      expect(response.body).to match "mark>#{resource.name}"
     end
   end
 

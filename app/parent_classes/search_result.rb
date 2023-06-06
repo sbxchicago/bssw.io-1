@@ -3,21 +3,25 @@ class SearchResult < MarkdownImport
   include AlgoliaSearch
 
   algoliasearch per_environment: true, sanitize: true, auto_index: false, if: :searchable? do
-    attribute :name, :content, :author_list_without_links
-#    attribute :name, :published_at, :is_fellow, :content, :author_list_without_links, :short_bio, :long_bio, :location, :organizers
-    searchableAttributes [ 'name', 'author_list_without_links', 'unordered(content)'] 
-#    attributesToHighlight [ 'content', 'long_bio', 'author_list_without_links', 'name', 'description', 'short_bio', 'location', 'organizers']
-    attributesToSnippet [ 'content:80', 'name:80', 'author_list_without_links:80' ]
+    attributes :name, :content, :author_list_without_links, :published_at
+    searchableAttributes [ 'name', 'author_list_without_links', 'content' ] 
+    attributesToSnippet [ 'content', 'name', 'author_list_without_links' ]
+    attributesToHighlight [ 'content', 'name', 'author_list_without_links' ]
     highlightPreTag '<mark>'
     highlightPostTag '</mark>'
-    ranking ['asc(is_fellow)', 'desc(published_at)', 'words', 'typo', 'geo', 'filters', 'proximity', 'attribute', 'exact', 'custom' ]
+    hitsPerPage 1000
+    ranking ['desc(is_fellow)', 'desc(published_at)' ]
     advancedSyntax true
+  end
+
+  def searchable_content
+    ActionView::Base.full_sanitizer.sanitize(content).gsub("\n", " ").gsub(',', '')
   end
 
   def is_fellow
     is_a?(Fellow)
   end
-  
+
   extend FriendlyId
   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 
@@ -30,7 +34,7 @@ class SearchResult < MarkdownImport
   end
 
   def searchable?
-    (publish || (is_fellow && !(honorable_mention))) && rebuild_id == RebuildStatus.first.display_rebuild_id
+     (publish || (is_fellow && !(honorable_mention))) && rebuild_id == RebuildStatus.first.display_rebuild_id && !(is_a?(BlogPost))
   end
   
   scope :published, lambda {
@@ -125,5 +129,5 @@ class SearchResult < MarkdownImport
   end
 
 
-  
+
 end

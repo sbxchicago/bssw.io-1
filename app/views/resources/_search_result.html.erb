@@ -1,3 +1,5 @@
+<% @num = @num + 1 %>
+
 <div class="event-blog-row search-row">
   <div class="container">
 
@@ -32,11 +34,9 @@
 
 
 	      <p class='search-results-content'>
-
 		<%= result.snippet_result['content'].try(:[], 'value').try(:html_safe) %>
-
-
 	      </p>
+
 	      <p class="topics small-caps">
 		<strong>Type of Item</strong>
 		<% if result.is_a?(Event)  %>
@@ -66,8 +66,9 @@
 
 	</a>
       </div>
-    </div>		
+    </div>
 
   </div>
 </div>
+
 

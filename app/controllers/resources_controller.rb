@@ -2,6 +2,9 @@
 
 # controller for the Resource class
 class ResourcesController < ApplicationController
+
+  require 'will_paginate/array'  
+
   if Rails.env != 'preview'
     http_basic_authenticate_with name: Rails.application.credentials.import['name'],
                                  password: Rails.application.credentials.import['password'], only: ['import']
@@ -34,12 +37,16 @@ class ResourcesController < ApplicationController
       @resources = scoped_resources.paginate(page: page, per_page: 75)
     else
       @search = search_string
-      if params[:view] == 'all'
-        @results = SearchResult.search(search_string, hitsPerPage: 1000)
-      else
-        @results = SearchResult.search(search_string, hitsPerPage: 75, page: page)
+      @resources = []
+      (1..50).each do |i|
+        @results = SearchResult.algolia_search(search_string, hitsPerPage: 5, page: i)
+        @resources = @resources + @results
       end
-      @resources = @results
+      if params[:view] != 'all'
+        @resources = @resources.paginate(page: page, per_page: 25)
+      else
+        @resources = @resources.paginate(page: page, per_page: @resources.size)
+      end
     end
     render 'index'
   end
