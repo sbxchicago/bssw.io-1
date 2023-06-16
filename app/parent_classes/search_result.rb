@@ -1,21 +1,22 @@
-class SearchResult < MarkdownImport
+# frozen_string_literal: true
 
+class SearchResult < MarkdownImport
   include AlgoliaSearch
 
   algoliasearch per_environment: true, sanitize: true, auto_index: false, if: :searchable? do
     attributes :name, :content, :author_list_without_links, :published_at
-    searchableAttributes [ 'name', 'author_list_without_links', 'content' ] 
-    attributesToSnippet [ 'content', 'name', 'author_list_without_links' ]
-    attributesToHighlight [ 'content', 'name', 'author_list_without_links' ]
+    searchableAttributes %w[name author_list_without_links content]
+    attributesToSnippet %w[content name author_list_without_links]
+    attributesToHighlight %w[content name author_list_without_links]
     highlightPreTag '<mark>'
     highlightPostTag '</mark>'
     hitsPerPage 1000
-    ranking ['desc(is_fellow)', 'desc(published_at)' ]
+    ranking ['desc(is_fellow)', 'desc(published_at)']
     advancedSyntax true
   end
 
   def searchable_content
-    ActionView::Base.full_sanitizer.sanitize(content).gsub("\n", " ").gsub(',', '')
+    ActionView::Base.full_sanitizer.sanitize(content).gsub("\n", ' ').gsub(',', '')
   end
 
   def is_fellow
@@ -26,7 +27,11 @@ class SearchResult < MarkdownImport
   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 
   def slug_candidates
-    custom_slug.blank? ? (honorable_mention ? nil : name) : custom_slug
+    if custom_slug.blank?
+      honorable_mention ? nil : name
+    else
+      custom_slug
+    end
   end
 
   def should_generate_new_friendly_id?
@@ -34,9 +39,9 @@ class SearchResult < MarkdownImport
   end
 
   def searchable?
-     (publish || (is_fellow && !(honorable_mention))) && rebuild_id == RebuildStatus.first.display_rebuild_id && !(is_a?(BlogPost))
+    (publish || (is_fellow && !honorable_mention)) && rebuild_id == RebuildStatus.first.display_rebuild_id && !is_a?(BlogPost)
   end
-  
+
   scope :published, lambda {
     where(publish: true)
   }
@@ -44,7 +49,6 @@ class SearchResult < MarkdownImport
   scope :with_topic, lambda { |topic|
     joins([:topics]).where('topics.id = ?', topic) if topic.present?
   }
-
 
   scope :with_category, lambda { |category|
     joins([:topics]).joins([:searchresults_topics]).where('topics.category_id = ?', category)
@@ -74,24 +78,21 @@ class SearchResult < MarkdownImport
     distinct.order(Arel.sql('(case when pinned then 1 else 0 end) DESC, name ASC'))
   }
 
-
-  has_and_belongs_to_many :topics, -> { distinct }, join_table: 'site_items_topics', dependent: :destroy, foreign_key: 'site_item_id'
+  has_and_belongs_to_many :topics, lambda {
+                                     distinct
+                                   }, join_table: 'site_items_topics', dependent: :destroy, foreign_key: 'site_item_id'
   before_destroy { topics.clear }
   before_destroy { contributions.clear }
-  has_many :contributions,  join_table: 'contributions', dependent: :destroy, foreign_key: 'site_item_id'
+  has_many :contributions, join_table: 'contributions', dependent: :destroy, foreign_key: 'site_item_id'
   has_many :authors, through: :contributions
-
 
   has_many :features, foreign_key: 'site_item_id'
 
-  validates :path,  uniqueness: { case_sensitive: false, scope: :rebuild_id, allow_blank: true }
+  validates :path, uniqueness: { case_sensitive: false, scope: :rebuild_id, allow_blank: true }
 
   has_many :announcements, foreign_key: 'site_item_id'
 
-
   store_methods :topic_list, :topics_count, :author_list
-
-
 
   def author_list_without_links
     if authors.empty?
@@ -110,7 +111,6 @@ class SearchResult < MarkdownImport
     end
   end
 
-
   def topic_list
     topics.map(&:name).join(', ')
   end
@@ -127,7 +127,4 @@ class SearchResult < MarkdownImport
       topics << topic if topic
     end
   end
-
-
-
 end

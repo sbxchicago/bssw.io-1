@@ -36,7 +36,7 @@ class Page < SearchResult
 
   def self.names_to_pages(names)
     names.map do |name|
-      find_by(name: name, rebuild_id: RebuildStatus.first.display_rebuild_id)
+      find_by(name:, rebuild_id: RebuildStatus.first.display_rebuild_id)
     end.delete_if(&:!)
   end
 
@@ -99,7 +99,7 @@ class Page < SearchResult
     node.text.split("\n").map do |slide|
       slide_info = slide.split(':')
       path = slide_info.last
-      FeaturedPost.create(path: path, label: slide_info.first, rebuild_id: rebuild_id) unless path == '-'
+      FeaturedPost.create(path:, label: slide_info.first, rebuild_id:) unless path == '-'
     end
     node.remove
   end

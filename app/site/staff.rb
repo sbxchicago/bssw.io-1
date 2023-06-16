@@ -1,19 +1,16 @@
 # frozen_string_literal: true
 
 # to display on "about" page
-class Staff < MarkdownImport #Author
-
-
-
+# Author
+class Staff < MarkdownImport
   scope :displayed, lambda {
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
 
-  
   def self.make_from_data(node, val, rebuild)
     node.css('a').each do |link|
       auth = Staff.find_or_create_by(website: link['href'], rebuild_id: rebuild)
-#      auth.update_attribute(:type, 'Staff')
+      #      auth.update_attribute(:type, 'Staff')
       auth.update_attribute(:section, val)
       auth.update_from_github
       Staff.find(auth.id).update_from_link(link.parent.children)
@@ -46,7 +43,6 @@ class Staff < MarkdownImport #Author
     end
   end
 
-
   def update_from_github
     return unless website&.match('github')
     return unless affiliation.blank? || avatar_url.blank?
@@ -67,6 +63,4 @@ class Staff < MarkdownImport #Author
     # last_name = names.last
     # update(first_name: names.first, last_name: last_name, alphabetized_name: last_name) unless names == [nil, nil]
   end
-
-  
 end

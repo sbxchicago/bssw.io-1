@@ -18,7 +18,7 @@ class Announcement < MarkdownImport
   end
 
   def self.create_from(elem, rebuild_id)
-    announcement = Announcement.create(rebuild_id: rebuild_id)
+    announcement = Announcement.create(rebuild_id:)
     link = elem.css('a')
     announcement.path = link.attr('href').content
     announcement.text = link.text

@@ -2,8 +2,7 @@
 
 # controller for the Resource class
 class ResourcesController < ApplicationController
-
-  require 'will_paginate/array'  
+  require 'will_paginate/array'
 
   if Rails.env != 'preview'
     http_basic_authenticate_with name: Rails.application.credentials.import['name'],
@@ -11,11 +10,9 @@ class ResourcesController < ApplicationController
   end
 
   def show
-
     @resource = scoped_resources.find(params[:id])
     redirect_to "/events/#{@resource.slug}" if @resource.is_a?(Event)
     redirect_to "/blog_posts/#{@resource.slug}" if @resource.is_a?(BlogPost)
-
   end
 
   def index
@@ -32,21 +29,21 @@ class ResourcesController < ApplicationController
 
   def search
     search_string = params[:search_string]
-    params[:page] ? page = params[:page].to_i : page = 1
+    page = params[:page] ? params[:page].to_i : 1
     if search_string.blank?
-      @resources = scoped_resources.paginate(page: page, per_page: 75)
+      @resources = scoped_resources.paginate(page:, per_page: 75)
     else
       @search = search_string
       @resources = []
       (1..50).each do |i|
         @results = SearchResult.algolia_search(search_string, hitsPerPage: 5, page: i)
-        @resources = @resources + @results
+        @resources += @results
       end
-      if params[:view] != 'all'
-        @resources = @resources.paginate(page: page, per_page: 25)
-      else
-        @resources = @resources.paginate(page: page, per_page: @resources.size)
-      end
+      @resources = if params[:view] != 'all'
+                     @resources.paginate(page:, per_page: 25)
+                   else
+                     @resources.paginate(page:, per_page: @resources.size)
+                   end
     end
     render 'index'
   end
@@ -58,17 +55,12 @@ class ResourcesController < ApplicationController
 
   private
 
-
-
   def populate_resources
-
     set_filters
     @resources = scoped_resources
     @resources = scoped_resources.joins(:searchresults_topics).with_topic(@topic) if @topic
     @resources = scoped_resources.with_category(@category) if @category
-    if @author
-      @resources = scoped_resources.with_author(@author)
-    end
+    @resources = scoped_resources.with_author(@author) if @author
     paginate
   end
 

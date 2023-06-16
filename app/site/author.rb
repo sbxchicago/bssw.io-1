@@ -2,7 +2,6 @@
 
 # contributor of a resource
 class Author < SearchResult
-
   self.table_name = 'search_results'
 
   include ActionView::Helpers::TextHelper
@@ -18,7 +17,6 @@ class Author < SearchResult
   scope :displayed, lambda {
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
-
 
   def should_generate_new_friendly_id?
     (new_record? || slug.blank?) && !last_name.blank?
@@ -64,7 +62,6 @@ class Author < SearchResult
   end
 
   def update_from_github
-
     return unless website&.match('github')
     return unless affiliation.blank? || avatar_url.blank?
 
@@ -78,10 +75,8 @@ class Author < SearchResult
   end
 
   def update_info(hash)
-
     update(avatar_url: hash.avatar_url.gsub(/\?v=[[:digit:]]/, ''))
     update(affiliation: hash.company) if affiliation.blank?
-
   end
 
   def do_overrides(alpha_name, display_name)

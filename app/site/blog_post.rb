@@ -6,7 +6,6 @@ class BlogPost < SiteItem
 
   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 
-  
   def related_posts
     posts = []
     5.times do

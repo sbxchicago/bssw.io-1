@@ -60,7 +60,7 @@ class MarkdownUtility < ApplicationRecord
     return unless content.match?(Regexp.new(regexp))
 
     child.replace(
-      content.gsub(Regexp.new((regexp)), span.to_xml.html_safe)
+      content.gsub(Regexp.new(regexp), span.to_xml.html_safe)
     )
   end
 

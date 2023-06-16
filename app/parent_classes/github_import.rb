@@ -14,7 +14,7 @@ class GithubImport < ApplicationRecord
   end
 
   def update_from_content(doc, rebuild)
-    self.save
+    save
     title_chunk = MarkdownUtility.get_title_chunk(doc)
     update(name: title_chunk.try(:strip))
     dates(doc, rebuild)

@@ -7,11 +7,10 @@ class Fellow < SearchResult
   }
 
   table_name = 'search_results'
-  
-   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
+
+  friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 
   has_many :fellow_links, dependent: :destroy
-
 
   def should_generate_new_friendly_id?
     true #    name_changed?

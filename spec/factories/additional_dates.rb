@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :additional_date do
     label { 'MyString' }
     #    additional_date_value
-#    event
+    #    event
   end
 end

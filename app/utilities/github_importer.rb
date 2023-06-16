@@ -15,8 +15,7 @@ class GithubImporter < ApplicationRecord
                                        lax_spacing: true,
                                        strikethrough: true,
                                        fenced_code_blocks: true,
-                                       no_intra_emphasis: true,
-                                      )
+                                       no_intra_emphasis: true)
     Nokogiri::HTML(markdown.render(updated_content), nil, 'UTF-8')
   end
 
@@ -59,7 +58,7 @@ class GithubImporter < ApplicationRecord
 
       rebuild.process_file(file)
     end
-    puts "time to complete"
+    puts 'time to complete'
     RebuildStatus.complete(rebuild, file_path)
   end
 end

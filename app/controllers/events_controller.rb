@@ -13,8 +13,8 @@ class EventsController < ApplicationController
       @events = @events.paginate(page: 1, per_page: @events.size)
       @last_page = @current_page = 1
     else
-      per_page = (@current_page) * page_val
-      @events = @events.paginate(page: 1, per_page: per_page)
+      per_page = @current_page * page_val
+      @events = @events.paginate(page: 1, per_page:)
     end
   end
 

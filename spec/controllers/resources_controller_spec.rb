@@ -60,14 +60,14 @@ RSpec.describe ResourcesController, type: :controller do
 
       resource = FactoryBot.create(:resource, publish: true, type: 'Resource')
       expect(SiteItem.published.displayed).to include(resource)
-      
+
       SearchResult.reindex!
       sleep(5)
- # expect(SiteItem.where(Arel.sql(Searchable.word_str(resource.name)))).to include(resource)
- #      expect(SiteItem.where(Arel.sql("search_text REGEXP '#{resource.name}'"))).to include(resource)
+      # expect(SiteItem.where(Arel.sql(Searchable.word_str(resource.name)))).to include(resource)
+      #      expect(SiteItem.where(Arel.sql("search_text REGEXP '#{resource.name}'"))).to include(resource)
 
- #      expect(Searchable.get_word_results([[resource.name]], SiteItem.displayed)).to include(resource)
- #      expect(Searchable.perform_search([[resource.name]], nil)).to include(resource)
+      #      expect(Searchable.get_word_results([[resource.name]], SiteItem.displayed)).to include(resource)
+      #      expect(Searchable.perform_search([[resource.name]], nil)).to include(resource)
       get :search, params: { search_string: resource.name }
       expect(assigns(:resources)).to include(resource)
     end
@@ -75,14 +75,14 @@ RSpec.describe ResourcesController, type: :controller do
     it 'finds fellows' do
       @request.env['HTTP_AUTHORIZATION'] = "Basic {Base64.encode64('preview-bssw:SoMyCodeWillSeeTheFuture!!')}"
       resource = FactoryBot.create(:resource, publish: true, type: 'Resource', name: 'Blorgon')
-      author = FactoryBot.create(:author, first_name: 'Joe', last_name: 'Blow',
-                                          rebuild_id: RebuildStatus.displayed_rebuild.id, publish: true)
-      fellow = FactoryBot.create(:fellow, name: 'Joe Blow', rebuild_id: RebuildStatus.displayed_rebuild.id, publish: true)
+
+      fellow = FactoryBot.create(:fellow, name: 'Joe Blow', rebuild_id: RebuildStatus.displayed_rebuild.id,
+                                          publish: true)
       SearchResult.reindex
       sleep(5)
 
       get :search, params: { search_string: 'Joe' }
-#      expect(assigns(:resources)).to include(author)
+      #      expect(assigns(:resources)).to include(author)
       expect(assigns(:resources)).to include(fellow)
       expect(assigns(:resources)).not_to include(resource)
     end
@@ -91,17 +91,16 @@ RSpec.describe ResourcesController, type: :controller do
       @request.env['HTTP_AUTHORIZATION'] = "Basic {Base64.encode64('preview-bssw:SoMyCodeWillSeeTheFuture!!')}"
       resource = FactoryBot.create(:resource, publish: true, type: 'Resource', name: 'Blorgon')
       page = FactoryBot.create(:page, name: 'Joe', content: 'Blow',
-                                          rebuild_id: RebuildStatus.displayed_rebuild.id, publish: true)
+                                      rebuild_id: RebuildStatus.displayed_rebuild.id, publish: true)
       SearchResult.reindex
       sleep(5)
 
       get :search, params: { search_string: 'Joe' }
-#      expect(assigns(:resources)).to include(author)
+      #      expect(assigns(:resources)).to include(author)
       expect(assigns(:resources)).to include(page)
       expect(assigns(:resources)).not_to include(resource)
     end
 
-    
     it 'renders template' do
       get :search
       expect(response).to render_template :index
@@ -134,7 +133,8 @@ RSpec.describe ResourcesController, type: :controller do
     end
 
     it 'finds fellows' do
-      fellow = FactoryBot.create(:fellow, name: 'bar bar', rebuild_id: RebuildStatus.displayed_rebuild.id, publish: true)
+      fellow = FactoryBot.create(:fellow, name: 'bar bar', rebuild_id: RebuildStatus.displayed_rebuild.id,
+                                          publish: true)
       SearchResult.reindex!
       sleep(15)
       get :search, params: { search_string: 'bar' }
@@ -170,7 +170,7 @@ RSpec.describe ResourcesController, type: :controller do
       resource = FactoryBot.create(:resource, content: 'search string')
 
       resource2 = FactoryBot.create(:resource, content: 'bloo bloo')
-#      expect(resource.content).not_to be_blank
+      #      expect(resource.content).not_to be_blank
       expect(Resource.displayed).to include(resource2)
       expect(Resource.displayed).to include(resource)
       #      SiteItem.all.each(&:set_search_text)
@@ -241,7 +241,7 @@ RSpec.describe ResourcesController, type: :controller do
 
     it 'can use categories' do
       category = FactoryBot.create(:category, rebuild_id: @rebuild.id)
-      topic = FactoryBot.create(:topic, category: category, rebuild_id: @rebuild.id)
+      topic = FactoryBot.create(:topic, category:, rebuild_id: @rebuild.id)
       resource_with_category = FactoryBot.create(:resource, rebuild_id: @rebuild.id)
       resource_without_category = FactoryBot.create(:resource, rebuild_id: @rebuild.id)
       resource_with_category.topics << topic
@@ -273,13 +273,13 @@ RSpec.describe ResourcesController, type: :controller do
   describe 'rss feed' do
     it 'shows nothing' do
       5.times { FactoryBot.create(:resource) }
-#      begin
-        get :index, format: :rss
- #     rescue Exception => e
-  #      puts e.inspect
-   #   end
-        
-    #  puts response.inspect
+      #      begin
+      get :index, format: :rss
+      #     rescue Exception => e
+      #      puts e.inspect
+      #   end
+
+      #  puts response.inspect
       expect(assigns(:resources)).to be_empty
       expect(response.media_type).to eq 'application/rss+xml'
       expect(response).to be_ok

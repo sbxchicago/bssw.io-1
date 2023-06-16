@@ -28,7 +28,7 @@ gem 'execjs'
 gem 'jquery-rails'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-#gem 'jbuilder', github: 'rails/jbuilder', branch: 'master'
+# gem 'jbuilder', github: 'rails/jbuilder', branch: 'master'
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
@@ -126,8 +126,8 @@ gem 'rack-utf8_sanitizer'
 gem 'rouge-rails'
 gem 'warning'
 
-gem 'ed25519'
 gem 'bcrypt_pbkdf'
+gem 'ed25519'
 
 gem 'algoliasearch-rails'
 gem 'faraday', '1.10.3'

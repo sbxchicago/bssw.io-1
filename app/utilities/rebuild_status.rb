@@ -30,7 +30,7 @@ class RebuildStatus < ApplicationRecord
     begin
       Staff.all.each(&:delete)
       FellowLink.all.each(&:delete)
-    rescue
+    rescue StandardError
     end
     rebuild.update(content_branch: branch)
     status = first || create
@@ -38,11 +38,11 @@ class RebuildStatus < ApplicationRecord
   end
 
   def self.complete(rebuild, file_path)
-    puts "completing"
+    puts 'completing'
     first.update(display_rebuild_id: rebuild.id, in_progress_rebuild_id: nil)
-    puts "time to clean site itesm"
+    puts 'time to clean site itesm'
     SiteItem.clean
-    puts "time to clean rebuild"
+    puts 'time to clean rebuild'
     rebuild.clean(file_path)
     rebuild.update(files_processed: "<ul>#{rebuild.files_processed}</ul>",
                    ended_at: Time.now)

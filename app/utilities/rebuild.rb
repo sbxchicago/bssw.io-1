@@ -37,22 +37,18 @@ class Rebuild < ApplicationRecord
     (Page.all + SearchResult.all + Community.all
     ).each(&:update_links_and_images)
   end
- 
+
   def clean(file_path)
     Category.displayed.each { |category| category.update(slug: nil) }
-    puts "time for custom info"
     AuthorUtility.all_custom_info(id, file_path)
-    puts "did custom info"
     clear_old
     update_links_and_images
-    begin
-      Author.all.each(&:cleanup)
-    rescue
-    end
+    #    begin
+    Author.all.each(&:cleanup)
+    # rescue StandardError
+    # end
     SearchResult.clear_index!
     SearchResult.displayed.reindex
-    # Fellow.all.each(&:set_search_text)
-    # SiteItem.all.each(&:set_search_text)
     File.delete(file_path)
   end
 
@@ -110,7 +106,7 @@ class Rebuild < ApplicationRecord
         break
       end
     end
-    item = res.find_or_create_by(path: GithubImporter.normalized_path(path), rebuild_id: self.id)
+    item = res.find_or_create_by(path: GithubImporter.normalized_path(path), rebuild_id: id)
     item.update(base_path: File.basename(path))
     item
   end

@@ -46,7 +46,7 @@ class Event < SiteItem
     end_date.try(:additional_date_values).try(:first).try(:date)
   end
 
-#  self.table_name = 'site_items'
+  #  self.table_name = 'site_items'
 
   def update_from_content(doc, rebuild)
     update_details(doc)

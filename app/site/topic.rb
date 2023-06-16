@@ -23,8 +23,9 @@ class Topic < GithubImport
   def self.create_from_node(child, cat_id, rebuild_id)
     name = child.at('strong').content
     child.at('strong').remove
-    topic = Topic.find_or_create_by(slug: name.parameterize, rebuild_id: rebuild_id)
-    topic.update(overview: child.content, name: name.strip.downcase, order_num: topic.get_order(child), category_id: cat_id)
+    topic = Topic.find_or_create_by(slug: name.parameterize, rebuild_id:)
+    topic.update(overview: child.content, name: name.strip.downcase, order_num: topic.get_order(child),
+                 category_id: cat_id)
     topic
   end
 
@@ -43,8 +44,8 @@ class Topic < GithubImport
     name = top_name.strip.downcase
     puts name
     top = find_or_create_by(
-      name: name,
-      rebuild_id: rebuild_id
+      name:,
+      rebuild_id:
     )
     top.slug = name.parameterize
     top

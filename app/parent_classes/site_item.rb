@@ -2,20 +2,17 @@
 
 # resources, events, and blog posts
 
-
 class SiteItem < SearchResult
   require 'csv'
-
 
   has_and_belongs_to_many :topics, -> { distinct }, join_table: 'site_items_topics', dependent: :destroy
   before_destroy { topics.clear }
   before_destroy { contributions.clear }
-  has_many :contributions,  join_table: 'contributions', dependent: :destroy
+  has_many :contributions, join_table: 'contributions', dependent: :destroy
   has_many :authors, through: :contributions
   # has_and_belongs_to_many :communities, through: :features, class_name: 'Resource'
 
   has_many :features
-
 
   def rss_date
     super || published_at
@@ -28,11 +25,11 @@ class SiteItem < SearchResult
   def self.clean
     items = where(name: nil)
     items.each(&:delete)
- 
- #   Fellow.displayed.each(&:set_search_text)
+
+    #   Fellow.displayed.each(&:set_search_text)
     puts 'refresh lists'
     displayed.each do |si|
-#      si.set_search_text
+      #      si.set_search_text
       si.refresh_topic_list
       si.refresh_author_list
     end

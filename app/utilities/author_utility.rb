@@ -3,19 +3,9 @@
 # utility methods for processing authors
 class AuthorUtility
   def self.all_custom_info(rebuild_id, file_path)
-    puts 'custom author info...'
-    begin
-      puts "bleeg"
-
-      Author.where(rebuild_id: rebuild_id).each(&:update_from_github)
-      custom_staff_info(file_path, rebuild_id)
-      custom_author_info(file_path, rebuild_id)
-    rescue Exception => e
-      puts "blorg"
-      puts e.inspect
-    end
-    puts "finished custom info"
-#    Author.where(rebuild_id: rebuild_id).each(&:set_search_text)
+    Author.where(rebuild_id:).each(&:update_from_github)
+    custom_staff_info(file_path, rebuild_id)
+    custom_author_info(file_path, rebuild_id)
   end
 
   def self.names_from(name)
@@ -65,7 +55,7 @@ class AuthorUtility
     GithubImporter.tar_extract(file_path).each do |file|
       contrib_file = file.read if file.header.name.match('About.md')
     end
-    Page.where(rebuild_id: rebuild_id, base_path: 'About.md').first.update_from_content(
+    Page.where(rebuild_id:, base_path: 'About.md').first.update_from_content(
       GithubImporter.parse_html_from(contrib_file), rebuild_id
     )
   end
@@ -106,11 +96,11 @@ class AuthorUtility
     host = uri.host
     website = host.blank? ? nil : "https://#{host}#{uri.path}"
 
-    auth = Author.find_by(website: website, rebuild_id: rebuild)
+    auth = Author.find_by(website:, rebuild_id: rebuild)
     unless auth
       #      last_name = names.last
       auth = Author.find_or_create_by(rebuild_id: rebuild, last_name: names.last, first_name: names.first)
-      auth.update(website: website, alphabetized_name: names.last)
+      auth.update(website:, alphabetized_name: names.last)
     end
     auth
   end
