@@ -13,7 +13,7 @@ class ContactForm < MailForm::Base
     {
       subject: "Contact: #{reason}",
       to: 'info@bssw.io',
-      from: %("#{name}" <info@bssw.io>)
+      from: %("BSSw Contact Form" <info@parallactic.com>)
     }
   end
 end
