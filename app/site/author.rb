@@ -12,8 +12,6 @@ class Author < SearchResult
 
   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 
-  before_save { is_person = true }
-
   scope :displayed, lambda {
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }

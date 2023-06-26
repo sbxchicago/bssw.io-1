@@ -6,7 +6,7 @@ class Fellow < SearchResult
     where("#{table_name}.rebuild_id = ?", RebuildStatus.first.display_rebuild_id)
   }
 
-  table_name = 'search_results'
+  self.table_name = 'search_results'
 
   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 

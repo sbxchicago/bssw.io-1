@@ -7,7 +7,6 @@ class Contribute < ContactForm
   def headers
     {      subject: "Contribute: #{reason}",
            to: 'info@bssw.io',
-      from: %("BSSw Contribution Form" <info@parallactic.com>)
-    }
+           from: %("BSSw Contribution Form" <info@parallactic.com>) }
   end
 end

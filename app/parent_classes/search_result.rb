@@ -19,10 +19,6 @@ class SearchResult < MarkdownImport
     ActionView::Base.full_sanitizer.sanitize(content).gsub("\n", ' ').gsub(',', '')
   end
 
-  def is_fellow
-    is_a?(Fellow)
-  end
-
   extend FriendlyId
   friendly_id :slug_candidates, use: %i[finders slugged scoped], scope: :rebuild_id
 
@@ -39,7 +35,7 @@ class SearchResult < MarkdownImport
   end
 
   def searchable?
-    (publish || (is_fellow && !honorable_mention)) && rebuild_id == RebuildStatus.first.display_rebuild_id && !is_a?(BlogPost)
+    (publish || (is_a?(Fellow) && !honorable_mention)) && rebuild_id == RebuildStatus.first.display_rebuild_id
   end
 
   scope :published, lambda {

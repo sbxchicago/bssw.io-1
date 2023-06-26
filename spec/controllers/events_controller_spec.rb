@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-nnrequire 'rails_helper'
+require 'rails_helper'
 
 RSpec.describe EventsController, type: :controller do
   render_views

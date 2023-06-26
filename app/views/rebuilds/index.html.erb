@@ -35,19 +35,27 @@
 	<% end %>
     </div>
     <% if params[:rebuilt] %>
-	<script type='text/javascript'>
+      <script type='text/javascript'>
+	var are_waiting = false;
 	 $('#wait').hide();
 	</script>
     <% else %>
-	<script type='text/javascript'>
+      <script type='text/javascript'>
+	var are_waiting = false;
 	 $('#wait').hide();
 	 $('#done').hide();
 	</script>
     <% end %>
     <script type='text/javascript'>
-     $('#form').submit(function() {
+      $('#form').submit(function() {
+      var are_waiting = true;
 	 $('#wait').show();
-	 $('#form').hide();
+      $('#form').hide();
+      setInterval(function () {
+      if (are_waiting) {
+      $('#wait p').append(" rebuilding... ");
+      }
+      }, 10000); 
      });
     </script>
 
