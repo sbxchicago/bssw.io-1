@@ -65,7 +65,7 @@ module ApplicationHelper
     [if event.start_at.blank?
        ''
      else
-       (event.end_at.blank? ? '<strong>Date</strong>' : '<strong>Dates</strong>') + date_range(
+       (event.end_at.blank? ? "<strong>#{event.start_date.label.gsub('Start', '')}</strong>"  : "<strong>#{event.start_date.label.gsub('Start', '').pluralize}</strong>") + date_range(
          event.start_at, event.end_at
        ).to_s.html_safe
      end]
