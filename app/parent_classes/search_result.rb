@@ -11,7 +11,7 @@ class SearchResult < MarkdownImport
     highlightPreTag '<mark>'
     highlightPostTag '</mark>'
     hitsPerPage 1000
-    ranking ['desc(is_fellow)', 'desc(published_at)']
+    ranking ['typo', 'desc(is_fellow)', 'desc(published_at)']
     advancedSyntax true
   end
 
