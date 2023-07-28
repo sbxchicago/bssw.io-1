@@ -6,7 +6,7 @@
     <% else %>
       <%= will_paginate @resources %>
       <% if @resources.next_page %>
-	| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
+	&nbsp;| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
       <% end %>
 
 
