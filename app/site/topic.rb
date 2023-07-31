@@ -24,7 +24,7 @@ class Topic < GithubImport
     name = child.at('strong').content
     child.at('strong').remove
     topic = Topic.find_or_create_by(slug: name.parameterize, rebuild_id:)
-    topic.update(overview: child.content, name: name.strip.downcase, order_num: topic.get_order(child),
+    topic.update(overview: child.content, name: name.strip, order_num: topic.get_order(child),
                  category_id: cat_id)
     topic
   end
@@ -41,9 +41,9 @@ class Topic < GithubImport
   def self.from_name(top_name, rebuild_id)
     return if top_name.match(Regexp.new(/\[(.*)\]/))
 
-    name = top_name.strip.downcase
+    name = top_name.strip
     top = find_or_create_by(
-      name: name.titleize,
+      name: ,
       rebuild_id:
     )
     top.slug = name.parameterize
