@@ -1,15 +1,13 @@
 <div class="container">
   <div class="row">
 
-    <% if params[:view] == 'all' || !(params[:author].blank?)%>
-      1-<%= @resources.total_entries %> of <%= @resources.total_entries %> Items
-    <% else %>
-      <%= will_paginate @resources %>
+    <% if @resources.respond_to?(:total_entries) %>
+            <%= will_paginate @resources %>
       <% if @resources.next_page %>
 	&nbsp;| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
       <% end %>
-
-
+    <% else %>
+            1-<%= @resources.total_entries %> of <%= @resources.total_entries %> Items
     <% end %>
   </div>
 </div>
