@@ -2,7 +2,7 @@
   <div class="row">
 
     <% if params[:view] || params[:author] || params[:topic] %>
-                  1-<%= @resources.total_entries %> of <%= @resources.total_entries %> Items
+                  1-<%= @resources.size %> of <%= @resources.size %> Items
 <% elsif @resources.respond_to?(:next_page) %>
             <%= will_paginate @resources %>
       <% if @resources.next_page %>
