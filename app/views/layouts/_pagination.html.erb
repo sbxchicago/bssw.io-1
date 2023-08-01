@@ -1,12 +1,12 @@
-<% if params[:view] || params[:author] || params[:topic] %>
-  
- 
-      1-<%= @resources.size %> of <%= @resources.size %> Items
-<% elsif @resources.respond_to?(:next_page) %>
+<% if @resources.respond_to?(:next_page) %>
             <%= will_paginate @resources %>
       <% if @resources.next_page %>
 	&nbsp;| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
       <% end %>
+
+<% elsif params[:view] || params[:author] || params[:topic] || params[:category] %>
+   
+      1-<%= @resources.size %> of <%= @resources.size %> Items
     <% end %>
 
 
