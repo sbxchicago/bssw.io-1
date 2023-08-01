@@ -5,8 +5,16 @@
 
 
 <% elsif params[:view] || params[:author] || params[:topic] || params[:category] %>
-   
+  <% if params[:author] %>
+
+    <div class='container'>
+<% end %.
       1-<%= @resources.size %> of <%= @resources.size %> Items
-    <% end %>
+<% if params[:author] %>
+
+    </div>
+<% end %>
+  <% end %>
+
 
 
