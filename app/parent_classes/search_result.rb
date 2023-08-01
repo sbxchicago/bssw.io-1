@@ -118,8 +118,8 @@ class SearchResult < MarkdownImport
   def add_topics(names)
     names.each do |top_name|
       next if top_name.blank?
-
-      topic = Topic.from_name(top_name.gsub(/^\"/, '').gsub(/\"$/, ''), rebuild_id)
+      topic = Topic.from_name(top_name.strip.gsub(/^\"/, '').gsub(/\"$/, ''),
+                              rebuild_id)
       topics << topic if topic
     end
   end
