@@ -1,8 +1,8 @@
 <% if @resources.respond_to?(:next_page) %>
             <%= will_paginate @resources %>
-      <% if @resources.next_page %>
+
 	&nbsp;| <%= link_to "View All", params.merge(:view => 'all', :page => 1).permit! %>
-      <% end %>
+
 
 <% elsif params[:view] || params[:author] || params[:topic] || params[:category] %>
    
