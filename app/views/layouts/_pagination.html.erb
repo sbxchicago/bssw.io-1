@@ -1,6 +1,3 @@
-<div class="container">
-  <div class="row">
-
     <% if params[:view] || params[:author] || params[:topic] %>
                   1-<%= @resources.size %> of <%= @resources.size %> Items
 <% elsif @resources.respond_to?(:next_page) %>
@@ -10,6 +7,4 @@
       <% end %>
     <% end %>
 
-  </div>
-</div>
 
