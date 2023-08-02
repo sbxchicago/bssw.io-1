@@ -1,4 +1,6 @@
-
+<% if params[:search_string] %>
+  <div class='row'>
+    <% end %>
 <% if @resources.respond_to?(:next_page) %>
   <%= will_paginate @resources %>
 
@@ -17,3 +19,4 @@
 
 
 
+<% if params[:search_string] %></div><% end %>
