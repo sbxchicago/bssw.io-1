@@ -1,5 +1,5 @@
 <% if params[:search_string] %>
-  <div class='row'>
+  <div class='container'>
     <% end %>
 <% if @resources.respond_to?(:next_page) %>
   <%= will_paginate @resources %>
