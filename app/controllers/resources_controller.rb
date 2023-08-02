@@ -60,11 +60,11 @@ class ResourcesController < ApplicationController
     @resources = scoped_resources.joins(:searchresults_topics).with_topic(@topic) if @topic
     @resources = scoped_resources.with_category(@category) if @category
     @resources = scoped_resources.with_author(@author) if @author
+    @resources = @resources.standard_scope
     @total = @resources.size
     if @resources.size > 75 && !(params[:view] == 'all')
       @resources = @resources.first(75)
     end
-    @resources = @resources.standard_scope
   end
 
   def paginate
