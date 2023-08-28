@@ -6,7 +6,8 @@ Rails.application.routes.draw do
 
   get '/robots.txt' => 'application#robots'
 
-  get '/resources/:id', to: redirect('/items/%<id>s/')
+
+  match "/resources/:id", to: redirect{ |params, request| "/items/#{request.params[:id]}"}, via: :get
   get '/resources.rss', to: redirect('/items.rss')
 
   match '/items/contributors', to: 'resources#authors', via: :get

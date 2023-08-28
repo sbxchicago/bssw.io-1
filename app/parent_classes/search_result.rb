@@ -11,7 +11,7 @@ class SearchResult < MarkdownImport
     highlightPreTag '<mark>'
     highlightPostTag '</mark>'
     hitsPerPage 1000
-    ranking ['desc(is_fellow)', 'desc(published_at)']
+    ranking ['typo', 'desc(is_fellow)', 'desc(published_at)']
     advancedSyntax true
   end
 
@@ -118,8 +118,8 @@ class SearchResult < MarkdownImport
   def add_topics(names)
     names.each do |top_name|
       next if top_name.blank?
-
-      topic = Topic.from_name(top_name, rebuild_id)
+      topic = Topic.from_name(top_name.strip.gsub(/^\"/, '').gsub(/\"$/, ''),
+                              rebuild_id)
       topics << topic if topic
     end
   end

@@ -30,9 +30,7 @@ class ResourcesController < ApplicationController
   def search
     search_string = params[:search_string]
     page = params[:page] ? params[:page].to_i : 1
-    if search_string.blank?
-      @resources = scoped_resources.paginate(page:, per_page: 75)
-    else
+
       @search = search_string
       @resources = []
       (1..50).each do |i|
@@ -44,7 +42,8 @@ class ResourcesController < ApplicationController
                    else
                      @resources.paginate(page:, per_page: @resources.size)
                    end
-    end
+
+
     render 'index'
   end
 
@@ -61,7 +60,11 @@ class ResourcesController < ApplicationController
     @resources = scoped_resources.joins(:searchresults_topics).with_topic(@topic) if @topic
     @resources = scoped_resources.with_category(@category) if @category
     @resources = scoped_resources.with_author(@author) if @author
-    paginate
+    @resources = @resources.standard_scope
+    @total = @resources.size
+    if @resources.size > 75 && !(params[:view] == 'all')
+      @resources = @resources.first(75)
+    end
   end
 
   def paginate
